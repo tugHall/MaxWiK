@@ -1,11 +1,32 @@
 Package: MaxWiK
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Machine learning method based on Maxima Weighted Isolation Kernel mean embedding
+Version: 1.0.0
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Iurii", "Nagornov", , "iurii.nagornov@aist.go.jp", role = c("aut", "cre") )
+Description: This software is a package named **MaxWiK** contains 
+Approximate Bayesian Computation method to choose a single parameter 
+for a single observation point.
+The method involves the transformation of row data to a Hilbert space 
+(mapping) and the measurement of the similarity between simulated points 
+and maxima weighted Isolation Kernel mapping related to the observation point. 
+We also design a heuristic algorithm for parameter estimation 
+that requires no calculation and is dimension independent. 
 License: MIT + file LICENSE
+Depends: 
+    R (>= 3.6.0)
+Imports:
+    actuar,
+    graphics,
+    grDevices,
+    methods,
+    stats,
+    stringr,
+    utils
+Suggests: 
+    rmarkdown,
+    knitr,
+    testthat,
+    DiagrammeR
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
