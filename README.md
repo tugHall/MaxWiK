@@ -6,7 +6,7 @@
 **MaxWiK** _(**Max**ima **W**eighted-**i**solation **K**ernel mapping method)_ is a machine learning method based on Isolation Kernel and Kernel mean embedding.
 For more details of the method, please, be kind to read the paper:
 
-[Iurii S. Nagornov, Approximate Bayesian Computation Based on Maxima Weighted Isolation Kernel Mapping](https://doi.org/10.48550/arXiv.2201.12745)
+[Iurii S. Nagornov, Approximate Bayesian Computation Based on Maxima Weighted Isolation Kernel Mapping, arXiv.2201.12745, 2022](https://doi.org/10.48550/arXiv.2201.12745)
 
 Authors and contributor list:
 ---
@@ -28,7 +28,7 @@ Short description
 
 For publication, please, be kind to use next references related to MaxWiK software:
 
-- [Iurii S. Nagornov, Approximate Bayesian Computation Based on Maxima Weighted Isolation Kernel Mapping](https://doi.org/10.48550/arXiv.2201.12745)
+- [Iurii S. Nagornov, Approximate Bayesian Computation Based on Maxima Weighted Isolation Kernel Mapping, arXiv.2201.12745, 2022](https://doi.org/10.48550/arXiv.2201.12745)
 
 - [Package MaxWiK: https://github.com/tugHall/MaxWiK](https://github.com/tugHall/MaxWiK.git)
 
