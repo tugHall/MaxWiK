@@ -1,15 +1,47 @@
 
 # Initialization of data and norm definition ------------------------------
 
+#' The norm function for vector
+#'
+#' @param x numeric vector
+#'
+#' @return The squared root of sum of squared elements of the vector x or Euclid length of the vector x
+#' @export
+#'
+#' @examples
+#' norm_vec(c(3,4)) # that returns 5
+#' norm_vec(c(12,5)) # that returns 13
+#' 
+norm_vec     <-  function(x) {
+    sqrt(sum(x^2))
+}
 
-### The kernel functions
+#' @describeIn norm_vec The squared norm or the sum of squared elements of the vector x
+#' @return The squared Euclid norm or the sum of squared elements of the vector x
+#' 
+#' @export
+#' @examples
+#' norm_vec_sq(c(3,4)) # that returns 25
+#' norm_vec_sq(c(12,5)) # that returns 169
+norm_vec_sq  <-  function(x) {
+    (sum(x^2))
+}
 
-### The norm function for vector
-norm_vec     <-  function(x) sqrt(sum(x^2))
-norm_vec_sq  <-  function(x)     (sum(x^2))
 
-### The function is to check DATA.FRAME 
-### that it has numeric format for ALL columns and it has NO 'NA' values
+#' Function to check DATA.FRAME 
+#'
+#' Check that DATA.FRAME has numeric format for ALL the columns and it has NO 'NA' values
+#' @param l DATA.FRAME that should have data of numeric type
+#'
+#' @return TRUE if data.frame has ONLY numeric data and FALSE vice verse  
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_numeric_format( data.frame( A= c(9,0), B = c(4,6)) )  # TRUE
+#' check_numeric_format( data.frame( A= c(9,0), B = c(4,NA)) )  # Error due to NA value
+#' check_numeric_format( data.frame( A= c(9,'0'), B = c(4,6)) ) # Error due to character in the data
+#' }
 check_numeric_format  <-  function( l ) {
 
     if ( all(!is.na( l ) )  & all( sapply(l, is.numeric) ) & is.data.frame( l ) ) return( TRUE )
@@ -29,10 +61,36 @@ check_numeric_format  <-  function( l ) {
 
 ### Let define parameters of kernels such that k(x,y) = 1 if x = y
 
-Gaussian_kernel  <-  function( x1, x2 , sgm = 1)  exp( -1 * norm_vec_sq(x1 - x2) / (2 * sgm**2 ) )
+#' Kernel function for two vectors x1 and x2
+#'
+#' @param x1 Numeric vector x1
+#' @param x2 Numeric vector x2
+#' @param sgm Sigma parameter in Gaussian kernel
+#'
+#' @return Value of Gaussian kernel for two vectors and given sigma
+#' @export
+#'
+#' @examples
+#' Gaussian_kernel(x1 = c(3,4), x2 = c(3.4,5), sgm = 1 )
+#' Gaussian_kernel(x1 = c(3,4), x2 = c(3.4,5), sgm = 5 )
+#' Gaussian_kernel(x1 = c(3,4), x2 = c(4,5), sgm = 1 )
+Gaussian_kernel  <-  function( x1, x2 , sgm = 1){
+    exp( -1 * norm_vec_sq(x1 - x2) / (2 * sgm**2 ) )
+}
 
-Laplacian_kernel  <-  function( x1, x2 , b = 1 )  exp( -1 * norm_vec(x1 - x2)    / (2 * b ) )
-
+#' @describeIn Gaussian_kernel Value of Laplacian kernel for two vectors and given width
+#' @param b The width of Laplacian kernel
+#'
+#' @return Value of Laplacian kernel for two vectors and given width
+#' @export
+#'
+#' @examples
+#' Laplacian_kernel(x1 = c(3,4), x2 = c(4,5), b = 1) 
+#' Laplacian_kernel(x1 = c(3,4), x2 = c(4,5), b = 5) 
+#' Laplacian_kernel(x1 = c(3,4), x2 = c(3,5), b = 1) 
+Laplacian_kernel  <-  function( x1, x2 , b = 1 ){
+    exp( -1 * norm_vec(x1 - x2)    / (2 * b ) )
+}
 
 # Isolation kernel --------------------------------------------------------
 ### ISOLATION KERNEL BASED ON VORONOI DIAGRAM 
@@ -44,42 +102,20 @@ Laplacian_kernel  <-  function( x1, x2 , b = 1 )  exp( -1 * norm_vec(x1 - x2)   
 
 ### The functions
 
-### The function to get subset with size psi for Voronoi diagram 
-GET_SUBSET  <-  function( data_set, pnts ){
-    voronoi_subset  <-  data_set[  , pnts]
-    return( voronoi_subset )
-}
-
-### The function to calculate a similarity between two points
-### in the Matrix of real numbers.
-
-### It returns the value of similarity or Isolation KERNEL for TWO points  
-iKernel  <-  function( Matrix_iKernel, pnt_1, pnt_2, t ){
-    ### Input data:
-    ### t is a number of columns of Matrix_iKernel
-    ### pnt_1 and pnt_2 are IDs of points 1 and 2 in the Matrix_iKernel
-    ### 
-    
-    # t  <-  ncol( Matrix_iKernel )
-    smlrt  <- sum( Matrix_iKernel[ pnt_1, ]  == Matrix_iKernel[ pnt_2, ] ) / t
-    return( smlrt )
-}
-
-### The function to get Isolation Kernel between a new point and dataset
-iKernel_point_dataset  <-  function( Matrix_iKernel, t, nr, iFeature_point ){
-    ### Input data:
-    ### t  is a number of columns of Matrix_iKernel
-    ### nr is a number of rows of Matrix_iKernel
-    ### iFeature_point is feature map in RKHS for a new point
-    ### iFeature_point is a result of the add_new_point_iKernel()  function
-    ### 
-    
-    smlrt_p_data  <- sapply( X = 1:nr, FUN = function( x ) sum( iFeature_point  == Matrix_iKernel[ x, ] ) / t  )
-    
-    return( smlrt_p_data )
-}
-
-### The function to get feature representation in RKHS based on Voronoi diagram for WHOLE dataset
+#' The function to get feature representation in RKHS based on Voronoi diagram for WHOLE dataset
+#'
+#' @param psi Integer number related to the size of each Voronoi diagram
+#' @param t Integer number of trees in Isolation Kernel or dimension of RKHS
+#' @param data dataset of points, rows - points, columns - dimensions of a point
+#' @param talkative logical. If TRUE then print messages, FALSE for the silent execution 
+#' @param new logical. Is Matrix_Voronoi new ? If TRUE then function will calculate Matrix_Voronoi, if FALSE function will use input Matrix_Voronoi.
+#' @param Matrix_Voronoi Matrix of Voronoi diagrams that is used only if new = FALSE
+#'
+#' @return Feature representation in RKHS based on Voronoi diagram for WHOLE dataset
+#' @export
+#'
+#' @examples
+#' NULL
 get_voronoi_feature  <-  function( psi = 40, t = 350, data, talkative = FALSE, 
                                    new = TRUE,  Matrix_Voronoi = NULL ){
     ### Input parameters
@@ -133,10 +169,165 @@ get_voronoi_feature  <-  function( psi = 40, t = 350, data, talkative = FALSE,
                   M_dissim  = dissim ) )
 }
 
+#' @describeIn get_voronoi_feature The function to get RKHS mapping based on Isolation Kernel for a new point
+#'
+#' @param d1 Data point - usually it is an observation data point
+#' @param dissim Matrix of dissimilarity or distances between all points.
+#' @param nr Integer number of rows in matrix of distances (dissim) and also the size of dataset
+#'
+#' @return RKHS mapping for a new point based on Isolation Kernel mapping
+#' @export
+#'
+#' @examples
+#' 
+add_new_point_iKernel  <-  function( data, d1, Matrix_Voronoi, dissim, t, psi, nr ){
+    ### Input data:
+    ### d1 is a data point - usually it is an observation data point
+    ### dissim is a matrix of dissimilarity or distances between all points
+    ### nr is a number of rows in dissim matrix (matrix of distances)
+    ### nr is also size of data
+    
+    dissim_new  <-  matrix( 0,  nr +1, nr +1 )
+    dissim_new[1:nr, 1:nr]  <-  dissim 
+    
+    ### Get distances between new point and points from the dataset
+    dlt  =  data
+    dlt    <-    sapply( X = 1:ncol(dlt), FUN = function( x )  dlt[ , x ] - d1[ 1, x ] )
+    dissim_new[ nr+1,1:nr ]   <-  sapply( X = 1:nr, FUN = function(x) norm_vec( dlt[ x, ] ) )
+    dissim_new[ 1:nr, nr+1 ]  <-  dissim_new[ nr+1,1:nr ]
+    
+    
+    ### Get the feature map of a new point for EACH Voronoi diagram:
+    iFeature_point  <-  rep( 0, t)
+    
+    for ( j in 1:t ) {
+        pnts      <-  Matrix_Voronoi[ j, ] 
+        sub_data  <-  dissim_new[ , pnts] 
+        iFeature_point[ j ]  <-  which.min( sub_data[ nr + 1, ] )[1]
+    }
+    
+    if ( min(iFeature_point ) == 0) stop( 'Error in calculation of feature map for a new point.' )
+    return( iFeature_point )
+}
 
-### The function to get feature representation in RKHS based on Voronoi diagram for PART of dataset
-### The NEW PART of data set show be at the end of PREVIOUS dataset
-### The Matrix_Voronoi is based on the PREVIOUS dataset
+
+
+#' The function to get subset with size psi for Voronoi diagram
+#'
+#' @param data_set Data.frame of Voronoi diagram
+#' @param pnts Integer vector of indexes of columns of the data_set
+#'
+#' @return Subset of data_set with columns pnts
+#' @export
+#'
+#' @examples
+#' 
+#' 
+GET_SUBSET  <-  function( data_set, pnts ){
+    voronoi_subset  <-  data_set[  , pnts]
+    return( voronoi_subset )
+}
+
+### The function to calculate a similarity between two points
+### in the Matrix of real numbers.
+
+#' Function returns the value of similarity or Isolation KERNEL for TWO points
+#' 
+#' @description \code{iKernel()} function returns value of similarity or Isolation KERNEL 
+#' for TWO points that is number in the range \code{[0,1]}
+#' 
+#' @param Matrix_iKernel Matrix of indexes of Voronoi cells for each point and each tree based on Isolation Kernel calculation
+#' @param pnt_1 The first point of dataset
+#' @param pnt_2 The second point of dataset
+#' @param t is a number of columns of Matrix_iKernel or dimension of Matrix_iKernel (corresponding to the number of trees t)
+#' 
+#' @return The function \code{iKernel()} returns a value of similarity or Isolation KERNEL for TWO points
+#' @export
+#'
+#' @examples
+#' NULL
+iKernel  <-  function( Matrix_iKernel, pnt_1, pnt_2, t ){
+    ### Input data:
+    ### t is a number of columns of Matrix_iKernel
+    ### pnt_1 and pnt_2 are IDs of points 1 and 2 in the Matrix_iKernel
+    ### 
+    
+    # t  <-  ncol( Matrix_iKernel )
+    smlrt  <- sum( Matrix_iKernel[ pnt_1, ]  == Matrix_iKernel[ pnt_2, ] ) / t
+    return( smlrt )
+}
+
+#' @describeIn iKernel The function to get Isolation Kernel between a new point and dataset
+#'
+#' @description  \code{iKernel_point_dataset()} function returns vector of values of similarity based on Isolation Kernel between a new point and all the points of dataset
+#' 
+#' @param iFeature_point Feature mapping in RKHS for a new point, that can be gotten via \code{add_new_point_iKernel()} function
+#' @param nr is number of rows in Matrix_iKernel or size of dataset
+#' 
+#' @return The function \code{iKernel_point_dataset()} returns a value of Isolation Kernel between a new point and dataset represented via Matrix_iKernel
+#' @export
+#'
+#' @examples
+#' NULL
+iKernel_point_dataset  <-  function( Matrix_iKernel, t, nr, iFeature_point ){
+    ### Input data:
+    ### t  is a number of columns of Matrix_iKernel
+    ### nr is a number of rows of Matrix_iKernel
+    ### iFeature_point is feature map in RKHS for a new point
+    ### iFeature_point is a result of the add_new_point_iKernel()  function
+    ### 
+    
+    smlrt_p_data  <- sapply( X = 1:nr, FUN = function( x ) sum( iFeature_point  == Matrix_iKernel[ x, ] ) / t  )
+    
+    return( smlrt_p_data )
+}
+
+
+#' @describeIn iKernel The function to get weights from Feature mapping
+#'
+#' @description  \code{get_weights_iKernel()} function returns list of two objects: 
+#' the first object is numeric vector of weights for RKHS space, and 
+#' the second object is numeric vector of weights of similarity for iFeature_point 
+#' corresponding observation point
+#'
+#' @param GI The inverse Gram matrix
+#'
+#' @return The function \code{get_weights_iKernel()} returns the 
+#' list of weights for RKHS space and weights of similarity for iFeature_point
+#' @export 
+#'
+#' @examples
+#' NULL 
+get_weights_iKernel   <-   function( GI, Matrix_iKernel, t, nr, iFeature_point ){
+    
+    smlrt_p_data    =  iKernel_point_dataset( Matrix_iKernel, t, nr, iFeature_point )
+    
+    PHI_T_k_S       =  matrix( data = smlrt_p_data, ncol = 1 ) 
+    
+    WGHTS  =  GI  %*%  PHI_T_k_S
+    
+    return( list( weights_RKHS = WGHTS, weights_similarity = PHI_T_k_S ) )
+}
+
+
+#' The function to get feature representation in RKHS based on Voronoi diagram for PART of dataset
+#'
+#' @description \code{get_voronoi_feature_PART_dataset()} function returns 
+#' the feature (mapping) representation in RKHS based on Voronoi diagram for NEW PART of dataset. 
+#' The \code{Matrix_Voronoi} is based on the PREVIOUS dataset. 
+#' The NEW PART of dataset will appear at the end of PREVIOUS dataset
+#' 
+#' @param data Data.frame of new points
+#' @param talkative Logical parameter to print or do not print messages
+#' @param start_row Row number from which a new data should be added
+#' @param Matrix_Voronoi Matrix of Voronoi diagrams based on the PREVIOUS dataset
+#' 
+#' @return List of three matrices: Matrix_Voronoi, Matrix_iKernel and dissim
+#' 
+#' @export
+#' 
+#' @examples
+#' NULL
 get_voronoi_feature_PART_dataset  <-  function( data, talkative = FALSE, start_row,  Matrix_Voronoi ){
     ### Input parameters
     ### psi is a number of points in a subset / dimension of RKHS 
@@ -180,51 +371,18 @@ get_voronoi_feature_PART_dataset  <-  function( data, talkative = FALSE, start_r
                   M_dissim  = dissim ) )
 }
 
-### The function to get RKHS mapping for a new point (Isolation Kernel)
-add_new_point_iKernel  <-  function( data, d1, Matrix_Voronoi, dissim, t, psi, nr ){
-    ### Input data:
-    ### d1 is a data point - usually it is an observation data point
-    ### dissim is a matrix of dissimilarity or distances between all points
-    ### nr is a number of rows in dissim matrix (matrix of distances)
-    ### nr is also size of data
-    
-    dissim_new  <-  matrix( 0,  nr +1, nr +1 )
-    dissim_new[1:nr, 1:nr]  <-  dissim 
-    
-    ### Get distances between new point and points from the dataset
-    dlt  =  data
-    dlt    <-    sapply( X = 1:ncol(dlt), FUN = function( x )  dlt[ , x ] - d1[ 1, x ] )
-    dissim_new[ nr+1,1:nr ]   <-  sapply( X = 1:nr, FUN = function(x) norm_vec( dlt[ x, ] ) )
-    dissim_new[ 1:nr, nr+1 ]  <-  dissim_new[ nr+1,1:nr ]
-    
-    
-    ### Get the feature map of a new point for EACH Voronoi diagram:
-    iFeature_point  <-  rep( 0, t)
-    
-    for ( j in 1:t ) {
-        pnts      <-  Matrix_Voronoi[ j, ] 
-        sub_data  <-  dissim_new[ , pnts] 
-        iFeature_point[ j ]  <-  which.min( sub_data[ nr + 1, ] )[1]
-    }
-    
-    if ( min(iFeature_point ) == 0) stop( 'Error in calculation of feature map for a new point.' )
-    return( iFeature_point )
-}
 
-### The function to get weights from Feature mapping
-get_weights_iKernel   <-   function( GI, Matrix_iKernel, t, nr, iFeature_point ){
-    
-    smlrt_p_data    =  iKernel_point_dataset( Matrix_iKernel, t, nr, iFeature_point )
-    
-    PHI_T_k_S       =  matrix( data = smlrt_p_data, ncol = 1 ) 
-    
-    WGHTS  =  GI  %*%  PHI_T_k_S
-    
-    return( list( weights_RKHS = WGHTS, weights_similarity = PHI_T_k_S ) )
-}
-
-
-### The function to calculate kernel mean embedding for Isolation Kernel of parameters
+#' The function to calculate Maxima weighted kernel mean mapping for Isolation Kernel in RKHS related to parameters space
+#'
+#' @param parameters_Matrix_iKernel Matrix of all the points represented in RKHS related to parameters space
+#' @param Hilbert_weights Maximal weights in RKHS to get related part of kernel mean embedding from parameters_Matrix_iKernel
+#'
+#' @return Maxima weighted kernel mean mapping in the form of integer vector with length t (number of trees). 
+#' Each element of the vector is index of Voronoi cell with maximal weight in the Voronoi diagram 
+#' @export
+#'
+#' @examples
+#' NULL
 get_kernel_mean_embedding  <-  function( parameters_Matrix_iKernel, Hilbert_weights ){
     ### Input:
     ### parameters_Matrix_iKernel is a matrix of of all points of PARAMETERS in a Hilbert space
@@ -251,7 +409,19 @@ get_kernel_mean_embedding  <-  function( parameters_Matrix_iKernel, Hilbert_weig
 }
 
 
-### The function to get subset of points based on feature map:
+#' The function to get subset of points based on feature mapping
+#'
+#' @param dtst Dataset of all the original points
+#' @param Matrix_Voronoi Matrix of Voronoi diagrams based on the Isolation Kernel algorithm
+#' @param iFeature_point Feature mapping in RKHS for a point, 
+#' that can be gotten via \code{add_new_point_iKernel()} function
+#'
+#' @return The subset of dtst that has points 
+#' extracted with feature mapping of an observation point (iFeature_point)
+#' @export
+#'
+#' @examples
+#' NULL
 get_subset_of_feature_map   <-   function(dtst, Matrix_Voronoi, iFeature_point ){
     ### Input
     ### dtst is a dataset of original points (all points)
@@ -270,10 +440,19 @@ get_subset_of_feature_map   <-   function(dtst, Matrix_Voronoi, iFeature_point )
 }
 
 
-
-
 ### Gram matrix -------------------------------------------------------------
-### The function to calculate Gram matrix for Isolation Kernel method
+
+#' @describeIn iKernel The function to calculate Gram matrix for Isolation Kernel method
+#'
+#' @description \code{GRAM_iKernel()} is the function to calculate Gram matrix for Isolation Kernel method based on Voronoi diagrams
+#' 
+#' @param check_pos_def Logical parameter to check the Gram matrix is positive definite or do not check
+#'
+#' @return  The function \code{GRAM_iKernel()} returns Gram matrix of Isolation Kernel
+#' @export
+#'
+#' @examples
+#' NULL
 GRAM_iKernel    <-  function( Matrix_iKernel, check_pos_def = FALSE ){
     t   <-  ncol( Matrix_iKernel )
     nr  <-  nrow( Matrix_iKernel )
@@ -292,7 +471,21 @@ GRAM_iKernel    <-  function( Matrix_iKernel, check_pos_def = FALSE ){
     return( G )
 }
 
-### The function to get inverse Gram matrix
+#' The function to get inverse Gram matrix
+#'
+#' @description Function \code{get_inverse_GRAM()} allows to get inverse Gram matrix based on given
+#' positive regularization constant lambda
+#'  
+#' @param G Gram matrix gotten via \code{GRAM_iKernel()} function
+#' @param l Lambda parameter or positive regularization constant
+#' @param check_pos_def Logical parameter to check the Gram matrix is positive definite or do not check
+#'
+#' @return Function \code{get_inverse_GRAM()} returns the inverse Gram matrix 
+#' based on the given positive regularization constant lambda l
+#' @export
+#'
+#' @examples
+#' NULL
 get_inverse_GRAM  <-  function( G, l = 1E-6, check_pos_def = FALSE ){
     ### l is a regularization constant
     n = nrow( G )
@@ -311,9 +504,22 @@ get_inverse_GRAM  <-  function( G, l = 1E-6, check_pos_def = FALSE ){
 }
 
 
-### The function to check the positive definite property of Gram matrix:
+#' @describeIn get_inverse_GRAM The function to check the positive definite property of Gram matrix
+#'
+#' @description Function \code{check_positive_definite()} returns logical value about n trials on 
+#' 'is Gram matrix positive definite or not?' Just incorrect trial returns FALSE
+#' 
+#' @param n Number of iterations to check the positive definite property
+#'
+#' @return Function \code{check_positive_definite()} returns logical value: \cr 
+#' TRUE if Gram matrix is positive definite, and FALSE if it is not
+#' @export
+#'
+#' @examples
+#' NULL
 check_positive_definite  <-  function( G , n = 10 ){
-    ### G - Gram matrix, n - number of iterations to check the positive definite property
+    ### G - Gram matrix, 
+    ### n - number of iterations to check the positive definite property
     nr = nrow( G )
     check_pf  =  TRUE
     
@@ -329,13 +535,41 @@ check_positive_definite  <-  function( G , n = 10 ){
 
 
 
-
-
-
-
 # Kernel ABC --------------------------------------------------------------
 
-
+#' Function to get Approximate Bayesian Computation based on Maxima Weighted Isolation Kernel mapping
+#'
+#' @description The function \code{iKernelABC()} is used to get Approximate Bayesian Computation 
+#' based on Maxima Weighted Isolation Kernel mapping.
+#' On given data frame of parameters, statistics of the simulations and an observation, 
+#' using the internal parameters psi and t, 
+#' the function \code{iKernelABC()} returns the estimation of a parameter corresponding to
+#' Maxima weighted Isolation Kernel ABC method. 
+#'
+#' @param psi Integer number. Size of each Voronoi diagram or number of areas/points in the Voronoi diagrams
+#' @param t Integer number of trees in the Isolation Forest
+#' @param param Data frame of parameters of the model
+#' @param stat.sim Summary statistics of the simulations (model output)
+#' @param stat.obs Summary statistics of the observation point
+#' @param talkative Logical parameter to print or do not print messages
+#' @param check_pos_def Logical parameter to check the Gram matrix is positive definite or do not check
+#'
+#' @return The function \code{iKernelABC()} returns the list of :
+#' - kernel_mean_embedding is a maxima weighted kernel mean embedding (mapping) related to the observation point;
+#' - parameters_Matrix_Voronoi is a matrix of information about Voronoi trees (rows - trees, columns - Voronoi points/areas IDs) for parameters data set;
+#' - parameters_Matrix_iKernel is a matrix of of all points of PARAMETERS in a Hilbert space (rows - points, columns - isolation trees);
+#' - Hilbert_weights is a weights in Hilbert space to get maxima weighted kernel mean embedding for parameters_Matrix_iKernel;
+#' - Matrix_iKernel is a matrix of all points of simulations in a Hilbert space (rows - points, columns - isolation trees);
+#' - iFeature_point is a feature embedding mapping for the OBSERVATION point;
+#' - similarity is a vector of similarities between the simulation points and observation point;
+#' - Matrix_Voronoi is a matrix of information about Voronoi trees (rows - trees, columns - Voronoi points/areas IDs);
+#' - t is a number of trees in the Isolation Forest; 
+#' - psi is a number of areas/points in the Voronoi diagrams
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
 iKernelABC  <-  function( psi = 40, t = 350, param, 
                           stat.sim, stat.obs, talkative = FALSE, check_pos_def = TRUE ){
     ### Input parameters
@@ -419,17 +653,99 @@ iKernelABC  <-  function( psi = 40, t = 350, param,
 
 # SUDOKU ------------------------------------------------------------------
 
-### This is a heuristic algorithm to seek a space/area related to 
-### the feature mapping in Hilbert space for the dataset of the parameters
+#' The function to get the best tracer bullets related to kernel mean embedding
+#' 
+#' @description The function \code{sudoku()} allows to get the best tracer bullets related to kernel mean embedding.
+#' The calculation performs ONLY for parameters dataset DT = par.sim. 
+#' This function performs a heuristic algorithm to seek a space/area related to 
+#' the feature mapping in Hilbert space for the dataset of the parameters. \cr
+#' The main idea of the algorithm is just: \cr
+#' 1) Generate points between the centers of Voronoi diagrams related to 
+#' the Maxima weighted feature mapping based on Isolation Kernel \cr
+#' 2) Following strategy to puzzle out of SUDOKU: delete all points that do not match feature mapping \cr
+#' 3) Output: The remaining points should be corresponding to the feature mapping.  
+#' 
+#' @param DT Whole dataset of parameters
+#' @param iKernelABC Result of calculations based on Isolation Kernel ABC 
+#' that can be gotten by the function \code{iKernelABC()}
+#' @param n_bullets Integer number of tracer bullets / additional points between the TWO most distant points
+#' @param n_best Integer number of the best tracer bullets / points 
+#' to consider them at the next algorithmic step
+#' @param halfwidth Criterion to choose the best tracer points like: \cr
+#' \code{if similarity_of_point >= halfwidth} then it is the point to be included to the pool of the best points 
+#' 
+#' @return The function \code{sudoku()} returns the list of next objects:
+#' - tracer_bullets that is all the points generated during the run of the algorithm, 
+#' - criterion that is a value of the similarity that is used to choose the best tracer points,  
+#' - best_tracer_bullets that is the best tracer points that have similarity more or equal than \strong{criterion} value,
+#' - surroundings_best_points that is the best tracer points that have similarity more or equal than \strong{halfwidth} value, 
+#' - feature_tracers that is results of the function \code{get_voronoi_feature_PART_dataset()} applied to the new tracer points, 
+#' - similarity_to_mean that is numeric vector of similarities of all the tracers points.
+#' 
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+#' 
+sudoku  <-  function( DT , iKernelABC, n_bullets = 20, n_best = 10, halfwidth = 0.5 ){
+    ### Input:
+    ### DT is a data set of parameters
+    ### iKernelABC is a result of calculations based on Isolation Kernel ABC
+    ### n_bullets is a number of tracer bullets / additional points between the TWO farthest distance points
+    ### n_best is a number of the best tracer bullets / points
+    
+    if ( FALSE){
+        sbst_feature_Y  =  get_subset_of_feature_map( dtst  =  stat.sim, 
+                                                      Matrix_Voronoi = iKernelABC$Matrix_Voronoi, 
+                                                      iFeature_point = iKernelABC$iFeature_point )
+    }
+    
+    sbst_feature_Param  =  get_subset_of_feature_map( dtst  =  DT, 
+                                                      Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi, 
+                                                      iFeature_point = iKernelABC$kernel_mean_embedding )
+    
+    tracer_bullets   =  get_tracer_bullets( DF = sbst_feature_Param, n_bullets = n_bullets )
+    
+    feature_tracers  =  get_voronoi_feature_PART_dataset( data = rbind( DT, tracer_bullets ), 
+                                                          talkative = FALSE, start_row = nrow( DT ) + 1 ,  
+                                                          Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi )
+    
+    ### Get similarity vector between kernel mean embedding and tracer bullets / new points
+    sim_tracer_bullets  =  iKernel_point_dataset( Matrix_iKernel = feature_tracers$M_iKernel, 
+                                                  t = iKernelABC$t, nr = nrow( feature_tracers$M_iKernel ), 
+                                                  iFeature_point = iKernelABC$kernel_mean_embedding )
+    
+    ### Lets take the best points:
+    criterion  =  sort(sim_tracer_bullets, decreasing = TRUE )[ n_best ]
+    best_tracer_bullets  =  tracer_bullets[ which(sim_tracer_bullets >= criterion), ]
+    cr_out  =  criterion
+    
+    # criterion  =  sort(sim_tracer_bullets, decreasing = TRUE )[ n_best * 4 ]
+    surroundings_best_points  =  tracer_bullets[ which(sim_tracer_bullets >= halfwidth ), ]
+    
+    return( list( tracer_bullets  =  tracer_bullets, 
+                  criterion  =  cr_out,  
+                  best_tracer_bullets  =  best_tracer_bullets,
+                  surroundings_best_points  =  surroundings_best_points, 
+                  feature_tracers  =  feature_tracers, 
+                  similarity_to_mean  =  sim_tracer_bullets ) )
+}
 
-### Idea is just:
-###     1) Generate points between the centers of Voronoi diagrams related to the feature mapping
-###     2) Following strategy to puzzle out of SUDOKU: delete all points 
-###         that do not match feature map. 
-###     Output: The remaining points should be related to feature mapping.  
-
-### Get pairs from Data Frame
-### Output is a list of pairs
+#' @describeIn sudoku The function to get pairs from Data Frame
+#'
+#' @description The function \code{get_pairs_of_data_frame()} is used to get pairs of points 
+#' from the Data Frame that is the most distant each other.
+#' In other words, the algorithm seeks the most distant coupled point to each point from the data frame
+#'
+#' @param DF Data Frame that is usually part of whole data frame of parameters, 
+#' and this part is corresponding also to Voronoi cites/seeds
+#'
+#' @return The function \code{get_pairs_of_data_frame()} returns the list of the pairs of points
+#' @export
+#'
+#' @examples
+#' NULL 
 get_pairs_of_data_frame  <-  function( DF ){
     ### Input
     ### DF is data frame to get pairs
@@ -446,8 +762,20 @@ get_pairs_of_data_frame  <-  function( DF ){
     return( GEN_DF )
 }
 
-### The function to generate points between pair of given points
-### Output is data frame of points
+
+#' @describeIn sudoku The function to generate points between the pair of given points
+#'
+#' @description The function \code{generate_points_between_two_points()} is used to generate 
+#' points between two given points
+#'
+#' @param pair Data frame of two points
+#' @param n Integer number of points that should be located between two input points
+#'
+#' @return The function \code{generate_points_between_two_points()} returns data frame of generated points between two given points
+#' @export
+#'
+#' @examples
+#' NULL
 generate_points_between_two_points  <-  function( pair, n = 10 ){
     ### Input
     ### pair is a data.frame of two points
@@ -462,7 +790,21 @@ generate_points_between_two_points  <-  function( pair, n = 10 ){
     return( DF )
 }
 
-### The function to get 'tracer bullets' - generated points between all the farthest distance points
+
+#' @describeIn sudoku The function to get 'tracer bullets' or tracer points 
+#'
+#' @description The function \code{get_tracer_bullets()} is used to to get 'tracer bullets' or tracer points 
+#' generated between all the pairs of the most distant points
+#'
+#' @param DF Data frame of oints that is used for generation of tracer points, 
+#' so it is usually a subset of points corresponding to Voronoi cites/seeds
+#' @param n_bullets Integer number of tracer points between each pair of points from DF
+#'
+#' @return The function \code{get_tracer_bullets()} returns data frame of generated tracer points
+#' @export
+#'
+#' @examples
+#' NULL 
 get_tracer_bullets  <-  function( DF , n_bullets = 20 ){
     ### Input:
     ### DF is a data frame
@@ -483,51 +825,7 @@ get_tracer_bullets  <-  function( DF , n_bullets = 20 ){
     return( tracer_bullets )
 }
 
-### The function to get the best tracer bullets related to kernel mean embedding.
-### The calculation performs ONLY for parameters dataset DT = par.sim 
-sudoku  <-  function( DT , iKernelABC, n_bullets = 20, n_best = 10, halfwidth = 0.5 ){
-    ### Input:
-    ### DT is a data set of parameters
-    ### iKernelABC is a result of calculations based on Isolation Kernel ABC
-    ### n_bullets is a number of tracer bullets / additional points between the TWO farthest distance points
-    ### n_best is a number of the best tracer bullets / points
-    
-    if ( FALSE){
-        sbst_feature_Y  =  get_subset_of_feature_map( dtst  =  stat.sim, 
-                                                  Matrix_Voronoi = iKernelABC$Matrix_Voronoi, 
-                                                  iFeature_point = iKernelABC$iFeature_point )
-    }
-    
-    sbst_feature_Param  =  get_subset_of_feature_map( dtst  =  DT, 
-                                                      Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi, 
-                                                      iFeature_point = iKernelABC$kernel_mean_embedding )
-    
-    tracer_bullets   =  get_tracer_bullets( DF = sbst_feature_Param, n_bullets = n_bullets )
-    
-    feature_tracers  =  get_voronoi_feature_PART_dataset( data = rbind( DT, tracer_bullets ), 
-                                        talkative = FALSE, start_row = nrow( DT ) + 1 ,  
-                                        Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi )
-    
-    ### Get similarity vector between kernel mean embedding and tracer bullets / new points
-    sim_tracer_bullets  =  iKernel_point_dataset( Matrix_iKernel = feature_tracers$M_iKernel, 
-                                                  t = iKernelABC$t, nr = nrow( feature_tracers$M_iKernel ), 
-                                                  iFeature_point = iKernelABC$kernel_mean_embedding )
-    
-    ### Let take the best points:
-    criterion  =  sort(sim_tracer_bullets, decreasing = TRUE )[ n_best ]
-    best_tracer_bullets  =  tracer_bullets[ which(sim_tracer_bullets >= criterion), ]
-    cr_out  =  criterion
-    
-    # criterion  =  sort(sim_tracer_bullets, decreasing = TRUE )[ n_best * 4 ]
-    surroundings_best_points  =  tracer_bullets[ which(sim_tracer_bullets >= halfwidth ), ]
-    
-    return( list( tracer_bullets  =  tracer_bullets, 
-                  criterion  =  cr_out,  
-                  best_tracer_bullets  =  best_tracer_bullets,
-                  surroundings_best_points  =  surroundings_best_points, 
-                  feature_tracers  =  feature_tracers, 
-                  similarity_to_mean  =  sim_tracer_bullets ) )
-}
+
 
 
 
@@ -537,7 +835,40 @@ sudoku  <-  function( DT , iKernelABC, n_bullets = 20, n_best = 10, halfwidth = 
 
 # SPIDERWEB algorithm -----------------------------------------------------
 
-spiderweb  <-  function( psi = 4, t = 35, param = par.sim, 
+#' @describeIn iKernelABC The function to get the best value of parameter corresponding to 
+#' Maxima Weighted Isolation Kernel mapping which is related to an observation point
+#' 
+#' @description The function \code{spiderweb()} itteratively generates tracer points gotten 
+#' from \code{sudoku()} algorithm, based on the simple procedure: \cr
+#' - making a reflection of the top points from the best point, \cr 
+#' - and then generating the point tracers between them, \cr
+#' - finally, the algorithm chooses again the top points and the best point (\code{sudoku()} function is used),
+#' - repeat all the steps until condition to be \code{TRUE}: \cr
+#' \code{abs( max( sim_tracers ) - sim_previous ) < epsilon }
+#'
+#' @param n_bullets Integer number of tracer bullets / additional points between the TWO most distant points
+#' @param n_best Integer number of the best tracer bullets / points 
+#' to consider them at the next algorithmic step
+#' @param halfwidth Criterion to choose the best tracer points like: \cr
+#' \code{if similarity_of_point >= halfwidth} then it is the point to be included to the poool of the best points
+#' @param epsilon Criterion to stop algorithm \code{spiderweb()} that isused to check: \cr
+#' \code{if ( abs( max( sim_tracers ) - sim_previous ) < epsilon ) break}
+#'
+#' @return The function \code{spiderweb()} returns the list of the next objects:
+#' - input.parameters the list of all the input parameters for Isolation Kernel ABC method;
+#' - par.best that is data frame of one point that is the best from all the generated tracer points;
+#' - par.top that is data frame of n_best points that are the top from all the generated tracer points; 
+#' - sim.top that is numeric vecor of similarities of the top points;
+#' - sim.best that is numeric value of the similarity of the best tracer point;
+#' tracers_all that is data frame of all the generated tracer points; 
+#' - sim.tracers_all that is numeric vector of similarities of all the generated tacer points;
+#' - iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters}.
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+spiderweb  <-  function( psi = 4, t = 35, param = param, 
                          stat.sim = stat.sim, stat.obs = stat.obs, 
                          talkative = FALSE, check_pos_def = FALSE ,
                          n_bullets = 10, n_best = 20, halfwidth = 0.5, 
@@ -621,8 +952,55 @@ spiderweb  <-  function( psi = 4, t = 35, param = par.sim,
 
 
 # MSE ---------------------------------------------------------------------
+
 # MSE is mean square error:
 # for parameters (if true parameter is known):
+
+
+#' The function to get the mean square error values for statistics of simulations
+#'
+#' @description The function \code{MSE_sim()} allows to get 
+#' the mean square error values for statistics of simulations
+#'
+#' @param stat.sim Summary statistics of the simulations (model output)
+#' @param stat.obs Summary statistics of the observation point
+#'
+#' @return The function \code{MSE_sim()} returns numeric vector of
+#' the mean square error values for statistics of simulations
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+MSE_sim   <-   function( stat.obs, stat.sim ){
+    if ( nrow( stat.obs ) > 1 ) stop( 'Please, use stat.obs for each row data independently. 
+                                            stat.obs should be single row data.frame')
+    # diff between stat.obs and stat.sim
+    df   =  sapply( X = 1:ncol( stat.obs ), FUN = function( x )  stat.sim[,x] - stat.obs[1,x]  )
+    if ( !is.data.frame( df ) & !is.matrix( df ) ) df = as.data.frame( matrix( df, nrow = 1 ) )
+    mse  =  sapply( X = 1:nrow(df) , FUN = function( x ) sum( df[x,] ** 2 ) )
+    
+    return( mse ) # mean( mse ) )
+}
+
+
+#' @describeIn MSE_sim The function calculates mean square error (MSE) value 
+#' for parameters as differences between them and already the known truth parameter 
+#'
+#' @description The function \code{MSE_parameters()} allows to get MSE for parameters if the truth parameter is known
+#'
+#' @param par.truth The truth parameter
+#' @param par.top Parameters from the top of similarities of \code{iKernelABC()} algorithm
+#' @param par.best The best parameter from \code{iKernelABC()} algorithm
+#'
+#' @return The function \code{MSE_parameters()} returns list of two numbers: \cr
+#' - mean of MSE values for all the points from par.top; \cr
+#' - MSE value for the point of par.best 
+#' 
+#' @export
+#' 
+#' @examples
+#' NULL 
 MSE_parameters   <-   function( par.truth, par.top = NULL, par.best ){
     names( par.truth )  =  names( par.best )
     if ( nrow(par.best) > 1 ) stop( 'Please, use par.top for multi row data. par.best should be single row data.frame')
@@ -645,138 +1023,54 @@ MSE_parameters   <-   function( par.truth, par.top = NULL, par.best ){
     }
 }
 
-# for output of simulation:
-# MSE is mean square error:
-MSE_sim   <-   function( stat.obs, stat.sim ){
-    if ( nrow( stat.obs ) > 1 ) stop( 'Please, use stat.obs for each row data independently. 
-                                            stat.obs should be single row data.frame')
-    # diff between stat.obs and stat.sim
-    df   =  sapply( X = 1:ncol( stat.obs ), FUN = function( x )  stat.sim[,x] - stat.obs[1,x]  )
-    if ( !is.data.frame( df ) & !is.matrix( df ) ) df = as.data.frame( matrix( df, nrow = 1 ) )
-    mse  =  sapply( X = 1:nrow(df) , FUN = function( x ) sum( df[x,] ** 2 ) )
-    
-    return( mse ) # mean( mse ) )
-}
-
-# PLOT --------------------------------------------------------------------
-
-plot_sudoku_2D   <-  function( stat.sim, par.sim, stat.obs, iKernelABC, rslt, 
-                              ind_X, ind_Y, names = c( 'X1', 'X2' ), draw_Y = FALSE, xlim, ylim,
-                              show_tracer = TRUE, show_obs = TRUE, show_appropriate = TRUE, show_best = TRUE,
-                              show_u_point = TRUE, show_legend = FALSE ){
-    
-    sbst_feature_Param  =  get_subset_of_feature_map( dtst  =  par.sim,
-                                                      Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi,
-                                                      iFeature_point = iKernelABC$kernel_mean_embedding )
-    if ( draw_Y ){
-        sbst_feature_Y  =  get_subset_of_feature_map( dtst  =  stat.sim,
-                                                  Matrix_Voronoi = iKernelABC$Matrix_Voronoi,
-                                                  iFeature_point = iKernelABC$iFeature_point )
-    }
-    pr = par()
-    l = par.sim[ , c( ind_X, ind_Y ) ]
-    par( mgp = c(2.2, 0.5, 0), font.axis = 2, font.lab = 2 )
-    plot( l[,1], l[,2], pch = 18, xlab = names[1], ylab = names[2], 
-          axes = FALSE, cex.lab = 1.5, xlim = xlim, ylim = ylim )
-          
-          # cex.lab = 1.3 , cex.axis = 1.4 , mar = c(4,4,2,2),
-          # tck = 0.04) ,
-    # box()
-    
-    axis( 1, font = 2, tck = 0.03, cex.axis = 1.4 )
-    axis( 2, font = 2, tck = 0.03, cex.axis = 1.4)    
-    axis( 3, font = 2, tck = 0.03, cex.axis = 1.4, labels = FALSE )
-    axis( 4, font = 2, tck = 0.03, cex.axis = 1.4, labels = FALSE ) 
-    
-    
-    
-    if ( draw_Y )    points( sbst_feature_Y[,ind_X], sbst_feature_Y[,ind_Y], col = 'red', cex = 1.6 )
-    if ( show_u_point ) points( sbst_feature_Param[,ind_X], sbst_feature_Param[,ind_Y], col = 'blue', cex = 1.4, pch = 0 )
-    if ( show_tracer ) points( rslt$tracer_bullets[,ind_X], rslt$tracer_bullets[,ind_Y], col = alpha('grey', 0.2 ), cex = 0.8, pch = 20 )
-    if ( show_appropriate ) points( rslt$surroundings_best_points[,ind_X], rslt$surroundings_best_points[,ind_Y], 
-            col = 'blue', cex = 0.5, pch = 20 )
-    if ( show_best ) points( rslt$best_tracer_bullets[,ind_X], rslt$best_tracer_bullets[,ind_Y], col = 'red', cex = 0.8, pch = 5 )
-    if (show_obs ) points( stat.obs[,ind_X], stat.obs[,ind_Y], col = 'red', cex = 2.4, pch = 4, lwd = 3 )
-    
-    if ( show_legend ) legend( x = 7.7, y = 10.3, bg = '#E0FFFF', box.col = 'grey',
-                col = c('black', 'red', 'blue', 'grey', 'blue', 'red' ), 
-                pch = c( 18,      4,       0 ,  1,    20,   5  ), bty = "o", 
-                legend = c('Simulation','Truth observation', 
-                           expression( paste('Voronoi sites ', upsilon[j]^'*' ) ),
-                            'Tracers', 'iKernel > 0.5', 
-                           'Top 20 points' )  
-                )
-
-}
-
-
-
-plot_web_2D   <-  function( stat.sim, par.sim, stat.obs, iKernelABC, web, ind_X, ind_Y, 
-                                names = c( 'P1', 'P2' ), draw_Y = FALSE, xlim, ylim,
-                               show_tracer = TRUE, show_obs = TRUE, show_top = TRUE, show_best = TRUE,
-                               show_u_point = TRUE, show_legend = FALSE ){
-    
-    sbst_feature_Param  =  get_subset_of_feature_map( dtst  =  par.sim,
-                                                      Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi,
-                                                      iFeature_point = iKernelABC$kernel_mean_embedding )
-    if ( draw_Y ){
-        sbst_feature_Y  =  get_subset_of_feature_map( dtst  =  stat.sim,
-                                                      Matrix_Voronoi = iKernelABC$Matrix_Voronoi,
-                                                      iFeature_point = iKernelABC$iFeature_point )
-    }
-    pr = par()
-    l = par.sim[ , c( ind_X, ind_Y ) ]
-    par( mgp = c(2.2, 0.5, 0), font.axis = 2, font.lab = 2 )
-    plot( l[,1], l[,2], pch = 18, xlab = names[1], ylab = names[2], 
-          axes = FALSE, cex.lab = 1.5, xlim = xlim, ylim = ylim )
-    
-    # cex.lab = 1.3 , cex.axis = 1.4 , mar = c(4,4,2,2),
-    # tck = 0.04) ,
-    # box()
-    
-    axis( 1, font = 2, tck = 0.03, cex.axis = 1.4 )
-    axis( 2, font = 2, tck = 0.03, cex.axis = 1.4)    
-    axis( 3, font = 2, tck = 0.03, cex.axis = 1.4, labels = FALSE )
-    axis( 4, font = 2, tck = 0.03, cex.axis = 1.4, labels = FALSE ) 
-    
-    
-    
-    if ( draw_Y )    points( sbst_feature_Y[,ind_X], sbst_feature_Y[,ind_Y], col = 'red', cex = 1.6 )
-    if ( show_u_point ) points( sbst_feature_Param[,ind_X], sbst_feature_Param[,ind_Y], col = 'blue', cex = 1.4, pch = 0 )
-    if ( show_tracer ) points( web$tracers_all[,ind_X], web$tracers_all[,ind_Y], col = alpha('grey', 0.2 ), cex = 0.8, pch = 20 )
-    if ( show_top ) points( web$par.top[,ind_X], web$par.top[,ind_Y], 
-                                    col = 'blue', cex = 0.5, pch = 20 )
-    if ( show_best ) points( web$par.best[,ind_X], web$par.best[,ind_Y], col = 'red', cex = 0.8, pch = 5 )
-    if (show_obs ) points( stat.obs[,ind_X], stat.obs[,ind_Y], col = 'red', cex = 2.4, pch = 4, lwd = 3 )
-    
-    if ( show_legend ) legend( x = 7.7, y = 10.3, bg = '#E0FFFF', box.col = 'grey',
-                               col = c('black', 'red', 'blue', 'grey', 'blue', 'red' ), 
-                               pch = c( 18,      4,       0 ,  1,    20,   5  ), bty = "o", 
-                               legend = c('Simulation','Truth observation', 
-                                          expression( paste('Voronoi sites ', upsilon[j]^'*' ) ),
-                                          'Tracers', 'Top 20 points', 'The best point' )  
-    )
-    
-}
 
 
 # DRAFT_FUCTIONS -----------------------------------------------------------
 
 
 
-### May be wrong:
+### To check correctness:
+
+#' The function to get mode of the input vector
+#' 
+#' @description The function \code{Get_Mode} returns the mode of vector. \cr 
+#' The mode is the value that appears most often in a dataset. 
+#' 
+#' @param v Input vector of the integer, numeric numbers or characters 
+#'
+#' @return The function \code{Get_Mode} returns the mode of vector
+#' 
+#' @export
+#'
+#' @examples
+#' NULL 
 Get_Mode <- function(v) {
     uniqv <- unique(v)
     return( uniqv[ which.max(tabulate(match(v, uniqv))) ] )
 }
-### May be wrong:
-Mean_iKrnl  <- function( param, sm ){
+
+
+
+#' The function returns the weighted mean of the parameter based on Isolation Kernel ABC method
+#'
+#' @description The function \code{Mean_iKernel_parameters()} returns the weighted mean of the parameter 
+#' that was calculated with \code{KernelABC()} function that represents Isolation Kernel ABC method 
+#' 
+#' @param param Data frame of parameters
+#' @param sm Numeric vector of weights gotten from \code{iKernelABC()} function
+#'
+#' @return The function \code{Mean_iKernel_parameters()} returns the weighted mean of the parameter 
+#' @export
+#'
+#' @examples 
+#' NULL 
+Mean_iKernel_parameters  <- function( param, sm ){
     Mean_iKrnl = rep( 0, length( param ) )
     sum_sm  =  sum( sm ) 
     for (i in 1:length( param )) {
         Mean_iKrnl[i] = sum( sm * param[,i]) / sum_sm 
     }
-    names(Mean_iKrnl) <- names( param)
+    names(Mean_iKrnl) <- names( param )
     return( Mean_iKrnl )
 }
 

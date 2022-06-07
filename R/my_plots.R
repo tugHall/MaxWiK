@@ -30,7 +30,7 @@ plot_2D   <-  function( x, y, names = c( 'X', 'Y' ), pch = 18, col = 'blue', cex
                         xr = c(-10,10), yr = c(-10,10),
                         safe_pdf = FALSE, filename = './plot.pdf', change_par = TRUE ){
     sapply( X = c('grDevices', 'graphics' ), FUN = function( x ) check_pkg( x ) )
-    define_par_for_plot( change_par_back = change_par )
+    # define_par_for_plot( change_par_back = change_par )
     rp = 1
     if ( safe_pdf )    {
         pdf( filename, width = 8, height = 8 )
@@ -76,12 +76,12 @@ plot_2D   <-  function( x, y, names = c( 'X', 'Y' ), pch = 18, col = 'blue', cex
 #' @export
 #'
 #' @examples
-#' DF = tugHall_dataset$data_avg
-#' plot_2D_lines( x = DF[, 1 ], DF, nl = 8:12 , xr = c(1,max(DF$Time) ), yr = c(0,1) )
-#' xr = c(1,max(DF$Time) )
-#' yr = c(0,max(DF[,14],DF[,16],DF[,17] ))
-#' plot_2D_lines( x = DF[, 1 ], DF, nl = c(14,16,17) , xr =xr, yr = yr )
-#' plot_2D_lines( x = DF[, 1 ], DF, nl = 18:22 , xr = c(1,max(DF$Time) ), yr = c(0,1) )
+#' NULL
+#' # plot_2D_lines( x = DF[, 1 ], DF, nl = 8:12 , xr = c(1,max(DF$Time) ), yr = c(0,1) )
+#' # xr = c(1,max(DF$Time) )
+#' # yr = c(0,max(DF[,14],DF[,16],DF[,17] ))
+#' # plot_2D_lines( x = DF[, 1 ], DF, nl = c(14,16,17) , xr =xr, yr = yr )
+#' # plot_2D_lines( x = DF[, 1 ], DF, nl = 18:22 , xr = c(1,max(DF$Time) ), yr = c(0,1) )
 plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
                               legend_names = '',
                                col = c( 'blue3', 'darkmagenta', 'red', 'green4',
@@ -92,7 +92,7 @@ plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
                         type = 'l' , logscale = '' , draw_key  =  TRUE, change_par = TRUE ){
 
     sapply( X = c( 'grDevices', 'graphics' ), FUN = function( x ) check_pkg( x ) )
-    define_par_for_plot( change_par_back = change_par )
+    # define_par_for_plot( change_par_back = change_par )
     rp = 1
     if ( safe_pdf )    {
         pdf( filename, width = 8, height = 8 )
@@ -131,122 +131,152 @@ plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
 }
 
 
-#' Function to plot order of genes dysfunction as a step function with number of cells related to each order
+
+
+# PLOT SUDOKU AND SPIDERWEB--------------------------------------------------------------------
+
+#' Function to plot all the results of the function \code{sudoku()}
+#' 
+#' @description The function \code{plot_sudoku_2D} draws all the results of the function \code{sudoku()}
+#' 
+#' @param stat.sim Summary statistics of the simulations (model output)
+#' @param par.sim Data frame of parameters of the model
+#' @param stat.obs Summary statistics of the observation point
+#' @param iKernelABC Result of calculations based on Isolation Kernel ABC 
+#' that can be gotten by the function \code{iKernelABC()}
+#' @param rslt Results of function \code{sudoku()}
+#' @param ind_X Column index of the par.sim data frame to plot as X axes 
+#' @param ind_Y Column index of the par.sim data frame to plot as Y axes 
+#' @param names Vector of axes names, by default \code{names = c( 'Parameter_1', 'Parameter_2' )}
+#' @param xlim Numeric vector of the range for X axes
+#' @param ylim Numeric vector of the range for Y axes
+#' @param show_tracer Logical to show or do not show all the tracer points
+#' @param show_obs Logical to show or do not show the stat.obs or parameter of observation point (if known)
+#' @param show_appropriate Logical to show or do not show all the points of 
+#' the object \code{rslt$surroundings_best_points} from results of \code{sudoku()} function
+#' @param show_best Logical to show or do not show the best point of the results of \code{sudoku()} function
+#' @param show_u_point Logical to show or do not show the estimated point of parameter for an observation 
+#' @param show_legend Logical to show or do not show the legend 
 #'
-#' @param rdr_dysf Order of genes dysfunction as a data.frame
-#' @param pos Coordinates of list of order of genes dysfunction
-#' @param logscale Parameter logscale for plot function
-#' @param cex Parameter cex for plot function
-#' @param change_par Indicator to change par() or not for a plot. By default change_par = TRUE, after plot it will be returned to initial values
-#'
-#' @return NULL, making plot with step function of order of genes' dysfunction
+#' @return Plot all the results of \code{sudoku()} function 
+#' 
 #' @export
-#'
+#' 
 #' @examples
-#' rdr_dysf = tugHall_dataset$rdr_dysf
-#' plot_order_dysfunction( rdr_dysf , logscale = '', pos = c(8, 5000), cex = 1.4)
-#' plot_order_dysfunction( rdr_dysf , logscale = 'y', pos = c(10, 100), cex = 1.2)
-plot_order_dysfunction  <-  function( rdr_dysf , pos = c(0,100),
-                                      logscale = 'y', cex = 1, change_par = TRUE ){
-    sapply( X = c( 'grDevices', 'graphics' ), FUN = function( x ) check_pkg( x ) )
-    define_par_for_plot( change_par_back = change_par )
-    tbl_rdr_dysf  =  aggregate( N_cells ~ order, data = rdr_dysf, FUN = sum )
-    tbl_rdr_dysf  =  tbl_rdr_dysf[ order( tbl_rdr_dysf$N_cells, decreasing = T ), ]
-
-    if ( logscale == '' ) cfcnt = 1.05 else cfcnt = 10.5
-
-    plot_2D_lines( x = 1:nrow(tbl_rdr_dysf), DF = tbl_rdr_dysf, nl = 2 ,
-                   names = c( 'Index', 'Number of cells' ),
-                   yr = c(1, max( tbl_rdr_dysf$N_cells ) * cfcnt ),
-                   xr = c(0.1, round( nrow( tbl_rdr_dysf )+5, digits = -1) ),
-                   type = 's', logscale = logscale,  draw_key  =  FALSE )
-    txt = NULL
-    for( i in 1:nrow( tbl_rdr_dysf) ) {
-        txt  = paste( txt, paste( i, tbl_rdr_dysf$order[ i ] ) , '\n', collapse = '   ')
-    }
-    text( x = pos[1], y = pos[2],
-          labels = txt , pos = 4, cex = cex , col = 'red')
-}
-
-
-# Plot clones evolution ---------------------------------------------------
-
-
-#' Function to plot clone evolution
-#'
-#' @param data_flow data.frame with results of simulation at each time step
-#' @param threshold Vector two numbers from 0 to 1 to show clones with relative final numbers of cells in the range of threshold
-#' @param lwd Line width in the plot function
-#' @param hue Parameter hue in the function randomColor from library randomcoloR
-#' @param luminosity Parameter luminosity in the function randomColor from library randomcoloR
-#' @param yr Range for Y axes
-#' @param add_initial Indicator to add or do not add initial clones to plot
-#' @param log_scale Indicator to use log_scale or not for Y axes
-#' @param change_par Indicator to change par() or not for a plot. By default change_par = TRUE, after plot it will be returned to initial values
-#'
-#' @return NULL, making plot with clones evolution
-#' @export
-#'
-#' @examples
-#' data_flow = tugHall_dataset$data_flow
-#' plot_clone_evolution( data_flow, threshold = c(0.01, 1 ), add_initial = TRUE, log_scale = FALSE )
-#' plot_clone_evolution( data_flow, threshold = c(0, 0.01 ), add_initial = FALSE, log_scale = TRUE )
-plot_clone_evolution  <-  function( data_flow, threshold = c(0.05,1.0), lwd = 2.0,
-                                    hue = c(" ", "random", "red", "orange", "yellow",
-                                            "green", "blue", "purple", "pink", "monochrome")[1],
-                                    luminosity = c(" ", "random", "light", "bright", "dark")[5] ,
-                                    yr = NA , add_initial = TRUE, log_scale = FALSE,
-                                    change_par = TRUE ){
-    sapply( X = c( 'grDevices', 'graphics', 'randomcoloR' ), FUN = function( x ) check_pkg( x ) )
-    define_par_for_plot( change_par_back = change_par )
-    clones_flow  =  data_flow[ ,c('Time', 'ID', 'ParentID', 'Birth_time', 'N_cells' ) ]
-    Nmax  =  max( clones_flow$N_cells )
-    time_max  =  max( clones_flow$Time )
-    Nthreshold  =  round( Nmax * threshold[1] )
-    N_max  =  round( Nmax * threshold[2] )
-
-    # delete clones with number of cells less than Nthreshold
-    w = sapply( X = ( max(clones_flow$ID[ which( clones_flow$Time == 0 ) ]) + 1 ):( max(clones_flow$ID ) ),
-                FUN = function( x ) {
-                    if ( max( clones_flow$N_cells[ which( clones_flow$ID == x ) ] ) > Nthreshold &
-                         max( clones_flow$N_cells[ which( clones_flow$ID == x ) ] ) < N_max )
-                        return( x )
-                    else
-                        return(NULL)
-                    }
-                )
-    w  =  unlist( w )
-    if ( add_initial )  w  =  c( clones_flow$ID[ which( clones_flow$Time == 0 ) ], w )
-
-    # clrs  =  gen_colors( nm = length( w ) )
-
-    if (TRUE)    clrs  =  randomColor(count = length( w ),
-                         hue = hue,
-                         luminosity = luminosity ) else {
-                             clrs = gen_colors( length( w ) )
-                             clrs = clrs$color
-                         }
-    DF  =  list( )
-    for ( i in 1:length( w ) ){
-        ss  =  which( clones_flow$ID == w[ i ] )
-        DF[[ i ]]  =  data.frame( x = clones_flow$Time[ ss ], y = clones_flow$N_cells[ ss ] )
-    }
-    if ( is.na(yr) ) yr = c( 1, N_max )
-    df_pl  =  as.data.frame( DF[[ 1 ]] )
-    plot_2D_lines( x = df_pl$x, DF = df_pl, nl = 2, names = c( 'Time step', 'Number of cells'),
-                    xr = c( 1, round( time_max+4, digits = -1 ) ), yr = yr, draw_key = FALSE,
-                   logscale = ifelse( log_scale, 'y', '' ) )
-
-    if ( length( w ) > 1 ){
-        for( i in 2:length( w ) ){
-            df_pl  =  as.data.frame( DF[[ i ]] )
-            lines( x = df_pl$x, y = df_pl$y, lwd = lwd, col = clrs[ i ] ) # clrs[ i, 'color']  )
-        }
-    }
-    title( main = paste0('Number of shown clones is ', length( w ), ' from ',  max( clones_flow$ID ), ' clones' ) )
+#' NULL
+plot_sudoku_2D   <-  function( stat.sim, par.sim, stat.obs, iKernelABC, rslt, 
+                               ind_X, ind_Y, names = c( 'Parameter_1', 'Parameter_2' ), 
+                               xlim, ylim,
+                               show_tracer = TRUE, show_obs = TRUE, show_appropriate = TRUE, show_best = TRUE,
+                               show_u_point = TRUE, show_legend = FALSE ){
+    
+    sbst_feature_Param  =  get_subset_of_feature_map( dtst  =  par.sim,
+                                                      Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi,
+                                                      iFeature_point = iKernelABC$kernel_mean_embedding )
+    # if ( draw_Y ){
+    #    sbst_feature_Y  =  get_subset_of_feature_map( dtst  =  stat.sim,
+    #                                              Matrix_Voronoi = iKernelABC$Matrix_Voronoi,
+    #                                              iFeature_point = iKernelABC$iFeature_point )
+    # }
+    # pr = par()
+    
+    l = par.sim[ , c( ind_X, ind_Y ) ]
+    par( mgp = c(2.2, 0.5, 0), font.axis = 2, font.lab = 2 )
+    plot( l[,1], l[,2], pch = 18, xlab = names[1], ylab = names[2], 
+          axes = FALSE, cex.lab = 1.5, xlim = xlim, ylim = ylim )
+    
+    # cex.lab = 1.3 , cex.axis = 1.4 , mar = c(4,4,2,2),
+    # tck = 0.04) ,
+    # box()
+    
+    axis( 1, font = 2, tck = 0.03, cex.axis = 1.4 )
+    axis( 2, font = 2, tck = 0.03, cex.axis = 1.4)    
+    axis( 3, font = 2, tck = 0.03, cex.axis = 1.4, labels = FALSE )
+    axis( 4, font = 2, tck = 0.03, cex.axis = 1.4, labels = FALSE ) 
+    
+    
+    
+    # if ( draw_Y )    points( sbst_feature_Y[,ind_X], sbst_feature_Y[,ind_Y], col = 'red', cex = 1.6 )
+    if ( show_u_point ) points( sbst_feature_Param[,ind_X], sbst_feature_Param[,ind_Y], col = 'blue', cex = 1.4, pch = 0 )
+    if ( show_tracer ) points( rslt$tracer_bullets[,ind_X], rslt$tracer_bullets[,ind_Y], col = alpha('grey', 0.2 ), cex = 0.8, pch = 20 )
+    if ( show_appropriate ) points( rslt$surroundings_best_points[,ind_X], rslt$surroundings_best_points[,ind_Y], 
+                                    col = 'blue', cex = 0.5, pch = 20 )
+    if ( show_best ) points( rslt$best_tracer_bullets[,ind_X], rslt$best_tracer_bullets[,ind_Y], col = 'red', cex = 0.8, pch = 5 )
+    if (show_obs ) points( stat.obs[,ind_X], stat.obs[,ind_Y], col = 'red', cex = 2.4, pch = 4, lwd = 3 )
+    
+    if ( show_legend ) legend( x = 7.7, y = 10.3, bg = '#E0FFFF', box.col = 'grey',
+                               col = c('black', 'red', 'blue', 'grey', 'blue', 'red' ), 
+                               pch = c( 18,      4,       0 ,  1,    20,   5  ), bty = "o", 
+                               legend = c('Simulation','Truth observation', 
+                                          expression( paste('Voronoi sites ', upsilon[j]^'*' ) ),
+                                          'Tracers', 'iKernel > 0.5', 
+                                          'Top 20 points' )  
+    )
+    
 }
 
 
 
-
+#' @describeIn plot_sudoku_2D The function to plot all the results of the function \code{spiderweb()}
+#'
+#' @description The function \code{plot_web_2D()} draws all the results of the function \code{spiderweb()}
+#'
+#' @param web Results of the function \code{spiderweb()} to draw on the plot
+#' @param show_top Logical to show or do not show the top points of the results of \code{sudoku()} function
+#'
+#' @return The function \code{plot_web_2D()} draws all the results of the function \code{spiderweb()}
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+plot_web_2D   <-  function( stat.sim, par.sim, stat.obs, iKernelABC, web, ind_X, ind_Y, 
+                            names = c( 'P1', 'P2' ),
+                            xlim, ylim,
+                            show_tracer = TRUE, show_obs = TRUE, show_top = TRUE, show_best = TRUE,
+                            show_u_point = TRUE, show_legend = FALSE ){
+    
+    sbst_feature_Param  =  get_subset_of_feature_map( dtst  =  par.sim,
+                                                      Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi,
+                                                      iFeature_point = iKernelABC$kernel_mean_embedding )
+    # if ( draw_Y ){
+    #     sbst_feature_Y  =  get_subset_of_feature_map( dtst  =  stat.sim,
+    #                                                   Matrix_Voronoi = iKernelABC$Matrix_Voronoi,
+    #                                                   iFeature_point = iKernelABC$iFeature_point )
+    # }
+    # pr = par()
+    
+    l = par.sim[ , c( ind_X, ind_Y ) ]
+    par( mgp = c(2.2, 0.5, 0), font.axis = 2, font.lab = 2 )
+    plot( l[,1], l[,2], pch = 18, xlab = names[1], ylab = names[2], 
+          axes = FALSE, cex.lab = 1.5, xlim = xlim, ylim = ylim )
+    
+    # cex.lab = 1.3 , cex.axis = 1.4 , mar = c(4,4,2,2),
+    # tck = 0.04) ,
+    # box()
+    
+    axis( 1, font = 2, tck = 0.03, cex.axis = 1.4 )
+    axis( 2, font = 2, tck = 0.03, cex.axis = 1.4)    
+    axis( 3, font = 2, tck = 0.03, cex.axis = 1.4, labels = FALSE )
+    axis( 4, font = 2, tck = 0.03, cex.axis = 1.4, labels = FALSE ) 
+    
+    
+    
+    # if ( draw_Y )    points( sbst_feature_Y[,ind_X], sbst_feature_Y[,ind_Y], col = 'red', cex = 1.6 )
+    if ( show_u_point ) points( sbst_feature_Param[,ind_X], sbst_feature_Param[,ind_Y], col = 'blue', cex = 1.4, pch = 0 )
+    if ( show_tracer ) points( web$tracers_all[,ind_X], web$tracers_all[,ind_Y], col = alpha('grey', 0.2 ), cex = 0.8, pch = 20 )
+    if ( show_top ) points( web$par.top[,ind_X], web$par.top[,ind_Y], 
+                            col = 'blue', cex = 0.5, pch = 20 )
+    if ( show_best ) points( web$par.best[,ind_X], web$par.best[,ind_Y], col = 'red', cex = 0.8, pch = 5 )
+    if (show_obs ) points( stat.obs[,ind_X], stat.obs[,ind_Y], col = 'red', cex = 2.4, pch = 4, lwd = 3 )
+    
+    if ( show_legend ) legend( x = 7.7, y = 10.3, bg = '#E0FFFF', box.col = 'grey',
+                               col = c('black', 'red', 'blue', 'grey', 'blue', 'red' ), 
+                               pch = c( 18,      4,       0 ,  1,    20,   5  ), bty = "o", 
+                               legend = c('Simulation','Truth observation', 
+                                          expression( paste('Voronoi sites ', upsilon[j]^'*' ) ),
+                                          'Tracers', 'Top 20 points', 'The best point' )  
+    )
+    
+}
 

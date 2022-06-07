@@ -15,7 +15,8 @@ Imports:
     methods,
     stats,
     stringr,
-    utils
+    utils,
+    scales
 Suggests: 
     rmarkdown,
     knitr,

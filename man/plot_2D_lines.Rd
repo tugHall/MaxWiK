@@ -66,10 +66,10 @@ NULL, making 2D plot using lines
 Function to plot 2D figure of lines  \code{ y_i = DF[, nl[ i ] ] ) }, i - index
 }
 \examples{
-DF = tugHall_dataset$data_avg
-plot_2D_lines( x = DF[, 1 ], DF, nl = 8:12 , xr = c(1,max(DF$Time) ), yr = c(0,1) )
-xr = c(1,max(DF$Time) )
-yr = c(0,max(DF[,14],DF[,16],DF[,17] ))
-plot_2D_lines( x = DF[, 1 ], DF, nl = c(14,16,17) , xr =xr, yr = yr )
-plot_2D_lines( x = DF[, 1 ], DF, nl = 18:22 , xr = c(1,max(DF$Time) ), yr = c(0,1) )
+NULL
+# plot_2D_lines( x = DF[, 1 ], DF, nl = 8:12 , xr = c(1,max(DF$Time) ), yr = c(0,1) )
+# xr = c(1,max(DF$Time) )
+# yr = c(0,max(DF[,14],DF[,16],DF[,17] ))
+# plot_2D_lines( x = DF[, 1 ], DF, nl = c(14,16,17) , xr =xr, yr = yr )
+# plot_2D_lines( x = DF[, 1 ], DF, nl = 18:22 , xr = c(1,max(DF$Time) ), yr = c(0,1) )
 }

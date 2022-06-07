@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @examples
-#'
+#' NULL
 #' # it takes a time for a simulation and then it will demonstrates results, \cr
 #' # so, please, wait for a while
 #' simulation_example( verbose = FALSE , to_plot = FALSE )
@@ -32,11 +32,6 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
     for( pck in names( packages ) ){
         library( package = pck, character.only = TRUE, include.only = packages[[ pck ]])
     }
-
-    copy_files_to_Input( files = c( 'CCDS.current.txt', 'CF.txt',
-                                   'cloneinit.txt','gene_hallmarks.txt',
-                                   'gene_map.txt','parameters.txt' ) ,
-                         dir = 'Input' )
 
 
     return( NULL )

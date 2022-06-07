@@ -14,74 +14,15 @@
 #' @export
 #'
 #' @examples
-#' fl = system.file('extdata/Input', 'gene_map.txt',package = 'tugHall.3', mustWork = TRUE )
-#' read_file(file_name = fl, stringsAsFactors = FALSE )
-#' fl = system.file('extdata/Input', 'CF.txt',package = 'tugHall.3', mustWork = TRUE )
-#' read_file(file_name = fl, stringsAsFactors = FALSE, header = FALSE )
+#' # fl = system.file('extdata/Input', 'gene_map.txt',package = 'tugHall.3', mustWork = TRUE )
+#' # read_file(file_name = fl, stringsAsFactors = FALSE )
+#' # fl = system.file('extdata/Input', 'CF.txt',package = 'tugHall.3', mustWork = TRUE )
+#' # read_file(file_name = fl, stringsAsFactors = FALSE, header = FALSE )
+#' NULL
 read_file  <-  function( file_name = '', stringsAsFactors = FALSE, header = TRUE ){
     if ( file.size( file_name )  < 10 ) return( NULL )
     return( read.table( file = file_name, stringsAsFactors  =  stringsAsFactors ,
                         sep="\t", header = header ))
-}
-
-
-#' Function to copy the files by default from extdata folder in the library to Input folder in the working directory
-#'
-#' @param files Files to copy, vector of names of files by default: \cr
-#' files = c( 'CCDS.current.txt', 'CF.txt', 'cloneinit.txt', 'gene_hallmarks.txt','gene_map.txt','parameters.txt' )
-#' @param dir Folder to where files should be save, by default dir = 'Input'
-#'
-#' @return List of logic numbers for each copied file, TRUE - success, FALSE - not success
-#' @export
-#'
-#' @examples
-#' files = c('CF.txt', 'cloneinit.txt','gene_hallmarks.txt','gene_map.txt','parameters.txt' )
-#' copy_files_to_Input( files, dir = 'Input' )
-copy_files_to_Input  <-  function( files = c('CCDS.current.txt', 'CF.txt', 'cloneinit.txt',
-                                             'gene_hallmarks.txt','gene_map.txt','parameters.txt' ) ,
-                                   dir = 'Input' ){
-
-    fls  =  lapply( X = files,
-            FUN = function( x ) system.file('extdata/Input', x, package = 'tugHall.3', mustWork = TRUE ) )
-    # fls  =  unlist( fls )
-
-    if ( !file.exists( dir ) ) dir.create( dir )
-    lapply( X = 1:length( fls ) , FUN = function( x ){
-        file.copy( fls[[ x ]],  dir, overwrite = TRUE, recursive = TRUE, copy.mode = TRUE )
-        } )
-
-}
-
-
-
-#' Function to copy the files of an example of simulation or from '/extdata/Output/' folder in the library to '/Output/' folder in the working directory
-#'
-#' @param files Files to copy, vector of names of files by default: \cr
-#' files = c( 'cloneout.txt', 'CNA_mutations.txt', 'point_mutations.txt', 'gene_MAP.txt','geneout.txt','log.txt', 'order_genes_dysfunction.txt', 'VAF_data.txt', 'VAF.txt', 'weights.txt' )
-#' @param dir Folder to where files should be save, by default dir = 'Output'
-#'
-#' @return List of logic numbers for each copied file, TRUE - success, FALSE - not success
-#' @export
-#'
-#' @examples
-#' files = c( 'cloneout.txt', 'CNA_mutations.txt', 'point_mutations.txt', 'gene_MAP.txt')
-#' copy_files_to_Output( files )
-#' files = c('geneout.txt','log.txt', 'VAF_data.txt', 'VAF.txt', 'weights.txt' )
-#' copy_files_to_Output( files )
-copy_files_to_Output  <-  function( files = c( 'cloneout.txt', 'CNA_mutations.txt', 'point_mutations.txt',
-                                               'gene_MAP.txt','geneout.txt','log.txt', 'order_genes_dysfunction.txt',
-                                               'VAF_data.txt', 'VAF.txt', 'weights.txt' ),
-                                   dir = 'Output' ){
-
-    fls  =  lapply( X = files,
-                    FUN = function( x ) system.file('extdata/Output', x, package = 'tugHall.3', mustWork = TRUE ) )
-    # fls  =  unlist( fls )
-
-    if ( !file.exists( dir ) ) dir.create( dir )
-    lapply( X = 1:length( fls ) , FUN = function( x ){
-        file.copy( fls[[ x ]],  dir, overwrite = TRUE, recursive = TRUE, copy.mode = TRUE )
-    } )
-
 }
 
 
@@ -143,29 +84,5 @@ gen_colors  <-  function(nm = 12){
 check_pkg  <-  function( pkg ){
     msg  =  paste0( 'Package ', pkg, ' must be installed to use this function. \n ' )
     if ( !requireNamespace( pkg , quietly = TRUE ) )    stop( msg, call. = FALSE )
-}
-
-
-
-#' Function to change par for plots and after plotting it returns par values
-#'
-#' @param change_par_back logical. If TRUE it changes par options back after finishing a function call
-#'
-#' @return Change par() options and returns it (after finishing the function) to values before a function has started
-#'
-#' @export
-#' @examples
-#' define_par_for_plot( change_par_back = TRUE )
-define_par_for_plot  <-  function( change_par_back ){
-
-    if ( change_par_back ){
-        op = par( no.readonly=TRUE )
-        par(xpd=TRUE, cex.lab=2, lwd = 2, mar = c(5, 5, 5, 5),
-            tcl = 0.5, cex.axis = 1.75,  mgp = c(3, 0.6, 0))
-        on.exit( par( op ) )
-    } else {
-        par(xpd=TRUE, cex.lab=2, lwd = 2, mar = c(5, 5, 5, 5),
-            tcl = 0.5, cex.axis = 1.75,  mgp = c(3, 0.6, 0))
-    }
 }
 

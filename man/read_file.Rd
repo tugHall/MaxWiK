@@ -20,8 +20,9 @@ data.frame of data from a file
 Function to read file
 }
 \examples{
-fl = system.file('extdata/Input', 'gene_map.txt',package = 'tugHall.3', mustWork = TRUE )
-read_file(file_name = fl, stringsAsFactors = FALSE )
-fl = system.file('extdata/Input', 'CF.txt',package = 'tugHall.3', mustWork = TRUE )
-read_file(file_name = fl, stringsAsFactors = FALSE, header = FALSE )
+# fl = system.file('extdata/Input', 'gene_map.txt',package = 'tugHall.3', mustWork = TRUE )
+# read_file(file_name = fl, stringsAsFactors = FALSE )
+# fl = system.file('extdata/Input', 'CF.txt',package = 'tugHall.3', mustWork = TRUE )
+# read_file(file_name = fl, stringsAsFactors = FALSE, header = FALSE )
+NULL
 }
