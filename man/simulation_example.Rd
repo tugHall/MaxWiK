@@ -20,7 +20,7 @@ List of results of simulation with default values for all the parameters
 Example of simulation for lazy start
 }
 \examples{
-
+NULL
 # it takes a time for a simulation and then it will demonstrates results, \cr
 # so, please, wait for a while
 simulation_example( verbose = FALSE , to_plot = FALSE )

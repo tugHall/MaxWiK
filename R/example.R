@@ -24,7 +24,6 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                         randomcoloR = 'randomColor',
                         methods = 'new',
                         stats = c('aggregate', 'rbinom', 'rexp', 'rnorm', 'runif' ),
-                        stringr = c('str_length', 'str_split', 'str_sub', 'str_trim'),
                         utils = c('read.delim', 'read.table', 'write.table', 'globalVariables' ),
                         grDevices = c('dev.off', 'pdf', 'rgb'),
                         graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title' ) )

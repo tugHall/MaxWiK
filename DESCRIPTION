@@ -8,13 +8,11 @@ License: MIT + file LICENSE
 Depends: 
     R (>= 3.6.0)
 Imports:
-    actuar,
     graphics,
     grDevices,
     randomcoloR,
     methods,
     stats,
-    stringr,
     utils,
     scales
 Suggests: 
