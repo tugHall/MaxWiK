@@ -2,7 +2,6 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom actuar rztpois
 #' @importFrom graphics axis
 #' @importFrom graphics legend
 #' @importFrom graphics lines
