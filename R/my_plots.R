@@ -141,7 +141,7 @@ plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
 #' 
 #' @param stat.sim Summary statistics of the simulations (model output)
 #' @param par.sim Data frame of parameters of the model
-#' @param stat.obs Summary statistics of the observation point
+#' @param par.truth Truth value of the parameter corresponding to observation point (if known)
 #' @param iKernelABC Result of calculations based on Isolation Kernel ABC 
 #' that can be gotten by the function \code{iKernelABC()}
 #' @param rslt Results of function \code{sudoku()}
@@ -164,7 +164,7 @@ plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
 #' 
 #' @examples
 #' NULL
-plot_sudoku_2D   <-  function( stat.sim, par.sim, stat.obs, iKernelABC, rslt, 
+plot_sudoku_2D   <-  function( stat.sim, par.sim, par.truth, iKernelABC, rslt, 
                                ind_X, ind_Y, names = c( 'Parameter_1', 'Parameter_2' ), 
                                xlim, ylim,
                                show_tracer = TRUE, show_obs = TRUE, show_appropriate = TRUE, show_best = TRUE,
@@ -202,7 +202,7 @@ plot_sudoku_2D   <-  function( stat.sim, par.sim, stat.obs, iKernelABC, rslt,
     if ( show_appropriate ) points( rslt$surroundings_best_points[,ind_X], rslt$surroundings_best_points[,ind_Y], 
                                     col = 'blue', cex = 0.5, pch = 20 )
     if ( show_best ) points( rslt$best_tracer_bullets[,ind_X], rslt$best_tracer_bullets[,ind_Y], col = 'red', cex = 0.8, pch = 5 )
-    if (show_obs ) points( stat.obs[,ind_X], stat.obs[,ind_Y], col = 'red', cex = 2.4, pch = 4, lwd = 3 )
+    if (show_obs ) points( par.truth[,ind_X], par.truth[,ind_Y], col = 'red', cex = 2.4, pch = 4, lwd = 3 )
     
     if ( show_legend ) legend( x = 7.7, y = 10.3, bg = '#E0FFFF', box.col = 'grey',
                                col = c('black', 'red', 'blue', 'grey', 'blue', 'red' ), 
@@ -230,7 +230,7 @@ plot_sudoku_2D   <-  function( stat.sim, par.sim, stat.obs, iKernelABC, rslt,
 #'
 #' @examples
 #' NULL
-plot_web_2D   <-  function( stat.sim, par.sim, stat.obs, iKernelABC, web, ind_X, ind_Y, 
+plot_web_2D   <-  function( stat.sim, par.sim, par.truth, iKernelABC, web, ind_X, ind_Y, 
                             names = c( 'P1', 'P2' ),
                             xlim, ylim,
                             show_tracer = TRUE, show_obs = TRUE, show_top = TRUE, show_best = TRUE,
@@ -268,7 +268,7 @@ plot_web_2D   <-  function( stat.sim, par.sim, stat.obs, iKernelABC, web, ind_X,
     if ( show_top ) points( web$par.top[,ind_X], web$par.top[,ind_Y], 
                             col = 'blue', cex = 0.5, pch = 20 )
     if ( show_best ) points( web$par.best[,ind_X], web$par.best[,ind_Y], col = 'red', cex = 0.8, pch = 5 )
-    if (show_obs ) points( stat.obs[,ind_X], stat.obs[,ind_Y], col = 'red', cex = 2.4, pch = 4, lwd = 3 )
+    if (show_obs ) points( par.truth[,ind_X], par.truth[,ind_Y], col = 'red', cex = 2.4, pch = 4, lwd = 3 )
     
     if ( show_legend ) legend( x = 7.7, y = 10.3, bg = '#E0FFFF', box.col = 'grey',
                                col = c('black', 'red', 'blue', 'grey', 'blue', 'red' ), 

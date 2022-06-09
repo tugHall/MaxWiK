@@ -4,7 +4,19 @@
 \alias{simulation_example}
 \title{Example of simulation for lazy start}
 \usage{
-simulation_example(verbose = TRUE, to_plot = TRUE, seed = NA)
+simulation_example(
+  verbose = TRUE,
+  to_plot = TRUE,
+  seed = NA,
+  model = c("Gaussian", "linear")[1],
+  d = 2,
+  x0 = c(3, 4),
+  probability = TRUE,
+  n = 1000,
+  r = range(0, 10),
+  psi = 8,
+  t = 12
+)
 }
 \arguments{
 \item{verbose}{Logical type to show or do not show messages during execution}
@@ -12,6 +24,22 @@ simulation_example(verbose = TRUE, to_plot = TRUE, seed = NA)
 \item{to_plot}{Logical type to plot or do not plot graphical results of a simulation}
 
 \item{seed}{Numeric type to set seed for a simulation, if seed = NA (by default) then it will be skipped}
+
+\item{model}{Name of the toy model, can be 'Gaussian' or 'linear' only}
+
+\item{d}{Integer number of dimension of the model}
+
+\item{x0}{Truth value of parameter corresponding to observation point}
+
+\item{probability}{Logical to apply the probabilistic distribution to input data generation}
+
+\item{n}{Integer number of points to generate for input data frame}
+
+\item{r}{Range of parameters to plot, by default \code{r = range(0, 10)}}
+
+\item{psi}{Integer number. Size of each Voronoi diagram or number of areas/points in the Voronoi diagrams}
+
+\item{t}{Integer number of trees in the Isolation Forest}
 }
 \value{
 List of results of simulation with default values for all the parameters

@@ -34,13 +34,15 @@ that contents the truth value of parameter. Each number in the vector should be 
 The function \code{Gaussian_model()} returns list of two objects: \cr
 \itemize{
 \item stat.sim - data frame of simulations statistics,
-\item par.sim - data frame of parameters.
+\item par.sim - data frame of parameters,
+\item stat.obs - data frame of an observation point.
 }
 
 The function \code{linear_model()} returns list of two objects: \cr
 \itemize{
 \item stat.sim - data frame of simulations statistics,
-\item par.sim - data frame of parameters.
+\item par.sim - data frame of parameters,
+\item stat.obs - data frame of an observation point.
 }
 }
 \description{

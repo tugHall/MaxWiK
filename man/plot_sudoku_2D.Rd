@@ -8,7 +8,7 @@
 plot_sudoku_2D(
   stat.sim,
   par.sim,
-  stat.obs,
+  par.truth,
   iKernelABC,
   rslt,
   ind_X,
@@ -27,7 +27,7 @@ plot_sudoku_2D(
 plot_web_2D(
   stat.sim,
   par.sim,
-  stat.obs,
+  par.truth,
   iKernelABC,
   web,
   ind_X,
@@ -48,7 +48,7 @@ plot_web_2D(
 
 \item{par.sim}{Data frame of parameters of the model}
 
-\item{stat.obs}{Summary statistics of the observation point}
+\item{par.truth}{Truth value of the parameter corresponding to observation point (if known)}
 
 \item{iKernelABC}{Result of calculations based on Isolation Kernel ABC
 that can be gotten by the function \code{iKernelABC()}}

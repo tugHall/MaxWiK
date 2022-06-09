@@ -19,10 +19,11 @@
 #'
 #' @return The function \code{Gaussian_model()} returns list of two objects: \cr
 #' - stat.sim - data frame of simulations statistics,
-#' - par.sim - data frame of parameters.
+#' - par.sim - data frame of parameters,
+#' - stat.obs - data frame of an observation point.
 #' 
 #' @export
-#'
+#' 
 #' @examples
 #' NULL
 Gaussian_model  <-  function( d = 1, x0 = 3, probability = TRUE,
@@ -71,7 +72,8 @@ Gaussian_model  <-  function( d = 1, x0 = 3, probability = TRUE,
 #'
 #' @return The function \code{linear_model()} returns list of two objects: \cr
 #' - stat.sim - data frame of simulations statistics,
-#' - par.sim - data frame of parameters.
+#' - par.sim - data frame of parameters,
+#' - stat.obs - data frame of an observation point.
 #' 
 #' @export 
 #'
@@ -113,5 +115,7 @@ linear_model  <-  function( d = 1, x0 = 3, probability = TRUE, noise = 0.2,
     
     return( list( stat.sim = stat.sim, par.sim = par.sim, stat.obs = stat.obs )  )
 }
+
+
 
 
