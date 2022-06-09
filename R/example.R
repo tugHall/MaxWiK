@@ -19,7 +19,7 @@
 #' NULL
 #' # it takes a time for a simulation and then it will demonstrates results, \cr
 #' # so, please, wait for a while
-#' simulation_example( verbose = FALSE , to_plot = FALSE )
+#' simulation_example( verbose = FALSE , to_plot = TRUE )
 simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA, 
                                   model = c('Gaussian', 'linear')[1] ,
                                   d = 2, x0 = c(3,4), probability = TRUE, 
