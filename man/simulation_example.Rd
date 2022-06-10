@@ -15,7 +15,8 @@ simulation_example(
   n = 1000,
   r = range(0, 10),
   psi = 8,
-  t = 12
+  t = 12,
+  restrict_points_number = 300
 )
 }
 \arguments{
@@ -40,6 +41,9 @@ simulation_example(
 \item{psi}{Integer number. Size of each Voronoi diagram or number of areas/points in the Voronoi diagrams}
 
 \item{t}{Integer number of trees in the Isolation Forest}
+
+\item{restrict_points_number}{Integer number of points which will be considered in the simulation, \cr
+other points will be skipped by rejection ABC}
 }
 \value{
 List of results of simulation with default values for all the parameters
@@ -51,5 +55,5 @@ Example of simulation for lazy start
 NULL
 # it takes a time for a simulation and then it will demonstrates results, \cr
 # so, please, wait for a while
-simulation_example( verbose = FALSE , to_plot = FALSE )
+sim = simulation_example( verbose = FALSE , to_plot = TRUE )
 }

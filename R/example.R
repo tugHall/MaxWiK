@@ -11,6 +11,8 @@
 #' @param r Range of parameters to plot, by default \code{r = range(0, 10)}
 #' @param psi Integer number. Size of each Voronoi diagram or number of areas/points in the Voronoi diagrams
 #' @param t Integer number of trees in the Isolation Forest
+#' @param restrict_points_number Integer number of points which will be considered in the simulation, \cr 
+#' other points will be skipped by rejection ABC
 #'
 #' @return List of results of simulation with default values for all the parameters
 #' @export
@@ -19,12 +21,13 @@
 #' NULL
 #' # it takes a time for a simulation and then it will demonstrates results, \cr
 #' # so, please, wait for a while
-#' simulation_example( verbose = FALSE , to_plot = TRUE )
+#' sim = simulation_example( verbose = FALSE , to_plot = TRUE )
 simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA, 
                                   model = c('Gaussian', 'linear')[1] ,
                                   d = 2, x0 = c(3,4), probability = TRUE, 
                                   n = 1000, r = range(0, 10),
-                                  psi = 8, t = 12 ){
+                                  psi = 8, t = 12, 
+                                  restrict_points_number = 300 ){
 
     if ( !is.na( seed ) ) set.seed( seed = seed )
 
@@ -38,7 +41,8 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
                         stats = c('aggregate', 'rbinom', 'rexp', 'rnorm', 'runif', 'dist' ),
                         utils = c('read.delim', 'read.table', 'write.table', 'globalVariables' ),
                         grDevices = c('dev.off', 'pdf', 'rgb'),
-                        graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title', 'points' ) )
+                        graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title', 'points' ),
+                        abc = 'abc' )
 
     for( pck in names( packages ) ){
         library( package = pck, character.only = TRUE, include.only = packages[[ pck ]])
@@ -51,10 +55,18 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
         input  =  linear_model( d = d, x0 = x0, probability = probability, 
                                  n = n, r = r)
     }
-    stat.sim  =  input$stat.sim
+    stat.sim_origin  =  input$stat.sim
     stat.obs  =  input$stat.obs
-    par.sim  =  input$par.sim
+    par.sim_origin  =  input$par.sim
     rm( input )
+    
+    tol = restrict_points_number / n 
+    
+    rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
+                    method = 'rejection', tol = tol )
+    
+    stat.sim  =  stat.sim_origin[ abc$region, ]
+    par.sim   =   par.sim_origin[ abc$region, ]    
     
     web  =  spiderweb( psi = psi, t = t, param = par.sim, 
                        stat.sim = stat.sim, stat.obs = stat.obs, 
@@ -76,9 +88,11 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
     
     plot_sudoku_2D( stat.sim = stat.sim , par.sim = par.sim, par.truth = data.frame( t(x0) ), 
                     iKernelABC = web$iKernelABC, rslt = rslt, ind_X = 1, ind_Y = 2, 
-                    names = c( 'P1', 'P2' ), xlim = c(0,10), ylim = c(0,10),
+                    names = c( 'Parameter 1', 'Parameter 2' ), 
+                    xlim = c(0,10), ylim = c(0,10),
                     show_tracer = TRUE, show_obs = TRUE, show_appropriate = TRUE, 
                     show_best = TRUE, show_u_point = TRUE, show_legend = TRUE )
     
-    return( NULL )
+    return( list( stat.sim  =  stat.sim, stat.obs  =  stat.obs, par.sim  =  par.sim,
+                  spiderweb  = web, sudoku  =  rslt) )
 }
