@@ -49,7 +49,9 @@ The function \code{sudoku()} returns the list of next objects:
 
 The function \code{get_pairs_of_data_frame()} returns the list of the pairs of points
 
-The function \code{generate_points_between_two_points()} returns data frame of generated points between two given points
+The function \code{generate_points_between_two_points()}
+returns data frame of generated points between two given points,
+including them as the first and last rows
 
 The function \code{get_tracer_bullets()} returns data frame of generated tracer points
 }

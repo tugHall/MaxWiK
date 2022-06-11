@@ -2,6 +2,7 @@
 % Please edit documentation in R/lib_iKernel.R
 \name{iKernelABC}
 \alias{iKernelABC}
+\alias{spiderweb_old}
 \alias{spiderweb}
 \title{Function to get Approximate Bayesian Computation based on Maxima Weighted Isolation Kernel mapping}
 \usage{
@@ -15,6 +16,20 @@ iKernelABC(
   check_pos_def = TRUE
 )
 
+spiderweb_old(
+  psi = 4,
+  t = 35,
+  param = param,
+  stat.sim = stat.sim,
+  stat.obs = stat.obs,
+  talkative = FALSE,
+  check_pos_def = FALSE,
+  n_bullets = 5,
+  n_best = 10,
+  halfwidth = 0.5,
+  epsilon = 0.001
+)
+
 spiderweb(
   psi = 4,
   t = 35,
@@ -23,8 +38,8 @@ spiderweb(
   stat.obs = stat.obs,
   talkative = FALSE,
   check_pos_def = FALSE,
-  n_bullets = 10,
-  n_best = 20,
+  n_bullets = 5,
+  n_best = 10,
   halfwidth = 0.5,
   epsilon = 0.001
 )
@@ -81,6 +96,18 @@ tracers_all that is data frame of all the generated tracer points;
 \item sim.tracers_all that is numeric vector of similarities of all the generated tacer points;
 \item iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters}.
 }
+
+The function \code{spiderweb()} returns the list of the next objects:
+\itemize{
+\item input.parameters the list of all the input parameters for Isolation Kernel ABC method;
+\item par.best that is data frame of one point that is the best from all the generated tracer points;
+\item par.top that is data frame of n_best points that are the top from all the generated tracer points;
+\item sim.top that is numeric vecor of similarities of the top points;
+\item sim.best that is numeric value of the similarity of the best tracer point;
+tracers_all that is data frame of all the generated tracer points;
+\item sim.tracers_all that is numeric vector of similarities of all the generated tacer points;
+\item iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters}.
+}
 }
 \description{
 The function \code{iKernelABC()} is used to get Approximate Bayesian Computation
@@ -99,14 +126,28 @@ from \code{sudoku()} algorithm, based on the simple procedure: \cr
 \item repeat all the steps until condition to be \code{TRUE}: \cr
 \code{abs( max( sim_tracers ) - sim_previous ) < epsilon }
 }
+
+The function \code{spiderweb()} itteratively generates tracer points gotten
+from \code{sudoku()} algorithm, based on the simple procedure: \cr
+\itemize{
+\item making a reflection of the top points from the best point, \cr
+\item and then generating the point tracers between them, \cr
+\item finally, the algorithm chooses again the top points and the best point (\code{sudoku()} function is used),
+\item repeat all the steps until condition to be \code{TRUE}: \cr
+\code{abs( max( sim_tracers ) - sim_previous ) < epsilon }
+}
 }
 \section{Functions}{
 \itemize{
+\item \code{spiderweb_old}: The function to get the best value of parameter corresponding to
+Maxima Weighted Isolation Kernel mapping which is related to an observation point
+
 \item \code{spiderweb}: The function to get the best value of parameter corresponding to
 Maxima Weighted Isolation Kernel mapping which is related to an observation point
 }}
 
 \examples{
+NULL
 NULL
 NULL
 }

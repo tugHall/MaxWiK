@@ -26,7 +26,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
                                   model = c('Gaussian', 'linear')[1] ,
                                   d = 2, x0 = c(3,4), probability = TRUE, 
                                   n = 1000, r = range(0, 10),
-                                  psi = 8, t = 12, 
+                                  psi = 12, t = 20, 
                                   restrict_points_number = 300 ){
 
     if ( !is.na( seed ) ) set.seed( seed = seed )
@@ -74,11 +74,12 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
                        n_bullets = 5, n_best = 20, halfwidth = 0.5, 
                        epsilon = 0.001 )
     
-    plot_web_2D( stat.sim = stat.sim , par.sim = par.sim, par.truth = data.frame( t(x0) ), 
+    plot_web_2D( stat.sim = stat.sim_origin , par.sim = par.sim_origin, par.truth = data.frame( t(x0) ), 
                  iKernelABC = web$iKernelABC, web = web, ind_X = 1, ind_Y = 2, 
                  names = c( 'Parameter 1', 'Parameter 2' ), xlim = c(0,10), ylim = c(0,10),
                  show_tracer = TRUE, show_obs = TRUE, show_top = TRUE, show_best = TRUE,
                  show_u_point = TRUE, show_legend = TRUE )
+    title( main = ' Plot of results of spiderweb function' )
     
     readline( 'That is plot of spiderweb algorithm, press enter to show plot of sudoku algorithm' )
     
@@ -86,12 +87,13 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
     rslt  =  sudoku( DT = par.sim , iKernelABC = web$iKernelABC, 
                       n_bullets = 5, n_best = 20, halfwidth = 0.5 )
     
-    plot_sudoku_2D( stat.sim = stat.sim , par.sim = par.sim, par.truth = data.frame( t(x0) ), 
+    plot_sudoku_2D( stat.sim = stat.sim_origin , par.sim = par.sim_origin, par.truth = data.frame( t(x0) ), 
                     iKernelABC = web$iKernelABC, rslt = rslt, ind_X = 1, ind_Y = 2, 
                     names = c( 'Parameter 1', 'Parameter 2' ), 
                     xlim = c(0,10), ylim = c(0,10),
                     show_tracer = TRUE, show_obs = TRUE, show_appropriate = TRUE, 
                     show_best = TRUE, show_u_point = TRUE, show_legend = TRUE )
+    title( main = ' Plot of results of sudoku function' )
     
     return( list( stat.sim_origin  =  stat.sim_origin, 
                   par.sim_origin  =  par.sim_origin,

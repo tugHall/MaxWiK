@@ -695,12 +695,6 @@ sudoku  <-  function( DT , iKernelABC, n_bullets = 20, n_best = 10, halfwidth = 
     ### n_bullets is a number of tracer bullets / additional points between the TWO farthest distance points
     ### n_best is a number of the best tracer bullets / points
     
-    if ( FALSE){
-        sbst_feature_Y  =  get_subset_of_feature_map( dtst  =  stat.sim, 
-                                                      Matrix_Voronoi = iKernelABC$Matrix_Voronoi, 
-                                                      iFeature_point = iKernelABC$iFeature_point )
-    }
-    
     sbst_feature_Param  =  get_subset_of_feature_map( dtst  =  DT, 
                                                       Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi, 
                                                       iFeature_point = iKernelABC$kernel_mean_embedding )
@@ -771,7 +765,9 @@ get_pairs_of_data_frame  <-  function( DF ){
 #' @param pair Data frame of two points
 #' @param n Integer number of points that should be located between two input points
 #'
-#' @return The function \code{generate_points_between_two_points()} returns data frame of generated points between two given points
+#' @return The function \code{generate_points_between_two_points()} 
+#' returns data frame of generated points between two given points, 
+#' including them as the first and last rows
 #' @export
 #'
 #' @examples
@@ -783,10 +779,9 @@ generate_points_between_two_points  <-  function( pair, n = 10 ){
     DF[ 1:n,] = 0
     row.names( DF ) = 1:n
     for( i in 1:length( DF ) ){
-        dlt = ( pair[ 2, i ] - pair[ 1, i ] ) / ( n + 1 )
-        DF[ , i ]  =  pair[ 1, i ] + dlt * ( 1:n )
+        dlt = ( pair[ 2, i ] - pair[ 1, i ] ) / ( n - 1 )  
+        DF[ , i ]  =  pair[ 1, i ] + dlt * ( 0 : ( n - 1 ) )
     }
-    
     return( DF )
 }
 
@@ -865,13 +860,13 @@ get_tracer_bullets  <-  function( DF , n_bullets = 20 ){
 #' - iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters}.
 #' 
 #' @export
-#'
+#' 
 #' @examples
 #' NULL
-spiderweb  <-  function( psi = 4, t = 35, param = param, 
+spiderweb_old  <-  function( psi = 4, t = 35, param = param, 
                          stat.sim = stat.sim, stat.obs = stat.obs, 
                          talkative = FALSE, check_pos_def = FALSE ,
-                         n_bullets = 10, n_best = 20, halfwidth = 0.5, 
+                         n_bullets = 5, n_best = 10, halfwidth = 0.5, 
                          epsilon = 0.001 ){
     
     input.parameters  =  list( psi = psi, t = t, param = param, 
@@ -894,9 +889,9 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
     tracers_all  =  tracers
     sim.tracers_all  =  rslt$similarity_to_mean
     
-    par.top = tracers[ order( rslt$similarity_to_mean , decreasing = TRUE)[1:n_best], ]
+    par.top   =  tracers[ order( rslt$similarity_to_mean , decreasing = TRUE)[1:n_best], ]
     par.best  =  par.top[ 1, ]
-    par.top   = par.top[2:n_best, ]
+    par.top   =  par.top[2:n_best, ]
     rm( tracers )
     sim_previous  =  0  # max( rslt$similarity_to_mean )
     
@@ -905,7 +900,7 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
     while( TRUE ){
         ### Reflect par.top through par.best 
         par.reflect  =  par.top
-        for( i in 1:nrow( par.top ) )  par.reflect[ i, ]  =  2 * par.best - par.reflect[ i ,  ] 
+        for( i in 1:nrow( par.top ) )  par.reflect[ i, ]  =  2 * par.best - par.top[ i ,  ] 
         
         ### Generate points between par.top and par.reflect:
         tracers  =  rbind( par.best, par.top, par.reflect )
@@ -949,7 +944,119 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
                   sim.tracers_all = sim.tracers_all, iKernelABC = iKernelABC ) )
 }
 
-
+#' @describeIn iKernelABC The function to get the best value of parameter corresponding to 
+#' Maxima Weighted Isolation Kernel mapping which is related to an observation point
+#' 
+#' @description The function \code{spiderweb()} itteratively generates tracer points gotten 
+#' from \code{sudoku()} algorithm, based on the simple procedure: \cr
+#' - making a reflection of the top points from the best point, \cr 
+#' - and then generating the point tracers between them, \cr
+#' - finally, the algorithm chooses again the top points and the best point (\code{sudoku()} function is used),
+#' - repeat all the steps until condition to be \code{TRUE}: \cr
+#' \code{abs( max( sim_tracers ) - sim_previous ) < epsilon }
+#'
+#' @param n_bullets Integer number of tracer bullets / additional points between the TWO most distant points
+#' @param n_best Integer number of the best tracer bullets / points 
+#' to consider them at the next algorithmic step
+#' @param halfwidth Criterion to choose the best tracer points like: \cr
+#' \code{if similarity_of_point >= halfwidth} then it is the point to be included to the poool of the best points
+#' @param epsilon Criterion to stop algorithm \code{spiderweb()} that isused to check: \cr
+#' \code{if ( abs( max( sim_tracers ) - sim_previous ) < epsilon ) break}
+#'
+#' @return The function \code{spiderweb()} returns the list of the next objects:
+#' - input.parameters the list of all the input parameters for Isolation Kernel ABC method;
+#' - par.best that is data frame of one point that is the best from all the generated tracer points;
+#' - par.top that is data frame of n_best points that are the top from all the generated tracer points; 
+#' - sim.top that is numeric vecor of similarities of the top points;
+#' - sim.best that is numeric value of the similarity of the best tracer point;
+#' tracers_all that is data frame of all the generated tracer points; 
+#' - sim.tracers_all that is numeric vector of similarities of all the generated tacer points;
+#' - iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters}.
+#' 
+#' @export
+#' 
+#' @examples
+#' NULL
+spiderweb  <-  function( psi = 4, t = 35, param = param, 
+                             stat.sim = stat.sim, stat.obs = stat.obs, 
+                             talkative = FALSE, check_pos_def = FALSE ,
+                             n_bullets = 5, n_best = 10, halfwidth = 0.5, 
+                             epsilon = 0.001 ){
+    
+    input.parameters  =  list( psi = psi, t = t, param = param, 
+                               stat.sim = stat.sim, stat.obs = stat.obs, 
+                               talkative = talkative, check_pos_def = check_pos_def,
+                               n_bullets = n_bullets, n_best = n_best, 
+                               halfwidth = halfwidth, epsilon = epsilon )
+    
+    iKernelABC  = iKernelABC( psi = psi, t = t, param = param, 
+                              stat.sim = stat.sim, stat.obs = stat.obs, 
+                              talkative = talkative, check_pos_def = check_pos_def )
+    
+    ### The function to apply SUDOKU algorithm to get the best tracer bullets
+    rslt  =  sudoku( DT = param , iKernelABC = iKernelABC, 
+                     n_bullets = n_bullets, n_best = n_best, halfwidth = halfwidth )
+    
+    ### Get the top:
+    tracers = rslt$tracer_bullets
+    
+    tracers_all  =  tracers
+    sim.tracers_all  =  rslt$similarity_to_mean
+    
+    par.top   =  tracers[ order( rslt$similarity_to_mean , decreasing = TRUE)[1:n_best], ]
+    par.best  =  par.top[ 1, ]
+    par.top   =  par.top[2:n_best, ]
+    rm( tracers )
+    sim_previous  =  0  # max( rslt$similarity_to_mean )
+    
+    sim.top   =  NULL
+    sim.best  =  -1
+    while( TRUE ){
+        ### Reflect par.top through par.best 
+        par.reflect  =  par.top
+        for( i in 1:nrow( par.top ) )  par.reflect[ i, ]  =  2 * par.best - par.top[ i ,  ] 
+        
+        ### Generate points between par.top and par.reflect:
+        tracers  =  rbind( par.best, par.top, par.reflect )
+        for( i in 1:nrow( par.top  ) ){
+            gen_tr  =  generate_points_between_two_points( pair = rbind( par.top[ i ,] , 
+                                                                         par.reflect[ i, ] ), n = n_bullets )
+            tracers  =  rbind( tracers, gen_tr )
+        }
+        
+        ### calculate the similarity for new points:
+        feature_tracers  =  get_voronoi_feature_PART_dataset( data = rbind( param, tracers ), 
+                                                              talkative = talkative, start_row = nrow( param ) + 1 ,  
+                                                              Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi )
+        
+        sim_tracers  =  iKernel_point_dataset( Matrix_iKernel = feature_tracers$M_iKernel, 
+                                               t = iKernelABC$t, nr = nrow( feature_tracers$M_iKernel ), 
+                                               iFeature_point = iKernelABC$kernel_mean_embedding )
+        
+        tracers_all  =  rbind( tracers_all, tracers )
+        sim.tracers_all  =  c( sim.tracers_all, sim_tracers )
+        # new best point
+        par.best     =  tracers[ which.max(sim_tracers ), ]
+        
+        if ( abs( max( sim_tracers ) - sim_previous ) < epsilon ) break
+        sim_previous   =   max( sim_tracers )
+        
+        ### rename new tracers:
+        sim.top  =  sort( sim_tracers , decreasing = TRUE)[1:n_best]
+        sim.best =  sim.top[ 1 ]
+        sim.top  =  sim.top[2:n_best]
+        
+        par.top  =  tracers[ order( sim_tracers , decreasing = TRUE)[1:n_best], ]
+        par.best  =  par.top[ 1, ]
+        par.top   = par.top[2:n_best, ]
+        
+        rm( tracers )
+    }
+    
+    return( list( input.parameters = input.parameters,  par.best = par.best, par.top = par.top, 
+                  sim.top = sim.top, sim.best = sim.best, tracers_all = tracers_all, 
+                  sim.tracers_all = sim.tracers_all, iKernelABC = iKernelABC ) )
+}
 
 # MSE ---------------------------------------------------------------------
 
