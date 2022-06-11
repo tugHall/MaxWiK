@@ -65,8 +65,8 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
     rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
                     method = 'rejection', tol = tol )
     
-    stat.sim  =  stat.sim_origin[ abc$region, ]
-    par.sim   =   par.sim_origin[ abc$region, ]    
+    stat.sim  =  stat.sim_origin[ rej$region, ]
+    par.sim   =   par.sim_origin[ rej$region, ]    
     
     web  =  spiderweb( psi = psi, t = t, param = par.sim, 
                        stat.sim = stat.sim, stat.obs = stat.obs, 
@@ -93,6 +93,10 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
                     show_tracer = TRUE, show_obs = TRUE, show_appropriate = TRUE, 
                     show_best = TRUE, show_u_point = TRUE, show_legend = TRUE )
     
-    return( list( stat.sim  =  stat.sim, stat.obs  =  stat.obs, par.sim  =  par.sim,
+    return( list( stat.sim_origin  =  stat.sim_origin, 
+                  par.sim_origin  =  par.sim_origin,
+                  stat.obs  =  stat.obs, 
+                  stat.sim  =  stat.sim,
+                  par.sim  =  par.sim,
                   spiderweb  = web, sudoku  =  rslt) )
 }
