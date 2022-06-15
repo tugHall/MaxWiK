@@ -41,7 +41,8 @@ spiderweb(
   n_bullets = 5,
   n_best = 10,
   halfwidth = 0.5,
-  epsilon = 0.001
+  epsilon = 0.001,
+  rate = 0.1
 )
 }
 \arguments{

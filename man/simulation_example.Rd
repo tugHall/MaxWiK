@@ -2,22 +2,25 @@
 % Please edit documentation in R/example.R
 \name{simulation_example}
 \alias{simulation_example}
+\alias{plot_3d_similarities}
 \title{Example of simulation for lazy start}
 \usage{
 simulation_example(
   verbose = TRUE,
   to_plot = TRUE,
   seed = NA,
-  model = c("Gaussian", "linear")[1],
+  model = c("Gaussian", "linear")[2],
   d = 2,
   x0 = c(3, 4),
   probability = TRUE,
   n = 1000,
   r = range(0, 10),
-  psi = 12,
-  t = 20,
+  psi = 4,
+  t = 8,
   restrict_points_number = 300
 )
+
+plot_3d_similarities(sim, r = range(0, 10), n = 12)
 }
 \arguments{
 \item{verbose}{Logical type to show or do not show messages during execution}
@@ -34,7 +37,7 @@ simulation_example(
 
 \item{probability}{Logical to apply the probabilistic distribution to input data generation}
 
-\item{n}{Integer number of points to generate for input data frame}
+\item{n}{Integer number of points for each axes to get net for plotly 3D graph}
 
 \item{r}{Range of parameters to plot, by default \code{r = range(0, 10)}}
 
@@ -44,16 +47,26 @@ simulation_example(
 
 \item{restrict_points_number}{Integer number of points which will be considered in the simulation, \cr
 other points will be skipped by rejection ABC}
+
+\item{sim}{Results of the function \code{simulation_example}}
 }
 \value{
 List of results of simulation with default values for all the parameters
+
+Plot of 3D to show the similarity of each point of the parameter space
 }
 \description{
 Example of simulation for lazy start
 }
+\section{Functions}{
+\itemize{
+\item \code{plot_3d_similarities}: Function to plot whole space of parameters
+related to similarity of the observation point:
+}}
+
 \examples{
 NULL
 # it takes a time for a simulation and then it will demonstrates results, \cr
 # so, please, wait for a while
-sim = simulation_example( verbose = FALSE , to_plot = TRUE )
+sim = simulation_example( verbose = FALSE , to_plot = FALSE )
 }

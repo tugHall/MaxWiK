@@ -733,7 +733,7 @@ sudoku  <-  function( DT , iKernelABC, n_bullets = 20, n_best = 10, halfwidth = 
 #' In other words, the algorithm seeks the most distant coupled point to each point from the data frame
 #'
 #' @param DF Data Frame that is usually part of whole data frame of parameters, 
-#' and this part is corresponding also to Voronoi cites/seeds
+#' and this part is corresponding also to Voronoi sites/seeds
 #'
 #' @return The function \code{get_pairs_of_data_frame()} returns the list of the pairs of points
 #' @export
@@ -792,7 +792,7 @@ generate_points_between_two_points  <-  function( pair, n = 10 ){
 #' generated between all the pairs of the most distant points
 #'
 #' @param DF Data frame of oints that is used for generation of tracer points, 
-#' so it is usually a subset of points corresponding to Voronoi cites/seeds
+#' so it is usually a subset of points corresponding to Voronoi sites/seeds
 #' @param n_bullets Integer number of tracer points between each pair of points from DF
 #'
 #' @return The function \code{get_tracer_bullets()} returns data frame of generated tracer points
@@ -981,13 +981,13 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
                              stat.sim = stat.sim, stat.obs = stat.obs, 
                              talkative = FALSE, check_pos_def = FALSE ,
                              n_bullets = 5, n_best = 10, halfwidth = 0.5, 
-                             epsilon = 0.001 ){
+                             epsilon = 0.001, rate = 0.1 ){
     
     input.parameters  =  list( psi = psi, t = t, param = param, 
                                stat.sim = stat.sim, stat.obs = stat.obs, 
                                talkative = talkative, check_pos_def = check_pos_def,
                                n_bullets = n_bullets, n_best = n_best, 
-                               halfwidth = halfwidth, epsilon = epsilon )
+                               halfwidth = halfwidth, epsilon = epsilon, rate = rate )
     
     iKernelABC  = iKernelABC( psi = psi, t = t, param = param, 
                               stat.sim = stat.sim, stat.obs = stat.obs, 
@@ -997,34 +997,46 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
     rslt  =  sudoku( DT = param , iKernelABC = iKernelABC, 
                      n_bullets = n_bullets, n_best = n_best, halfwidth = halfwidth )
     
+    ### Get subset of parameters of Voronoi sites corresponding to an observation point
+    network  =  get_subset_of_feature_map( dtst  =  param, 
+                                           Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi, 
+                                           iFeature_point = iKernelABC$kernel_mean_embedding )
+    # Number of Voronoi sites and number of rows for pool of points for network
+    N_Voronoi  =  nrow( network )
+    n_network  =   round( N_Voronoi * ( 1 + rate ) )  
+    # To add additional rows:
+    n_add      =   n_network  -   nrow( network )
+    
     ### Get the top:
     tracers = rslt$tracer_bullets
+    ### Add the top of tracers:
+    network[ N_Voronoi + 1 : n_add,  ]  =  tracers[ order( rslt$similarity_to_mean , 
+                                                           decreasing = TRUE)[ 1 : n_add ], ]
     
-    tracers_all  =  tracers
-    sim.tracers_all  =  rslt$similarity_to_mean
-    
-    par.top   =  tracers[ order( rslt$similarity_to_mean , decreasing = TRUE)[1:n_best], ]
-    par.best  =  par.top[ 1, ]
-    par.top   =  par.top[2:n_best, ]
+    par.best  =  tracers[ order( rslt$similarity_to_mean , decreasing = TRUE)[1], ]
     rm( tracers )
-    sim_previous  =  0  # max( rslt$similarity_to_mean )
+    sim_previous  =  0  
     
-    sim.top   =  NULL
     sim.best  =  -1
+    iteration  =  0 
     while( TRUE ){
-        ### Reflect par.top through par.best 
-        par.reflect  =  par.top
-        for( i in 1:nrow( par.top ) )  par.reflect[ i, ]  =  2 * par.best - par.top[ i ,  ] 
+        iteration  =  iteration  +  1
+        
+        ### Reflect network through par.best 
+        par.reflect  =  network  #  including par.best
+        for( i in 1:n_network )  par.reflect[ i, ]  =  2 * par.best - network[ i ,  ] 
         
         ### Generate points between par.top and par.reflect:
-        tracers  =  rbind( par.best, par.top, par.reflect )
-        for( i in 1:nrow( par.top  ) ){
-            gen_tr  =  generate_points_between_two_points( pair = rbind( par.top[ i ,] , 
+        tracers  =  rbind( network, par.reflect )
+        tracers  =  unique.data.frame( tracers )
+        
+        for( i in 1:n_network ){
+            gen_tr  =  generate_points_between_two_points( pair = rbind( network[ i ,] , 
                                                                          par.reflect[ i, ] ), n = n_bullets )
             tracers  =  rbind( tracers, gen_tr )
         }
         
-        ### calculate the similarity for new points:
+        ### calculate the similarity for all the new points:
         feature_tracers  =  get_voronoi_feature_PART_dataset( data = rbind( param, tracers ), 
                                                               talkative = talkative, start_row = nrow( param ) + 1 ,  
                                                               Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi )
@@ -1033,29 +1045,39 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
                                                t = iKernelABC$t, nr = nrow( feature_tracers$M_iKernel ), 
                                                iFeature_point = iKernelABC$kernel_mean_embedding )
         
-        tracers_all  =  rbind( tracers_all, tracers )
-        sim.tracers_all  =  c( sim.tracers_all, sim_tracers )
-        # new best point
-        par.best     =  tracers[ which.max(sim_tracers ), ]
+        # tracers_all  =  rbind( tracers_all, tracers )  # Change later 
+        # sim.tracers_all  =  c( sim.tracers_all, sim_tracers )  # Change later 
         
-        if ( abs( max( sim_tracers ) - sim_previous ) < epsilon ) break
-        sim_previous   =   max( sim_tracers )
+        # new best point and top points (the cut tracers)
+        tracers   =   tracers[ order( sim_tracers, decreasing = TRUE )[ 1:n_add ], ]  # Remove all the tracer and leave only the n_add top
+        par.best  =   tracers[ 1, ]
+        sim.best  =   max( sim_tracers )
         
-        ### rename new tracers:
-        sim.top  =  sort( sim_tracers , decreasing = TRUE)[1:n_best]
-        sim.best =  sim.top[ 1 ]
-        sim.top  =  sim.top[2:n_best]
+        if ( ( abs( sim.best - sim_previous ) < epsilon ) & iteration > 5 ) break
+        sim_previous   =   sim.best
         
-        par.top  =  tracers[ order( sim_tracers , decreasing = TRUE)[1:n_best], ]
-        par.best  =  par.top[ 1, ]
-        par.top   = par.top[2:n_best, ]
+        ### Combine with network
+        ## 1. Get similarities for network dataset
+        feature_network  =  get_voronoi_feature_PART_dataset( data = rbind( param, network ), 
+                                                              talkative = talkative, start_row = nrow( param ) + 1 ,  
+                                                              Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi )
         
+        sim_network  =  iKernel_point_dataset( Matrix_iKernel = feature_network$M_iKernel, 
+                                               t = iKernelABC$t, nr = nrow( feature_network$M_iKernel ), 
+                                               iFeature_point = iKernelABC$kernel_mean_embedding )
+        
+        network   =    network[ order( sim_network, decreasing = TRUE )[1:N_Voronoi] , ]  #  Cut and remove the n_add worst rows
+        
+        network   =    rbind( network, tracers )  #  Renew data in the spider network
         rm( tracers )
     }
     
-    return( list( input.parameters = input.parameters,  par.best = par.best, par.top = par.top, 
-                  sim.top = sim.top, sim.best = sim.best, tracers_all = tracers_all, 
-                  sim.tracers_all = sim.tracers_all, iKernelABC = iKernelABC ) )
+    return( list( input.parameters = input.parameters, 
+                  iteration  =  iteration, 
+                  network  =  network, 
+                  par.best = par.best,
+                  sim.best = sim.best, 
+                  iKernelABC = iKernelABC ) )
 }
 
 # MSE ---------------------------------------------------------------------

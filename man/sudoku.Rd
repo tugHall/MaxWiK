@@ -30,7 +30,7 @@ to consider them at the next algorithmic step}
 \code{if similarity_of_point >= halfwidth} then it is the point to be included to the pool of the best points}
 
 \item{DF}{Data frame of oints that is used for generation of tracer points,
-so it is usually a subset of points corresponding to Voronoi cites/seeds}
+so it is usually a subset of points corresponding to Voronoi sites/seeds}
 
 \item{pair}{Data frame of two points}
 

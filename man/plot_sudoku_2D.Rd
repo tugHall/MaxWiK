@@ -37,7 +37,7 @@ plot_web_2D(
   ylim,
   show_tracer = TRUE,
   show_obs = TRUE,
-  show_top = TRUE,
+  show_network = TRUE,
   show_best = TRUE,
   show_u_point = TRUE,
   show_legend = FALSE

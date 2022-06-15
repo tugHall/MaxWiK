@@ -233,7 +233,7 @@ plot_sudoku_2D   <-  function( stat.sim, par.sim, par.truth, iKernelABC, rslt,
 plot_web_2D   <-  function( stat.sim, par.sim, par.truth, iKernelABC, web, ind_X, ind_Y, 
                             names = c( 'P1', 'P2' ),
                             xlim, ylim,
-                            show_tracer = TRUE, show_obs = TRUE, show_top = TRUE, show_best = TRUE,
+                            show_tracer = TRUE, show_obs = TRUE, show_network = TRUE, show_best = TRUE,
                             show_u_point = TRUE, show_legend = FALSE ){
     
     sbst_feature_Param  =  get_subset_of_feature_map( dtst  =  par.sim,
@@ -264,9 +264,8 @@ plot_web_2D   <-  function( stat.sim, par.sim, par.truth, iKernelABC, web, ind_X
     
     # if ( draw_Y )    points( sbst_feature_Y[,ind_X], sbst_feature_Y[,ind_Y], col = 'red', cex = 1.6 )
     if ( show_u_point ) points( sbst_feature_Param[,ind_X], sbst_feature_Param[,ind_Y], col = 'blue', cex = 1.4, pch = 0 )
-    if ( show_tracer ) points( web$tracers_all[,ind_X], web$tracers_all[,ind_Y], col = alpha('grey', 0.2 ), cex = 0.8, pch = 20 )
-    if ( show_top ) points( web$par.top[,ind_X], web$par.top[,ind_Y], 
-                            col = 'blue', cex = 0.5, pch = 20 )
+    # if ( show_tracer ) points( web$tracers_all[,ind_X], web$tracers_all[,ind_Y], col = alpha('grey', 0.2 ), cex = 0.8, pch = 20 )
+    if ( show_network ) points( web$network[,ind_X], web$network[,ind_Y], col = 'blue', cex = 0.5, pch = 20 )
     if ( show_best ) points( web$par.best[,ind_X], web$par.best[,ind_Y], col = 'red', cex = 0.8, pch = 5 )
     if (show_obs ) points( par.truth[,ind_X], par.truth[,ind_Y], col = 'red', cex = 2.4, pch = 4, lwd = 3 )
     
