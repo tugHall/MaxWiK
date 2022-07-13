@@ -26,7 +26,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
                                   model = c('Gaussian', 'linear')[2] ,
                                   d = 2, x0 = c(3,4), probability = TRUE, 
                                   n = 1000, r = range(0, 10),
-                                  psi = 4, t = 8, 
+                                  psi = 8, t = 8, 
                                   restrict_points_number = 300 ){
 
     if ( !is.na( seed ) ) set.seed( seed = seed )
@@ -68,7 +68,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
     stat.sim  =  stat.sim_origin[ rej$region, ]
     par.sim   =   par.sim_origin[ rej$region, ]    
     
-    web  =  spiderweb_old( psi = psi, t = t, param = par.sim_origin, 
+    web  =  spiderweb( psi = psi, t = t, param = par.sim_origin, 
                        stat.sim = stat.sim_origin, stat.obs = stat.obs, 
                        talkative = TRUE, check_pos_def = FALSE ,
                        n_bullets = 5, n_best = 20, halfwidth = 0.5, 

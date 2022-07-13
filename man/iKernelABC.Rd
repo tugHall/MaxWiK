@@ -38,11 +38,13 @@ spiderweb(
   stat.obs = stat.obs,
   talkative = FALSE,
   check_pos_def = FALSE,
-  n_bullets = 5,
+  n_bullets = 16,
   n_best = 10,
   halfwidth = 0.5,
   epsilon = 0.001,
-  rate = 0.1
+  rate = 0.1,
+  max_iteration = 5,
+  save_web = TRUE
 )
 }
 \arguments{
@@ -70,6 +72,13 @@ to consider them at the next algorithmic step}
 
 \item{epsilon}{Criterion to stop algorithm \code{spiderweb()} that isused to check: \cr
 \code{if ( abs( max( sim_tracers ) - sim_previous ) < epsilon ) break}}
+
+\item{rate}{Numeric rate from 0 to 1 that gives rate of changing of surround points of proposed max of similarity
+or part of changing of network during meta-sampling}
+
+\item{max_iteration}{Maximal number of iteration in the function}
+
+\item{save_web}{Logical to save or do not save network during meta-sampling}
 }
 \value{
 The function \code{iKernelABC()} returns the list of :
@@ -100,14 +109,13 @@ tracers_all that is data frame of all the generated tracer points;
 
 The function \code{spiderweb()} returns the list of the next objects:
 \itemize{
-\item input.parameters the list of all the input parameters for Isolation Kernel ABC method;
+\item input.parameters that is the list of all the input parameters for Isolation Kernel ABC method;
+\item iteration that is iteration value when algorithm stopped;
+\item network that is network points when algorithm stopped;
 \item par.best that is data frame of one point that is the best from all the generated tracer points;
-\item par.top that is data frame of n_best points that are the top from all the generated tracer points;
-\item sim.top that is numeric vecor of similarities of the top points;
 \item sim.best that is numeric value of the similarity of the best tracer point;
-tracers_all that is data frame of all the generated tracer points;
-\item sim.tracers_all that is numeric vector of similarities of all the generated tacer points;
-\item iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters}.
+\item iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters};
+\item spiderweb that is the list of all the networks during the meta-sampling.
 }
 }
 \description{

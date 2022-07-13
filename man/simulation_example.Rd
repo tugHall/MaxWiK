@@ -15,7 +15,7 @@ simulation_example(
   probability = TRUE,
   n = 1000,
   r = range(0, 10),
-  psi = 4,
+  psi = 8,
   t = 8,
   restrict_points_number = 300
 )

@@ -962,16 +962,19 @@ spiderweb_old  <-  function( psi = 4, t = 35, param = param,
 #' \code{if similarity_of_point >= halfwidth} then it is the point to be included to the poool of the best points
 #' @param epsilon Criterion to stop algorithm \code{spiderweb()} that isused to check: \cr
 #' \code{if ( abs( max( sim_tracers ) - sim_previous ) < epsilon ) break}
+#' @param rate Numeric rate from 0 to 1 that gives rate of changing of surround points of proposed max of similarity
+#' or part of changing of network during meta-sampling
+#' @param max_iteration Maximal number of iteration in the function
+#' @param save_web Logical to save or do not save network during meta-sampling
 #'
 #' @return The function \code{spiderweb()} returns the list of the next objects:
-#' - input.parameters the list of all the input parameters for Isolation Kernel ABC method;
+#' - input.parameters that is the list of all the input parameters for Isolation Kernel ABC method;
+#' - iteration that is iteration value when algorithm stopped;
+#' - network that is network points when algorithm stopped;
 #' - par.best that is data frame of one point that is the best from all the generated tracer points;
-#' - par.top that is data frame of n_best points that are the top from all the generated tracer points; 
-#' - sim.top that is numeric vecor of similarities of the top points;
 #' - sim.best that is numeric value of the similarity of the best tracer point;
-#' tracers_all that is data frame of all the generated tracer points; 
-#' - sim.tracers_all that is numeric vector of similarities of all the generated tacer points;
-#' - iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters}.
+#' - iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters};
+#' - spiderweb that is the list of all the networks during the meta-sampling.
 #' 
 #' @export
 #' 
@@ -980,14 +983,16 @@ spiderweb_old  <-  function( psi = 4, t = 35, param = param,
 spiderweb  <-  function( psi = 4, t = 35, param = param, 
                              stat.sim = stat.sim, stat.obs = stat.obs, 
                              talkative = FALSE, check_pos_def = FALSE ,
-                             n_bullets = 5, n_best = 10, halfwidth = 0.5, 
-                             epsilon = 0.001, rate = 0.1 ){
+                             n_bullets = 16, n_best = 10, halfwidth = 0.5, 
+                             epsilon = 0.001, rate = 0.1, 
+                             max_iteration = 5, save_web = TRUE ){
     
     input.parameters  =  list( psi = psi, t = t, param = param, 
                                stat.sim = stat.sim, stat.obs = stat.obs, 
                                talkative = talkative, check_pos_def = check_pos_def,
                                n_bullets = n_bullets, n_best = n_best, 
-                               halfwidth = halfwidth, epsilon = epsilon, rate = rate )
+                               halfwidth = halfwidth, epsilon = epsilon, rate = rate,
+                               max_iteration = max_iteration, save_web = save_web )
     
     iKernelABC  = iKernelABC( psi = psi, t = t, param = param, 
                               stat.sim = stat.sim, stat.obs = stat.obs, 
@@ -1010,7 +1015,7 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
     ### Get the top:
     tracers = rslt$tracer_bullets
     ### Add the top of tracers:
-    network[ N_Voronoi + 1 : n_add,  ]  =  tracers[ order( rslt$similarity_to_mean , 
+    network[ N_Voronoi + ( 1 : n_add ),  ]  =  tracers[ order( rslt$similarity_to_mean , 
                                                            decreasing = TRUE)[ 1 : n_add ], ]
     
     par.best  =  tracers[ order( rslt$similarity_to_mean , decreasing = TRUE)[1], ]
@@ -1019,8 +1024,13 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
     
     sim.best  =  -1
     iteration  =  0 
+    spiderweb  =  NULL
+    
+    ### START META-SAMPLING via iterations
     while( TRUE ){
         iteration  =  iteration  +  1
+        
+        if ( save_web ) spiderweb[[ iteration ]]  =  network 
         
         ### Reflect network through par.best 
         par.reflect  =  network  #  including par.best
@@ -1030,12 +1040,25 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
         tracers  =  rbind( network, par.reflect )
         tracers  =  unique.data.frame( tracers )
         
-        for( i in 1:n_network ){
-            gen_tr  =  generate_points_between_two_points( pair = rbind( network[ i ,] , 
-                                                                         par.reflect[ i, ] ), n = n_bullets )
-            tracers  =  rbind( tracers, gen_tr )
+        if ( FALSE ){    
+            ### Change IT!!!! Incorrect!!! This algorithm seeks only across the best tracer not around,
+            ### This algorithm restricts diversity of points in the high dimensional space
+            for( i in 1:n_network ){
+                gen_tr  =  generate_points_between_two_points( pair = rbind( network[ i ,] , 
+                                                                             par.reflect[ i, ] ), n = n_bullets )
+                tracers  =  rbind( tracers, gen_tr )
+            }
+            ### Change IT!!!! Incorrect!!!
         }
         
+        ### Alternative algorithm to get diverse generation of points:
+        if ( TRUE ){
+            
+            gen_tr  =  get_tracer_bullets( DF = tracers, n_bullets = n_bullets )
+            
+            tracers  =  rbind( tracers, gen_tr )
+        }
+
         ### calculate the similarity for all the new points:
         feature_tracers  =  get_voronoi_feature_PART_dataset( data = rbind( param, tracers ), 
                                                               talkative = talkative, start_row = nrow( param ) + 1 ,  
@@ -1049,12 +1072,10 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
         # sim.tracers_all  =  c( sim.tracers_all, sim_tracers )  # Change later 
         
         # new best point and top points (the cut tracers)
-        tracers   =   tracers[ order( sim_tracers, decreasing = TRUE )[ 1:n_add ], ]  # Remove all the tracer and leave only the n_add top
+        rdr  =  order( sim_tracers, decreasing = TRUE )
+        tracers   =   tracers[ rdr[ 1:n_add ],  ]  # Remove all the tracer and leave only the n_add top
         par.best  =   tracers[ 1, ]
-        sim.best  =   max( sim_tracers )
-        
-        if ( ( abs( sim.best - sim_previous ) < epsilon ) & iteration > 5 ) break
-        sim_previous   =   sim.best
+        sim.best  =   sim_tracers[ rdr[1] ]
         
         ### Combine with network
         ## 1. Get similarities for network dataset
@@ -1068,8 +1089,12 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
         
         network   =    network[ order( sim_network, decreasing = TRUE )[1:N_Voronoi] , ]  #  Cut and remove the n_add worst rows
         
-        network   =    rbind( network, tracers )  #  Renew data in the spider network
+        network   =    rbind( network, tracers )  #  Renew data in the spiderweb
         rm( tracers )
+        
+        ### Check for break from iterations:
+        if ( ( abs( sim.best - sim_previous ) < epsilon ) | ( iteration >= max_iteration ) )   break
+        sim_previous   =   sim.best
     }
     
     return( list( input.parameters = input.parameters, 
@@ -1077,7 +1102,8 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
                   network  =  network, 
                   par.best = par.best,
                   sim.best = sim.best, 
-                  iKernelABC = iKernelABC ) )
+                  iKernelABC = iKernelABC, 
+                  spiderweb = spiderweb ) )
 }
 
 # MSE ---------------------------------------------------------------------
