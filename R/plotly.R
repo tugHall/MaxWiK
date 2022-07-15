@@ -185,7 +185,7 @@ plot_3d_net_similarities  <-  function( simnet, r = range(0, 10), n = 20 ){
                            x = c( Xbest[1], Xbest[1] ), 
                            y = c( Xbest[2], Xbest[2] ), 
                            z = c(0, max(net$sim) )
-        ) %>% layout( list( title = paste('Psi = ', psi_t$psi[j], ',  t = ', psi_t$t[j] ) )
+        ) %>% layout( title = paste('Psi = ', psi_t$psi[j], ',  t = ', psi_t$t[j] ) 
         ) %>% add_trace( type = "scatter3d", mode="line", # markers
                          name = 'Truth',
                         x = c(x0[1],x0[1]), y = c(x0[2], x0[2]), z = c(0, max(net$sim))  

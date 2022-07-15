@@ -188,9 +188,9 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
                       psi_t     =  psi_t,
                       webnet  = webnet )
     
-    network     =  get_network_from_simnet( simnet = simnet )
+    simnet$networks  =  get_network_from_simnet( simnet = simnet )
     
-    simnet$MAP  =  point_estimate( network )$MAP
+    simnet$MAP  =  point_estimate( simnet$networks )$MAP
     
     return( simnet )
 }
