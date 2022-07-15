@@ -102,10 +102,10 @@ plot_3d_similarities  <-  function( sim, r = range(0, 10), n = 12 ){
 #'
 #' @examples
 #' NULL
-plot_3d_net_similarities  <-  function( simnet, r = range(0, 10), n = 12 ){
+plot_3d_net_similarities  <-  function( simnet, r = range(0, 10), n = 20 ){
     
     gen_x  =  ( 0 : (n-1) ) * ( r[2] - r[1] ) / ( n - 1 )
-    gen_y  =  gen_x
+    # gen_y  =  gen_x
     
     stat.obs = simnet$stat.obs 
     par.sim = simnet$par.sim_origin
@@ -131,10 +131,13 @@ plot_3d_net_similarities  <-  function( simnet, r = range(0, 10), n = 12 ){
     
     for( j in 1:length( simnet$webnet)  ){
         
-        net = generate_net()
+        net = generate_net( gen_x )
         web  =  simnet$webnet[[ j ]] 
         iKernelABC  =  simnet$webnet[[ j ]]$iKernelABC
         Xbest  =  as.numeric( simnet$webnet[[ j ]]$par.best )
+        
+        network  =  simnet$webnet[[ j ]]$network
+        sim_network  =  simnet$webnet[[ j ]]$sim_network
         
         if ( FALSE ){
             iKernelABC  =  web$iKernelABC
@@ -182,7 +185,10 @@ plot_3d_net_similarities  <-  function( simnet, r = range(0, 10), n = 12 ){
         ) %>% layout(title = paste('Psi = ', psi_t$psi[j], ',  t = ', psi_t$t[j] ) 
         ) %>% add_trace( type = "scatter3d", mode="line", # markers
                          name = 'Truth',
-                        x = c(x0[1],x0[1]), y = c(x0[2], x0[2]), z = c(0, max(net$sim))  ) 
+                        x = c(x0[1],x0[1]), y = c(x0[2], x0[2]), z = c(0, max(net$sim))  
+        ) %>% add_trace( type = "scatter3d", mode="line", # markers
+                         name = 'Network',
+                         x = network$x1, y = network$x2, z = sim_network ) 
         
         
         print( p2 )

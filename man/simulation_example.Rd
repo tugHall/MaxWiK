@@ -39,7 +39,7 @@ simulation_example_many_psi_t(
 
 plot_3d_similarities(sim, r = range(0, 10), n = 12)
 
-plot_3d_net_similarities(simnet, r = range(0, 10), n = 12)
+plot_3d_net_similarities(simnet, r = range(0, 10), n = 20)
 }
 \arguments{
 \item{verbose}{Logical type to show or do not show messages during execution}

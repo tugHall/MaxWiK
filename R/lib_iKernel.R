@@ -767,7 +767,8 @@ get_pairs_of_data_frame  <-  function( DF ){
 #'
 #' @return The function \code{generate_points_between_two_points()} 
 #' returns data frame of generated points between two given points, 
-#' including them as the first and last rows
+#' including given points as the first and the last rows
+#' 
 #' @export
 #'
 #' @examples
@@ -778,7 +779,7 @@ generate_points_between_two_points  <-  function( pair, n = 10 ){
     DF = pair
     DF[ 1:n,] = 0
     row.names( DF ) = 1:n
-    for( i in 1:length( DF ) ){
+    for( i in 1:ncol( DF ) ){
         dlt = ( pair[ 2, i ] - pair[ 1, i ] ) / ( n - 1 )  
         DF[ , i ]  =  pair[ 1, i ] + dlt * ( 0 : ( n - 1 ) )
     }
@@ -1209,6 +1210,8 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
             tracers  =  rbind( tracers, gen_tr )
         }
         
+        tracers  =  unique.data.frame( tracers )
+        
         ### calculate the similarity for all the new points:
         feature_tracers  =  get_voronoi_feature_PART_dataset( data = rbind( param, tracers ), 
                                                               talkative = talkative, start_row = nrow( param ) + 1 ,  
@@ -1237,22 +1240,33 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
                                                t = iKernelABC$t, nr = nrow( feature_network$M_iKernel ), 
                                                iFeature_point = iKernelABC$kernel_mean_embedding )
         
-        network   =    network[ order( sim_network, decreasing = TRUE )[1:N_Voronoi] , ]  #  Cut and remove the n_add worst rows
+        rdr  =  order( sim_network, decreasing = TRUE )[1:N_Voronoi]
+        network   =    network[ rdr , ]  #  Cut and remove the n_add worst rows
         
         network   =    rbind( network, tracers )  #  Renew data in the spiderweb
         rm( tracers )
         
-        sim_network  =  sim_network[ order( sim_network, decreasing = TRUE )[1:N_Voronoi]  ]
-        sim.slow     =  min( sim_network )  # Get the worst value
+        sim_network  =  sim_network[ rdr  ]
+        sim.slow     =  sim_network[ N_Voronoi ]  # Get the worst value
         
         ### Check for break from iterations:
         if ( ( abs( sim.slow - sim_previous ) < epsilon ) | ( iteration >= max_iteration ) )   break
         sim_previous   =   sim.best
     }
     
+    ### Calculate similarities of final network:
+    feature_network  =  get_voronoi_feature_PART_dataset( data = rbind( param, network ), 
+                                                          talkative = talkative, start_row = nrow( param ) + 1 ,  
+                                                          Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi )
+    
+    sim_network  =  iKernel_point_dataset( Matrix_iKernel = feature_network$M_iKernel, 
+                                           t = iKernelABC$t, nr = nrow( feature_network$M_iKernel ), 
+                                           iFeature_point = iKernelABC$kernel_mean_embedding )
+    
     return( list( input.parameters = input.parameters, 
                   iteration  =  iteration, 
                   network  =  network, 
+                  sim_network  =  sim_network,
                   par.best = par.best,
                   sim.best = sim.best, 
                   iKernelABC = iKernelABC, 
