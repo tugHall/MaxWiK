@@ -1159,9 +1159,12 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
     network  =  get_subset_of_feature_map( dtst  =  param, 
                                            Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi, 
                                            iFeature_point = iKernelABC$kernel_mean_embedding )
+    network  =  unique.data.frame( network )
+    
     # Number of Voronoi sites and number of rows for pool of points for network
     N_Voronoi  =  nrow( network )
-    n_network  =   round( N_Voronoi * ( 1 + rate ) )  
+    n_network  =   round( N_Voronoi * ( 1 + rate ) ) 
+    
     # To add additional rows:
     n_add      =   n_network  -   nrow( network )
     
@@ -1193,25 +1196,10 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
         tracers  =  rbind( network, par.reflect )
         tracers  =  unique.data.frame( tracers )
         
-        if ( FALSE ){    
-            ### Change IT!!!! Incorrect!!! This algorithm seeks only across the best tracer not around,
-            ### This algorithm restricts diversity of points in the high dimensional space
-            for( i in 1:n_network ){
-                gen_tr  =  generate_points_between_two_points( pair = rbind( network[ i ,] , 
-                                                                             par.reflect[ i, ] ), n = n_bullets )
-                tracers  =  rbind( tracers, gen_tr )
-            }
-            ### Change IT!!!! Incorrect!!!
-        }
-        
-        ### Alternative algorithm to get diverse generation of points:
-        if ( TRUE ){
+        ### Algorithm to get diverse generation of points:
             
-            gen_tr  =  get_tracer_bullets( DF = tracers, n_bullets = n_bullets )
-            
-            tracers  =  rbind( tracers, gen_tr )
-        }
-        
+        gen_tr  =  get_tracer_bullets( DF = tracers, n_bullets = n_bullets )
+        tracers  =  rbind( tracers, gen_tr )
         tracers  =  unique.data.frame( tracers )
         
         ### calculate the similarity for all the new points:
@@ -1223,12 +1211,9 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
                                                t = iKernelABC$t, nr = nrow( feature_tracers$M_iKernel ), 
                                                iFeature_point = iKernelABC$kernel_mean_embedding )
         
-        # tracers_all  =  rbind( tracers_all, tracers )  # Change later 
-        # sim.tracers_all  =  c( sim.tracers_all, sim_tracers )  # Change later 
-        
         # new best point and top points (the cut tracers)
         rdr  =  order( sim_tracers, decreasing = TRUE )
-        tracers   =   tracers[ rdr[ 1:n_add ],  ]  # Remove all the tracer and leave only the n_add top
+        tracers   =   tracers[ rdr[ 1:n_network ],  ]  # Sort all the tracers and leave only the n_network top
         par.best  =   tracers[ 1, ]
         sim.best  =   sim_tracers[ rdr[1] ]
         
@@ -1245,7 +1230,7 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
         rdr  =  order( sim_network, decreasing = TRUE )[1:N_Voronoi]
         network   =    network[ rdr , ]  #  Cut and remove the n_add worst rows
         
-        network   =    rbind( network, tracers )  #  Renew data in the spiderweb
+        network   =    unique.data.frame( rbind( network, tracers ) )[ 1:n_network, ]  #  Renew data in the spiderweb
         rm( tracers )
         
         sim_network  =  sim_network[ rdr  ]

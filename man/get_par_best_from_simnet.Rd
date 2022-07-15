@@ -3,12 +3,15 @@
 \name{get_par_best_from_simnet}
 \alias{get_par_best_from_simnet}
 \alias{get_spiderweb_from_simnet}
+\alias{get_network_from_simnet}
 \title{Function to extract all the best parameters estimation from results of the function
 \code{simulation_example_many_psi_t()}}
 \usage{
 get_par_best_from_simnet(simnet)
 
 get_spiderweb_from_simnet(simnet)
+
+get_network_from_simnet(simnet)
 }
 \arguments{
 \item{simnet}{results of the function \code{simulation_example_many_psi_t()}}
@@ -17,6 +20,9 @@ get_spiderweb_from_simnet(simnet)
 \code{get_par_best_from_simnet()} returns all the best parameters estimation
 
 \code{get_spiderweb_from_simnet()} returns all the spiderwebs from results of the function
+\code{simulation_example_many_psi_t()}
+
+\code{get_network_from_simnet()} returns all the networks from results of the function
 \code{simulation_example_many_psi_t()}
 }
 \description{
@@ -27,9 +33,13 @@ Function to extract all the best parameters estimation from results of the funct
 \itemize{
 \item \code{get_spiderweb_from_simnet}: Function to extract all the spiderwebs from results of the function
 \code{simulation_example_many_psi_t()}
+
+\item \code{get_network_from_simnet}: Function to extract all the networks from results of the function
+\code{simulation_example_many_psi_t()}
 }}
 
 \examples{
+NULL
 NULL
 NULL
 }

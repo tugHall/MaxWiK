@@ -250,3 +250,35 @@ get_spiderweb_from_simnet  <-  function( simnet ){
     return( network )
 }
 
+
+
+#' @describeIn get_par_best_from_simnet  Function to extract all the networks from results of the function 
+#' \code{simulation_example_many_psi_t()}
+#'
+#'
+#' @return \code{get_network_from_simnet()} returns all the networks from results of the function 
+#' \code{simulation_example_many_psi_t()}
+#' 
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+get_network_from_simnet  <-  function( simnet ){
+    
+    webnet  =  simnet$webnet
+    param   =  simnet$webnet[[ 1 ]]$par.best   #  Get the format of parameters
+    
+    network =  data.frame()
+    iteration  =  NULL
+    for ( j in 1:length( webnet )){
+
+        network  =  rbind( network, webnet[[ j ]]$network )
+        iteration  =  c( iteration, rep( j, nrow( simnet$webnet[[ j ]]$network ) ) )
+        
+    }
+    network$iteration  =  iteration
+    return( network )
+}
+
+
