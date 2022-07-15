@@ -701,6 +701,8 @@ sudoku  <-  function( DT , iKernelABC, n_bullets = 20, n_best = 10, halfwidth = 
     
     tracer_bullets   =  get_tracer_bullets( DF = sbst_feature_Param, n_bullets = n_bullets )
     
+    tracer_bullets   =  unique.data.frame( tracer_bullets )
+    
     feature_tracers  =  get_voronoi_feature_PART_dataset( data = rbind( DT, tracer_bullets ), 
                                                           talkative = FALSE, start_row = nrow( DT ) + 1 ,  
                                                           Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi )
