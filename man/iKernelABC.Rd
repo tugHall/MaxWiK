@@ -4,6 +4,7 @@
 \alias{iKernelABC}
 \alias{spiderweb_old}
 \alias{spiderweb}
+\alias{spiderweb_slow}
 \title{Function to get Approximate Bayesian Computation based on Maxima Weighted Isolation Kernel mapping}
 \usage{
 iKernelABC(
@@ -31,6 +32,23 @@ spiderweb_old(
 )
 
 spiderweb(
+  psi = 4,
+  t = 35,
+  param = param,
+  stat.sim = stat.sim,
+  stat.obs = stat.obs,
+  talkative = FALSE,
+  check_pos_def = FALSE,
+  n_bullets = 16,
+  n_best = 10,
+  halfwidth = 0.5,
+  epsilon = 0.001,
+  rate = 0.1,
+  max_iteration = 5,
+  save_web = TRUE
+)
+
+spiderweb_slow(
   psi = 4,
   t = 35,
   param = param,
@@ -117,6 +135,17 @@ The function \code{spiderweb()} returns the list of the next objects:
 \item iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters};
 \item spiderweb that is the list of all the networks during the meta-sampling.
 }
+
+The function \code{spiderweb()} returns the list of the next objects:
+\itemize{
+\item input.parameters that is the list of all the input parameters for Isolation Kernel ABC method;
+\item iteration that is iteration value when algorithm stopped;
+\item network that is network points when algorithm stopped;
+\item par.best that is data frame of one point that is the best from all the generated tracer points;
+\item sim.best that is numeric value of the similarity of the best tracer point;
+\item iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters};
+\item spiderweb that is the list of all the networks during the meta-sampling.
+}
 }
 \description{
 The function \code{iKernelABC()} is used to get Approximate Bayesian Computation
@@ -145,6 +174,16 @@ from \code{sudoku()} algorithm, based on the simple procedure: \cr
 \item repeat all the steps until condition to be \code{TRUE}: \cr
 \code{abs( max( sim_tracers ) - sim_previous ) < epsilon }
 }
+
+The function \code{spiderweb_slow()} itteratively generates tracer points gotten
+from \code{sudoku()} algorithm, based on the simple procedure: \cr
+\itemize{
+\item making a reflection of the top points from the best point, \cr
+\item and then generating the point tracers between them, \cr
+\item finally, the algorithm chooses again the top points and the best point (\code{sudoku()} function is used),
+\item repeat all the steps until condition to be \code{TRUE}: \cr
+\code{abs( min( sim_tracers ) - sim_previous ) < epsilon }
+}
 }
 \section{Functions}{
 \itemize{
@@ -153,9 +192,13 @@ Maxima Weighted Isolation Kernel mapping which is related to an observation poin
 
 \item \code{spiderweb}: The function to get the best value of parameter corresponding to
 Maxima Weighted Isolation Kernel mapping which is related to an observation point
+
+\item \code{spiderweb_slow}: The function to get the best value of parameter corresponding to
+Maxima Weighted Isolation Kernel mapping which is related to an observation point
 }}
 
 \examples{
+NULL
 NULL
 NULL
 NULL

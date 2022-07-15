@@ -2,21 +2,34 @@
 % Please edit documentation in R/example.R
 \name{get_par_best_from_simnet}
 \alias{get_par_best_from_simnet}
+\alias{get_spiderweb_from_simnet}
 \title{Function to extract all the best parameters estimation from results of the function
 \code{simulation_example_many_psi_t()}}
 \usage{
 get_par_best_from_simnet(simnet)
+
+get_spiderweb_from_simnet(simnet)
 }
 \arguments{
 \item{simnet}{results of the function \code{simulation_example_many_psi_t()}}
 }
 \value{
 \code{get_par_best_from_simnet()} returns all the best parameters estimation
+
+\code{get_spiderweb_from_simnet()} returns all the spiderwebs from results of the function
+\code{simulation_example_many_psi_t()}
 }
 \description{
 Function to extract all the best parameters estimation from results of the function
 \code{simulation_example_many_psi_t()}
 }
+\section{Functions}{
+\itemize{
+\item \code{get_spiderweb_from_simnet}: Function to extract all the spiderwebs from results of the function
+\code{simulation_example_many_psi_t()}
+}}
+
 \examples{
+NULL
 NULL
 }

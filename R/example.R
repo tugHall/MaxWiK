@@ -170,7 +170,7 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
     for( j in 1:nrow( psi_t ) ){
         psi =  psi_t$psi[ j ]
         t   =  psi_t$t[ j ]
-        web  =  spiderweb( psi = psi, t = t, param = par.sim_origin, 
+        web  =  spiderweb_slow( psi = psi, t = t, param = par.sim_origin, 
                            stat.sim = stat.sim_origin, stat.obs = stat.obs, 
                            talkative = TRUE, check_pos_def = FALSE ,
                            n_bullets = 5, n_best = 20, halfwidth = 0.5, 
@@ -216,5 +216,37 @@ get_par_best_from_simnet  <-  function( simnet ){
     
     best$sim  =  sim
     return( best )
+}
+
+
+#' @describeIn get_par_best_from_simnet  Function to extract all the spiderwebs from results of the function 
+#' \code{simulation_example_many_psi_t()}
+#'
+#'
+#' @return \code{get_spiderweb_from_simnet()} returns all the spiderwebs from results of the function 
+#' \code{simulation_example_many_psi_t()}
+#' 
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+get_spiderweb_from_simnet  <-  function( simnet ){
+    
+    webnet  =  simnet$webnet
+    param   =  simnet$webnet[[ 1 ]]$par.best   #  Get the format of parameters
+    
+    network =  list()
+    for ( j in 1:length( webnet )){
+        res = NULL
+        for( p in 1:length(webnet[[ j ]]$spiderweb ) ){
+            web  =  webnet[[ j ]]$spiderweb[[ p ]]
+            web$iteration  =  p
+            res  =  rbind( res, web )
+        }
+        network[[ j ]]  =  res 
+    }
+    
+    return( network )
 }
 
