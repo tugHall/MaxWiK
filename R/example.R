@@ -188,3 +188,33 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
                   psi_t     =  psi_t,
                   webnet  = webnet ) )
 }
+
+
+
+#' Function to extract all the best parameters estimation from results of the function 
+#' \code{simulation_example_many_psi_t()}
+#'
+#' @param simnet results of the function \code{simulation_example_many_psi_t()}
+#'
+#' @return \code{get_par_best_from_simnet()} returns all the best parameters estimation 
+#' 
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+get_par_best_from_simnet  <-  function( simnet ){
+    best = NULL
+    sim = NULL
+    for( j in 1:length( simnet$webnet)  ){
+        par.best  =  simnet$webnet[[ j ]]$par.best 
+        
+        best  =  rbind( best, par.best )
+        sim   =  c( sim, simnet$webnet[[ j ]]$sim.best )
+        
+    }
+    
+    best$sim  =  sim
+    return( best )
+}
+
