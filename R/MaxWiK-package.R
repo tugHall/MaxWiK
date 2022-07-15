@@ -2,6 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom bayestestR point_estimate
 #' @importFrom graphics axis
 #' @importFrom graphics legend
 #' @importFrom graphics lines

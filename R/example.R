@@ -179,14 +179,20 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
     }
 
     
-    return( list( stat.sim_origin  =  stat.sim_origin, 
-                  par.sim_origin  =  par.sim_origin,
-                  x0 = x0,
-                  stat.obs  =  stat.obs, 
-                  stat.sim  =  stat.sim,
-                  par.sim   =  par.sim,
-                  psi_t     =  psi_t,
-                  webnet  = webnet ) )
+    simnet  =  list(  stat.sim_origin  =  stat.sim_origin, 
+                      par.sim_origin   =  par.sim_origin,
+                      x0 = x0,
+                      stat.obs  =  stat.obs, 
+                      stat.sim  =  stat.sim,
+                      par.sim   =  par.sim,
+                      psi_t     =  psi_t,
+                      webnet  = webnet )
+    
+    network     =  get_network_from_simnet( simnet = simnet )
+    
+    simnet$MAP  =  point_estimate( network )$MAP
+    
+    return( simnet )
 }
 
 
@@ -270,14 +276,14 @@ get_network_from_simnet  <-  function( simnet ){
     param   =  simnet$webnet[[ 1 ]]$par.best   #  Get the format of parameters
     
     network =  data.frame()
-    iteration  =  NULL
+    # iteration  =  NULL
     for ( j in 1:length( webnet )){
 
         network  =  rbind( network, webnet[[ j ]]$network )
-        iteration  =  c( iteration, rep( j, nrow( simnet$webnet[[ j ]]$network ) ) )
+        # iteration  =  c( iteration, rep( j, nrow( simnet$webnet[[ j ]]$network ) ) )
         
     }
-    network$iteration  =  iteration
+    # network$iteration  =  iteration
     return( network )
 }
 

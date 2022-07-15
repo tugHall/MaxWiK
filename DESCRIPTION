@@ -14,7 +14,8 @@ Imports:
     methods,
     stats,
     utils,
-    scales
+    scales,
+    bayestestR
 Suggests: 
     rmarkdown,
     knitr,
