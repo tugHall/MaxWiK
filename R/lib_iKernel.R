@@ -1135,7 +1135,7 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
                          talkative = FALSE, check_pos_def = FALSE ,
                          n_bullets = 16, n_best = 10, halfwidth = 0.5, 
                          epsilon = 0.001, rate = 0.1, 
-                         max_iteration = 5, save_web = TRUE ){
+                         max_iteration = 15, save_web = TRUE ){
     
     input.parameters  =  list( psi = psi, t = t, param = param, 
                                stat.sim = stat.sim, stat.obs = stat.obs, 
@@ -1243,7 +1243,7 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
         rm( tracers )
         
         sim_network  =  sim_network[ order( sim_network, decreasing = TRUE )[1:N_Voronoi]  ]
-        sim.slow     =  sim_network[ N_Voronoi ]
+        sim.slow     =  min( sim_network )  # Get the worst value
         
         ### Check for break from iterations:
         if ( ( abs( sim.slow - sim_previous ) < epsilon ) | ( iteration >= max_iteration ) )   break

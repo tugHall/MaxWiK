@@ -61,7 +61,7 @@ spiderweb_slow(
   halfwidth = 0.5,
   epsilon = 0.001,
   rate = 0.1,
-  max_iteration = 5,
+  max_iteration = 15,
   save_web = TRUE
 )
 }
