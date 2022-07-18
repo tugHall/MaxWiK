@@ -81,7 +81,9 @@ check_numeric_format  <-  function( l ) {
 #' \code{G = kernelMatrix( kernel = krnl, x = as.matrix(sim.stat), y = as.matrix(obs.stat) ) }
 #' @param epsilon adjust parameter in the weight estimation: \cr
 #' \code{w_ij = exp(- ( 1 - k_(y_i, y_obs )/epsilon )}, where \code{y_obs } is observation value
-#' and \code{y_i} is a i-th point from sim.stat, by default epsilon = 0.1
+#' and \code{y_i} is a i-th point from sim.stat, by default epsilon = 0.5; \cr
+#' also it is possible to adjust epsilon parameter by \code{adjust_K2_ABC()} function 
+#' to get the best estimation of a parameter
 #' @param par.sim dataset/matrix of parameters for simulation
 #' 
 #' @return \code{K2_ABC()} returns the list of: \cr 
@@ -92,7 +94,7 @@ check_numeric_format  <-  function( l ) {
 #' 
 #' @examples 
 #' NULL
-K2_ABC  <-  function( G, epsilon = 0.1, par.sim ){
+K2_ABC  <-  function( G, epsilon = 0.5, par.sim ){
     
     weights  =  as.numeric( exp( (G - 1) / epsilon ) )
     sum_wghts  = sum( weights )
@@ -105,6 +107,52 @@ K2_ABC  <-  function( G, epsilon = 0.1, par.sim ){
     
     return( list( weights = weights, par.est = par.est ) )
 }
+
+
+#' @describeIn K2_ABC Function to adjust epsilon parameter for K2-ABC method
+#' 
+#' @description \code{adjust_K2_ABC()} allows to adjust epsilon parameter for K2-ABC method
+#' using numeric vector of epsilon, find parameter estimation for each epsilon and choose the best one.
+#'
+#' @param epsilon Numeric vector of possible values of epsilon,
+#' by default \code{epsilon = (0.05 * 1:20) }
+#' @param stat.sim Matrix of statistics of simulations
+#' @param stat.obs Matrix of statistics of an observation
+#' @param kernel Kernel function of class kernel from kernlab package
+#'
+#' @return \code{adjust_K2_ABC()} returns the best parameter estimation using K2-ABC method
+#' 
+#' @export 
+#'
+#' @examples
+#' NULL
+adjust_K2_ABC  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ), par.sim, stat.sim, stat.obs, kernel ){
+    
+    ### Get the nearest point to stat.obs
+    dst  =  as.matrix(dist( x = rbind( stat.sim, stat.obs ) ) )
+    id   =  as.numeric( which.min( dst[ nrow(dst), 1:(nrow(dst)-1)]) )[ 1 ]
+    
+    ### Get new sets and truth parameter to check hyper parameter epsilon
+    x    =  as.matrix( stat.sim[ -id, ] )
+    y    =  as.matrix( stat.sim[  id, ]  )
+    par.thruth  =  as.matrix( par.sim[ id, ] )
+    
+    ### Get adjusted Gram matrix for x and y
+    G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, x, y )
+    
+    ### Get the best epsilon for K2_ABC method based on par.truth
+    dlt  =  sapply( epsilon, 
+                    FUN = function( eps ) sum( ( par.thruth - K2_ABC( G, epsilon = eps, par.sim = par.sim[-id, ] )$par.est   ) ** 2  )
+                  )
+    epsilon  =  epsilon[ which.min( dlt ) ]
+    
+    G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, x = as.matrix( stat.sim ), y = as.matrix( stat.obs ) )
+    
+    K2  =  K2_ABC( G, epsilon = epsilon, par.sim )
+    
+    return( K2$par.est )
+}
+
 
 
 #' Function to get Gram matrix after adjusting of sigma parameter of a kernel 

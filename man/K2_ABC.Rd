@@ -2,20 +2,34 @@
 % Please edit documentation in R/lib_iKernel.R
 \name{K2_ABC}
 \alias{K2_ABC}
+\alias{adjust_K2_ABC}
 \title{Function to get parameter estimation and weights using K2-ABC method}
 \usage{
-K2_ABC(G, epsilon = 0.1, par.sim)
+K2_ABC(G, epsilon = 0.5, par.sim)
+
+adjust_K2_ABC(
+  epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20)),
+  par.sim,
+  stat.sim,
+  stat.obs,
+  kernel
+)
 }
 \arguments{
 \item{G}{Gram matrix between sim.stat and obs.stat data sets/matrices that can be obtained by \cr
 \code{ krnl = rbfdot(sigma = 1) } \cr
 \code{G = kernelMatrix( kernel = krnl, x = as.matrix(sim.stat), y = as.matrix(obs.stat) ) }}
 
-\item{epsilon}{adjust parameter in the weight estimation: \cr
-\code{w_ij = exp(- ( 1 - k_(y_i, y_obs )/epsilon )}, where \code{y_obs } is observation value
-and \code{y_i} is a i-th point from sim.stat, by default epsilon = 0.1}
+\item{epsilon}{Numeric vector of possible values of epsilon,
+by default \code{epsilon = (0.05 * 1:20) }}
 
 \item{par.sim}{dataset/matrix of parameters for simulation}
+
+\item{stat.sim}{Matrix of statistics of simulations}
+
+\item{stat.obs}{Matrix of statistics of an observation}
+
+\item{kernel}{Kernel function of class kernel from kernlab package}
 }
 \value{
 \code{K2_ABC()} returns the list of: \cr
@@ -23,6 +37,8 @@ and \code{y_i} is a i-th point from sim.stat, by default epsilon = 0.1}
 \item weights for \code{par.sim} related to observation point based on Gram matrix \cr
 \item parameter estimation par.est
 }
+
+\code{adjust_K2_ABC()} returns the best parameter estimation using K2-ABC method
 }
 \description{
 \code{K2_ABC()} function allows to get parameter
@@ -31,7 +47,16 @@ the paper
 Mijung Park, Wittawat Jitkrittum, Dino Sejdinovic,
 Proceedings of the 19th International Conference on Artificial Intelligence and Statistics,
 \href{https://proceedings.mlr.press/v51/park16.html}{PMLR 51:398-407, 2016}.
+
+\code{adjust_K2_ABC()} allows to adjust epsilon parameter for K2-ABC method
+using numeric vector of epsilon, find parameter estimation for each epsilon and choose the best one.
 }
+\section{Functions}{
+\itemize{
+\item \code{adjust_K2_ABC}: Function to adjust epsilon parameter for K2-ABC method
+}}
+
 \examples{
+NULL
 NULL
 }
