@@ -109,6 +109,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
 #' @describeIn simulation_example  Example of simulation for lazy start and different psi / t hyperparameters
 #'
 #' @param psi_t Data.frame with different set of psi and t hyperparameters
+#' @param cores Number of cores for parallel calculation
 #'
 #' @return List of results of simulation with default values for all the parameters
 #' @export
@@ -124,7 +125,7 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
                                   n = 1000, r = range(0, 10),
                                   psi_t = data.frame( psi = c( 4,  4, 8, 8,  8,  8, 10, 10 ), 
                                                       t   = c( 8, 20, 6, 8, 16, 20,  6, 12 )  ), 
-                                  restrict_points_number = 300 ){
+                                  restrict_points_number = 300, cores = 4 ){
     
     if ( !is.na( seed ) ) set.seed( seed = seed )
     
@@ -139,7 +140,8 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
                         utils = c('read.delim', 'read.table', 'write.table', 'globalVariables' ),
                         grDevices = c('dev.off', 'pdf', 'rgb'),
                         graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title', 'points' ),
-                        abc = 'abc' )
+                        abc = 'abc',
+                        parallel = 'mclapply' )
     
     for( pck in names( packages ) ){
         library( package = pck, character.only = TRUE, include.only = packages[[ pck ]])
@@ -166,17 +168,18 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
     par.sim   =   par.sim_origin[ rej$region, ]    
     
     webnet  =  list( )
-    
-    for( j in 1:nrow( psi_t ) ){
+    SIM  =  function( j ){
         psi =  psi_t$psi[ j ]
         t   =  psi_t$t[ j ]
         web  =  spiderweb_slow( psi = psi, t = t, param = par.sim_origin, 
-                           stat.sim = stat.sim_origin, stat.obs = stat.obs, 
-                           talkative = TRUE, check_pos_def = FALSE ,
-                           n_bullets = 5, n_best = 20, halfwidth = 0.5, 
-                           epsilon = 0.001 )
-        webnet[[ j ]]  =  web
-    }
+                                stat.sim = stat.sim_origin, stat.obs = stat.obs, 
+                                talkative = TRUE, check_pos_def = FALSE ,
+                                n_bullets = 5, n_best = 20, halfwidth = 0.5, 
+                                epsilon = 0.001 )
+        return( web )
+    } 
+    # for( j in 1:nrow( psi_t ) ){
+    webnet  =  mclapply( 1:nrow( psi_t ) , FUN = SIM, mc.cores = cores )
 
     
     simnet  =  list(  stat.sim_origin  =  stat.sim_origin, 

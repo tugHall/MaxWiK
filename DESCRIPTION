@@ -15,7 +15,8 @@ Imports:
     stats,
     utils,
     scales,
-    bayestestR
+    bayestestR,
+    parallel
 Suggests: 
     rmarkdown,
     knitr,

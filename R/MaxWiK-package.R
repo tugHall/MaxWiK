@@ -15,6 +15,7 @@
 #' @importFrom grDevices pdf
 #' @importFrom grDevices rgb
 #' @importFrom methods new
+#' @importFrom parallel mclapply
 #' @importFrom randomcoloR randomColor
 #' @importFrom scales alpha
 #' @importFrom stats aggregate

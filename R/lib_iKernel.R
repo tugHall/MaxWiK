@@ -54,43 +54,91 @@ check_numeric_format  <-  function( l ) {
 }
 
 
-# Gaussian and Laplacian kernel -------------------------------------------
-### 1. Radial basis function (RDF) or Gaussian kernel, and Laplacian kernel
-###     https://en.wikipedia.org/wiki/Kernel_smoother 
+# K2-ABC -------------------------------------------
+# The 'kernlab' package is used for standard kernels and Gram matrix calculations:
+# for example:
+# kernlab::kernelMatrix(kernel,x,y), where x and y are matrices, and kernel is a kernel function:
+# - rbfdot Radial Basis kernel function:
+# - polydot Polynomial kernel function
+# - vanilladot Linear kernel function
+# - tanhdot Hyperbolic tangent kernel function
+# - laplacedot Laplacian kernel function
+# - besseldot Bessel kernel function
+# - anovadot ANOVA RBF kernel function
+# - splinedot the Spline kernel
 
-
-### Let define parameters of kernels such that k(x,y) = 1 if x = y
-
-#' Kernel function for two vectors x1 and x2
+#' Function to get parameter estimation and weights using K2-ABC method 
+#' 
+#' @description \code{K2_ABC()} function allows to get parameter 
+#' estimation and weights using K2-ABC method described in 
+#'  the paper 
+#' Mijung Park, Wittawat Jitkrittum, Dino Sejdinovic, 
+#' Proceedings of the 19th International Conference on Artificial Intelligence and Statistics, 
+#' [PMLR 51:398-407, 2016](https://proceedings.mlr.press/v51/park16.html). 
 #'
-#' @param x1 Numeric vector x1
-#' @param x2 Numeric vector x2
-#' @param sgm Sigma parameter in Gaussian kernel
+#' @param G Gram matrix between sim.stat and obs.stat data sets/matrices that can be obtained by \cr
+#' \code{ krnl = rbfdot(sigma = 1) } \cr 
+#' \code{G = kernelMatrix( kernel = krnl, x = as.matrix(sim.stat), y = as.matrix(obs.stat) ) }
+#' @param epsilon adjust parameter in the weight estimation: \cr
+#' \code{w_ij = exp(- ( 1 - k_(y_i, y_obs )/epsilon )}, where \code{y_obs } is observation value
+#' and \code{y_i} is a i-th point from sim.stat, by default epsilon = 0.1
+#' @param par.sim dataset/matrix of parameters for simulation
+#' 
+#' @return \code{K2_ABC()} returns the list of: \cr 
+#' 1) weights for \code{par.sim} related to observation point based on Gram matrix \cr
+#' 2) parameter estimation par.est 
+#' 
+#' @export 
+#' 
+#' @examples 
+#' NULL
+K2_ABC  <-  function( G, epsilon = 0.1, par.sim ){
+    
+    weights  =  as.numeric( exp( (G - 1) / epsilon ) )
+    sum_wghts  = sum( weights )
+    weights  =  weights / sum_wghts 
+    
+    par.est  =  par.sim[1, ]
+    for( i in 1:ncol(par.est) ){
+        par.est[1, i]  =  sum( weights * par.sim[ , i ] )
+    }
+    
+    return( list( weights = weights, par.est = par.est ) )
+}
+
+
+#' Function to get Gram matrix after adjusting of sigma parameter of a kernel 
 #'
-#' @return Value of Gaussian kernel for two vectors and given sigma
+#' @param kernel Function of kernel with parameter sigma, class from kernel lab package
+#' @param sigma numeric vector of possible values of the sigma parameter for a kernel function,
+#' by default \code{sigma = ( 2**(1:20) ) * 1E-3}
+#' @param x Matrix of stat.sim
+#' @param y Matrix of stat.obs
+#'
+#' @return \code{adjust_Gram} function returns Gram matrix after adjusting of sigma
+#' 
 #' @export
 #'
 #' @examples
-#' Gaussian_kernel(x1 = c(3,4), x2 = c(3.4,5), sgm = 1 )
-#' Gaussian_kernel(x1 = c(3,4), x2 = c(3.4,5), sgm = 5 )
-#' Gaussian_kernel(x1 = c(3,4), x2 = c(4,5), sgm = 1 )
-Gaussian_kernel  <-  function( x1, x2 , sgm = 1){
-    exp( -1 * norm_vec_sq(x1 - x2) / (2 * sgm**2 ) )
+#' NULL 
+adjust_Gram  <-  function( kernel, sigma = ( 2**(1:20) ) * 1E-3, x, y ){
+    
+    get_dlt = function( kernel, sigma, x, y ){
+                krnl  =  kernel( sigma )
+                G = kernelMatrix( kernel = krnl, x, y)
+                dlt = max( G ) - min( G )
+                return( dlt )
+    }
+    
+    dlt  =  sapply( sigma, FUN = function(sgm ) get_dlt(kernel = kernel, sigma = sgm, x, y ) )
+    
+    sigma  =  sigma[ which.max( dlt ) ]
+    krnl  =  kernel( sigma )
+    G = kernelMatrix( kernel = krnl, x, y)
+    
+    return( G )
 }
 
-#' @describeIn Gaussian_kernel Value of Laplacian kernel for two vectors and given width
-#' @param b The width of Laplacian kernel
-#'
-#' @return Value of Laplacian kernel for two vectors and given width
-#' @export
-#'
-#' @examples
-#' Laplacian_kernel(x1 = c(3,4), x2 = c(4,5), b = 1) 
-#' Laplacian_kernel(x1 = c(3,4), x2 = c(4,5), b = 5) 
-#' Laplacian_kernel(x1 = c(3,4), x2 = c(3,5), b = 1) 
-Laplacian_kernel  <-  function( x1, x2 , b = 1 ){
-    exp( -1 * norm_vec(x1 - x2)    / (2 * b ) )
-}
 
 # Isolation kernel --------------------------------------------------------
 ### ISOLATION KERNEL BASED ON VORONOI DIAGRAM 

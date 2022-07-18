@@ -10,6 +10,7 @@
 #' @export
 #'
 #' @examples
+#' NULL
 plot_3d_similarities  <-  function( sim, r = range(0, 10), n = 12 ){
     
     gen_x  =  ( 0 : (n-1) ) * ( r[2] - r[1] ) / ( n - 1 )
@@ -199,4 +200,16 @@ plot_3d_net_similarities  <-  function( simnet, r = range(0, 10), n = 20 ){
 
     return( NULL )
 }
+
+
+
+### Example of density plot of meta-sampling distribution:
+if ( FALSE){
+    ggplot( data = simnet$networks, aes( x = x1 ) ) + 
+        geom_histogram( aes( y = ..density.. ), colour = 'white', fill = 4, alpha = 0.1) +
+        geom_density(lwd = 2, colour = 4, fill = 4, alpha = 0.25)
+}
+
+
+
 

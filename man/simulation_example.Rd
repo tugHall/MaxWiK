@@ -34,7 +34,8 @@ simulation_example_many_psi_t(
   r = range(0, 10),
   psi_t = data.frame(psi = c(4, 4, 8, 8, 8, 8, 10, 10), t = c(8, 20, 6, 8, 16, 20, 6,
     12)),
-  restrict_points_number = 300
+  restrict_points_number = 300,
+  cores = 4
 )
 
 plot_3d_similarities(sim, r = range(0, 10), n = 12)
@@ -68,6 +69,8 @@ plot_3d_net_similarities(simnet, r = range(0, 10), n = 20)
 other points will be skipped by rejection ABC}
 
 \item{psi_t}{Data.frame with different set of psi and t hyperparameters}
+
+\item{cores}{Number of cores for parallel calculation}
 
 \item{sim}{Results of the function \code{simulation_example}}
 
@@ -106,5 +109,6 @@ NULL
 # it takes a time for a simulation and then it will demonstrates results, \cr
 # so, please, wait for a while
 sim = simulation_example_many_psi_t( verbose = FALSE , to_plot = FALSE )
+NULL
 NULL
 }
