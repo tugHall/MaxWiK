@@ -3,6 +3,7 @@
 \name{K2_ABC}
 \alias{K2_ABC}
 \alias{adjust_K2_ABC}
+\alias{adjust_K2_ABC_iKernel}
 \title{Function to get parameter estimation and weights using K2-ABC method}
 \usage{
 K2_ABC(G, epsilon = 0.5, par.sim)
@@ -14,11 +15,17 @@ adjust_K2_ABC(
   stat.obs,
   kernel
 )
+
+adjust_K2_ABC_iKernel(
+  epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20)),
+  par.sim,
+  stat.sim,
+  stat.obs,
+  G
+)
 }
 \arguments{
-\item{G}{Gram matrix between sim.stat and obs.stat data sets/matrices that can be obtained by \cr
-\code{ krnl = rbfdot(sigma = 1) } \cr
-\code{G = kernelMatrix( kernel = krnl, x = as.matrix(sim.stat), y = as.matrix(obs.stat) ) }}
+\item{G}{Kernel matrix \code{G} conteiners similarities between simulation points and observation point based on isolation kernel}
 
 \item{epsilon}{Numeric vector of possible values of epsilon,
 by default \code{epsilon = (0.05 * 1:20) }}
@@ -38,7 +45,9 @@ by default \code{epsilon = (0.05 * 1:20) }}
 \item parameter estimation par.est
 }
 
-\code{adjust_K2_ABC()} returns the best parameter estimation using K2-ABC method
+\code{adjust_K2_ABC()} returns the best parameter estimation using K2-ABC method varying epsilon
+
+\code{adjust_K2_ABC_iKernel()} returns the best parameter estimation using K2-ABC method varying epsilon and based on isolation kernel
 }
 \description{
 \code{K2_ABC()} function allows to get parameter
@@ -50,13 +59,20 @@ Proceedings of the 19th International Conference on Artificial Intelligence and 
 
 \code{adjust_K2_ABC()} allows to adjust epsilon parameter for K2-ABC method
 using numeric vector of epsilon, find parameter estimation for each epsilon and choose the best one.
+
+\code{adjust_K2_ABC_iKernel()} allows to adjust epsilon parameter for K2-ABC method
+using numeric vector of epsilon, find parameter estimation for each epsilon and choose the best one
+based on matrix of isolation kernel.
 }
 \section{Functions}{
 \itemize{
 \item \code{adjust_K2_ABC}: Function to adjust epsilon parameter for K2-ABC method
+
+\item \code{adjust_K2_ABC_iKernel}: Function to adjust epsilon parameter for K2-ABC method
 }}
 
 \examples{
+NULL
 NULL
 NULL
 }

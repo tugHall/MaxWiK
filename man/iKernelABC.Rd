@@ -2,6 +2,7 @@
 % Please edit documentation in R/lib_iKernel.R
 \name{iKernelABC}
 \alias{iKernelABC}
+\alias{Get_iKernel_estimation}
 \alias{spiderweb_old}
 \alias{spiderweb}
 \alias{spiderweb_slow}
@@ -16,6 +17,8 @@ iKernelABC(
   talkative = FALSE,
   check_pos_def = TRUE
 )
+
+Get_iKernel_estimation(iKernelABC, par.sim, stat.sim, stat.obs)
 
 spiderweb_old(
   psi = 4,
@@ -80,6 +83,8 @@ spiderweb_slow(
 
 \item{check_pos_def}{Logical parameter to check the Gram matrix is positive definite or do not check}
 
+\item{iKernelABC}{Result of function \code{iKernelABC}}
+
 \item{n_bullets}{Integer number of tracer bullets / additional points between the TWO most distant points}
 
 \item{n_best}{Integer number of the best tracer bullets / points
@@ -111,6 +116,12 @@ The function \code{iKernelABC()} returns the list of :
 \item Matrix_Voronoi is a matrix of information about Voronoi trees (rows - trees, columns - Voronoi points/areas IDs);
 \item t is a number of trees in the Isolation Forest;
 \item psi is a number of areas/points in the Voronoi diagrams
+}
+
+\code{Get_iKernel_estimation()} returns list of: \cr
+\itemize{
+\item iKernel_ABC - parameter estimation based on isolation kernel / weighted sum; \cr
+\item K2_ABC_iKernel - parameter estimation based on K2-ABC method with matrix of isolation kernel.
 }
 
 The function \code{spiderweb()} returns the list of the next objects:
@@ -187,6 +198,8 @@ from \code{sudoku()} algorithm, based on the simple procedure: \cr
 }
 \section{Functions}{
 \itemize{
+\item \code{Get_iKernel_estimation}: function to get parameter estimation based on isolation kernel
+
 \item \code{spiderweb_old}: The function to get the best value of parameter corresponding to
 Maxima Weighted Isolation Kernel mapping which is related to an observation point
 
@@ -198,6 +211,7 @@ Maxima Weighted Isolation Kernel mapping which is related to an observation poin
 }}
 
 \examples{
+NULL
 NULL
 NULL
 NULL

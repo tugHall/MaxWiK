@@ -120,7 +120,7 @@ K2_ABC  <-  function( G, epsilon = 0.5, par.sim ){
 #' @param stat.obs Matrix of statistics of an observation
 #' @param kernel Kernel function of class kernel from kernlab package
 #'
-#' @return \code{adjust_K2_ABC()} returns the best parameter estimation using K2-ABC method
+#' @return \code{adjust_K2_ABC()} returns the best parameter estimation using K2-ABC method varying epsilon
 #' 
 #' @export 
 #'
@@ -147,6 +147,49 @@ adjust_K2_ABC  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ),
     epsilon  =  epsilon[ which.min( dlt ) ]
     
     G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, x = as.matrix( stat.sim ), y = as.matrix( stat.obs ) )
+    
+    K2  =  K2_ABC( G, epsilon = epsilon, par.sim )
+    
+    return( K2$par.est )
+}
+
+
+
+#' @describeIn K2_ABC Function to adjust epsilon parameter for K2-ABC method
+#' 
+#' @description \code{adjust_K2_ABC_iKernel()} allows to adjust epsilon parameter for K2-ABC method
+#' using numeric vector of epsilon, find parameter estimation for each epsilon and choose the best one
+#' based on matrix of isolation kernel.
+#'
+#' @param G Kernel matrix \code{G} conteiners similarities between simulation points and observation point based on isolation kernel
+#'
+#' @return \code{adjust_K2_ABC_iKernel()} returns the best parameter estimation using K2-ABC method varying epsilon and based on isolation kernel
+#' 
+#' @export 
+#'
+#' @examples
+#' NULL
+adjust_K2_ABC_iKernel  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ), par.sim, stat.sim, stat.obs, G ){
+    
+    ### Get the nearest point to stat.obs
+    dst  =  as.matrix(dist( x = rbind( stat.sim, stat.obs ) ) )
+    id   =  as.numeric( which.min( dst[ nrow(dst), 1:(nrow(dst)-1)]) )[ 1 ]
+    
+    ### Get new sets and truth parameter to check hyper parameter epsilon
+    x    =  as.matrix( stat.sim[ -id, ] )
+    y    =  as.matrix( stat.sim[  id, ]  )
+    par.thruth  =  as.matrix( par.sim[ id, ] )
+    
+    ### Get Gram matrix for x and y
+    G_xy = G[ -id, ]
+    
+    ### Get the best epsilon for K2_ABC method based on par.truth
+    dlt  =  sapply( epsilon, 
+                    FUN = function( eps ) sum( ( par.thruth - K2_ABC( G_xy, epsilon = eps, par.sim = par.sim[-id, ] )$par.est   ) ** 2  )
+    )
+    epsilon  =  epsilon[ which.min( dlt ) ]
+    
+    # G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, x = as.matrix( stat.sim ), y = as.matrix( stat.obs ) )
     
     K2  =  K2_ABC( G, epsilon = epsilon, par.sim )
     
@@ -744,6 +787,39 @@ iKernelABC  <-  function( psi = 40, t = 350, param,
                   description    = description, 
                   t = t, 
                   psi = psi )  )
+}
+
+#' @describeIn iKernelABC  function to get parameter estimation based on isolation kernel
+#'
+#' @param iKernelABC Result of function \code{iKernelABC}
+#'
+#' @return \code{Get_iKernel_estimation()} returns list of: \cr
+#' - iKernel_ABC - parameter estimation based on isolation kernel / weighted sum; \cr
+#' - K2_ABC_iKernel - parameter estimation based on K2-ABC method with matrix of isolation kernel.
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+Get_iKernel_estimation  <-  function( iKernelABC, par.sim, stat.sim, stat.obs ){
+    
+    ### Isolation kernel estimation:
+    weights  =  iKernelABC$similarity
+    sum_wghts  = sum( weights )
+    weights  =  weights / sum_wghts 
+    
+    par.est  =  par.sim[1, ]
+    for( i in 1:ncol(par.est) ){
+        par.est[1, i]  =  sum( weights * par.sim[ , i ] )
+    }
+    
+    ### K2-ABC based on iKernel:
+    G = matrix( iKernelABC$similarity, ncol = 1 )
+    
+    K2_ABC_iKernel  =  adjust_K2_ABC_iKernel(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ), par.sim, stat.sim, stat.obs, G )
+    
+    return( list (K2_ABC_iKernel  =  K2_ABC_iKernel, 
+                  iKernel_ABC     =  par.est ) )
 }
 
 
@@ -1447,7 +1523,7 @@ MSE_parameters   <-   function( par.truth, par.top = NULL, par.best ){
 #'
 #' @return The function \code{Get_Mode} returns the mode of vector
 #' 
-#' @export
+#' 
 #'
 #' @examples
 #' NULL 
@@ -1467,7 +1543,7 @@ Get_Mode <- function(v) {
 #' @param sm Numeric vector of weights gotten from \code{iKernelABC()} function
 #'
 #' @return The function \code{Mean_iKernel_parameters()} returns the weighted mean of the parameter 
-#' @export
+#' 
 #'
 #' @examples 
 #' NULL 
