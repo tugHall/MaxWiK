@@ -231,6 +231,56 @@ adjust_Gram  <-  function( kernel, sigma = ( 2**(1:20) ) * 1E-3, x, y ){
 }
 
 
+
+
+
+
+# ABC_standard  -----------------------------------------------------------
+
+#' @describeIn K2_ABC Function to adjust tolerance parameter for rejection ABC method
+#' 
+#' @description \code{adjust_ABC_tolerance()} allows to adjust tolerance parameter for rejection ABC method
+#' using numeric vector of tolerance, find parameter estimation for each tolerance and choose the best one.
+#'
+#' @param tolerance 
+#'
+#' @return \code{adjust_ABC_tolerance()} returns the best parameter estimation using rejection ABC method varying tolerance and tolerance value
+#' 
+#' @export 
+#'
+#' @examples
+#' NULL
+adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1:20) ), par.sim, stat.sim, stat.obs ){
+    
+    ### Get the nearest point to stat.obs
+    dst  =  as.matrix(dist( x = rbind( stat.sim, stat.obs ) ) )
+    id   =  as.numeric( which.min( dst[ nrow(dst), 1:(nrow(dst)-1)]) )[ 1 ]
+    
+    ### Get new sets and truth parameter to check hyper parameter epsilon
+    x    =  as.matrix( stat.sim[ -id, ] )
+    y    =  as.matrix( stat.sim[  id, ]  )
+    par.thruth  =  as.matrix( par.sim[ id, ] )
+    
+    ### Get the best epsilon for K2_ABC method based on par.truth
+    dlt  =  sapply( tolerance, 
+                    FUN = function( tlr ) {
+                        rej      =  abc( target = y, param = par.sim[-id, ], 
+                                         sumstat = x, tol = tlr, method = 'rejection' ) 
+                        par.est  =  point_estimate( rej$unadj.values)$MAP
+                        return ( sum( ( par.thruth - par.est ) ** 2  ) )
+                    }
+    )
+    tolerance  =  tolerance[ which.min( dlt ) ][ 1 ]
+    
+    rej      =  abc( target = stat.obs, param = par.sim, 
+                     sumstat = stat.sim, tol = tolerance, method = 'rejection' ) 
+    par.est  =  point_estimate( rej$unadj.values)$MAP
+    
+    return( list( par.est   =  par.est, 
+                  tolerance =  tolerance) )
+}
+
+
 # Isolation kernel --------------------------------------------------------
 ### ISOLATION KERNEL BASED ON VORONOI DIAGRAM 
 

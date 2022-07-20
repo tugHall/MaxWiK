@@ -4,6 +4,7 @@
 \alias{K2_ABC}
 \alias{adjust_K2_ABC}
 \alias{adjust_K2_ABC_iKernel}
+\alias{adjust_ABC_tolerance}
 \title{Function to get parameter estimation and weights using K2-ABC method}
 \usage{
 K2_ABC(G, epsilon = 0.5, par.sim)
@@ -23,6 +24,13 @@ adjust_K2_ABC_iKernel(
   stat.obs,
   G
 )
+
+adjust_ABC_tolerance(
+  tolerance = c(0.001, 0.002, 0.005, (0.01 * 1:20)),
+  par.sim,
+  stat.sim,
+  stat.obs
+)
 }
 \arguments{
 \item{G}{Kernel matrix \code{G} conteiners similarities between simulation points and observation point based on isolation kernel}
@@ -37,6 +45,8 @@ by default \code{epsilon = (0.05 * 1:20) }}
 \item{stat.obs}{Matrix of statistics of an observation}
 
 \item{kernel}{Kernel function of class kernel from kernlab package}
+
+\item{tolerance}{}
 }
 \value{
 \code{K2_ABC()} returns the list of: \cr
@@ -48,6 +58,8 @@ by default \code{epsilon = (0.05 * 1:20) }}
 \code{adjust_K2_ABC()} returns the best parameter estimation using K2-ABC method varying epsilon
 
 \code{adjust_K2_ABC_iKernel()} returns the best parameter estimation using K2-ABC method varying epsilon and based on isolation kernel
+
+\code{adjust_ABC_tolerance()} returns the best parameter estimation using rejection ABC method varying tolerance and tolerance value
 }
 \description{
 \code{K2_ABC()} function allows to get parameter
@@ -63,15 +75,21 @@ using numeric vector of epsilon, find parameter estimation for each epsilon and 
 \code{adjust_K2_ABC_iKernel()} allows to adjust epsilon parameter for K2-ABC method
 using numeric vector of epsilon, find parameter estimation for each epsilon and choose the best one
 based on matrix of isolation kernel.
+
+\code{adjust_ABC_tolerance()} allows to adjust tolerance parameter for rejection ABC method
+using numeric vector of tolerance, find parameter estimation for each tolerance and choose the best one.
 }
 \section{Functions}{
 \itemize{
 \item \code{adjust_K2_ABC}: Function to adjust epsilon parameter for K2-ABC method
 
 \item \code{adjust_K2_ABC_iKernel}: Function to adjust epsilon parameter for K2-ABC method
+
+\item \code{adjust_ABC_tolerance}: Function to adjust tolerance parameter for rejection ABC method
 }}
 
 \examples{
+NULL
 NULL
 NULL
 NULL
