@@ -687,12 +687,12 @@ check_positive_definite  <-  function( G , n = 10 ){
 #'
 #' @param psi Integer number. Size of each Voronoi diagram or number of areas/points in the Voronoi diagrams
 #' @param t Integer number of trees in the Isolation Forest
-#' @param param Data frame of parameters of the model
+#' @param param or \code{par.sim} - data frame of parameters of the model
 #' @param stat.sim Summary statistics of the simulations (model output)
 #' @param stat.obs Summary statistics of the observation point
 #' @param talkative Logical parameter to print or do not print messages
 #' @param check_pos_def Logical parameter to check the Gram matrix is positive definite or do not check
-#'
+#' 
 #' @return The function \code{iKernelABC()} returns the list of :
 #' - kernel_mean_embedding is a maxima weighted kernel mean embedding (mapping) related to the observation point;
 #' - parameters_Matrix_Voronoi is a matrix of information about Voronoi trees (rows - trees, columns - Voronoi points/areas IDs) for parameters data set;
@@ -822,6 +822,70 @@ Get_iKernel_estimation  <-  function( iKernelABC, par.sim, stat.sim, stat.obs ){
                   iKernel_ABC     =  par.est ) )
 }
 
+
+#' @describeIn iKernelABC Function to adjust hyper parameters \code{psi} and \code{t} for isolation kernel ABC
+#'
+#' @param psi_t Initial data.frame of  \code{psi} and \code{t}, by default \cr
+#' \code{psi_t = data.frame( psi = as.numeric( sapply( X = c(2:8)*2, FUN = function( x ) rep(x, 8) ) ), t = rep( c(4,6,8,10,12,14,16,20), 7) )}
+#' @param n_best Number of the best adjusted values of psi_t pairs regarding to MSE 
+#'
+#' @return \code{adjust_psi_t() } returns adjusted hyper parameters \code{psi} and \code{t} as a data.frame with set of pair \code{psi_t} 
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+adjust_psi_t  <-  function(par.sim, stat.sim, stat.obs, talkative = FALSE, check_pos_def = FALSE, n_best = 10,
+                           psi_t = data.frame( psi = as.numeric( sapply( X = c(2:8)*2, FUN = function( x ) rep(x, 8) ) ), 
+                                               t = rep( c(4,6,8,10,12,14,16,20), 7) ) ){
+    
+    get_dlt  =  function( psi, t, par.sim, stat.sim, stat.obs, par.truth,
+                          talkative = talkative, check_pos_def = check_pos_def  ){
+        
+        ikernelABC  =  iKernelABC( psi = psi, t = t, param = par.sim, stat.sim = stat.sim, 
+                                   stat.obs = stat.obs, talkative = talkative, 
+                                   check_pos_def = check_pos_def )
+        ### Isolation kernel estimation:
+        weights  =  iKernelABC$similarity
+        sum_wghts  = sum( weights )
+        weights  =  weights / sum_wghts 
+        
+        par.est  =  par.sim[1, ]
+        for( i in 1:ncol(par.est) ){
+            par.est[1, i]  =  sum( weights * par.sim[ , i ] )
+        }
+        
+        dlt  =  sum( ( par.thruth - par.est ) ** 2  )
+        
+        return( dlt )
+    }
+    
+    ### Get the nearest point to stat.obs and it's id
+    dst  =  as.matrix( dist( x = rbind( stat.sim, stat.obs ) ) )
+    id   =  as.numeric( which.min( dst[ nrow(dst), 1:(nrow(dst)-1)]) )[ 1 ]
+    
+    ### Get new sets and truth parameter to check hyper parameters psi_t:
+    x    =  stat.sim[ -id, ] 
+    y    =  stat.sim[  id, ] 
+    par.thruth  =  par.sim[ id, ]
+    
+    psi_t$dlt = 0
+    
+    for( i in 1:nrow( psi_t ) ){
+        dlt  =  get_dlt( psi = psi_t$psi[ i ], 
+                         t = psi_t$t[ i ], 
+                         par.sim  = par.sim[-id, ], 
+                         stat.sim = x, 
+                         stat.obs = y, 
+                         par.truth = par.truth,
+                         talkative = talkative, check_pos_def = check_pos_def  )
+        psi_t$dlt[ i ]  =  dlt 
+    }
+    
+    rdr  =  order( psi_t$dlt, decreasing = TRUE )[1:n_best]
+    
+    return( psi_t[rdr, c( 1,2 ) ] )
+}
 
 # SUDOKU ------------------------------------------------------------------
 

@@ -3,6 +3,7 @@
 \name{iKernelABC}
 \alias{iKernelABC}
 \alias{Get_iKernel_estimation}
+\alias{adjust_psi_t}
 \alias{spiderweb_old}
 \alias{spiderweb}
 \alias{spiderweb_slow}
@@ -19,6 +20,17 @@ iKernelABC(
 )
 
 Get_iKernel_estimation(iKernelABC, par.sim, stat.sim, stat.obs)
+
+adjust_psi_t(
+  par.sim,
+  stat.sim,
+  stat.obs,
+  talkative = FALSE,
+  check_pos_def = FALSE,
+  n_best = 10,
+  psi_t = data.frame(psi = as.numeric(sapply(X = c(2:8) * 2, FUN = function(x) rep(x,
+    8))), t = rep(c(4, 6, 8, 10, 12, 14, 16, 20), 7))
+)
 
 spiderweb_old(
   psi = 4,
@@ -73,7 +85,7 @@ spiderweb_slow(
 
 \item{t}{Integer number of trees in the Isolation Forest}
 
-\item{param}{Data frame of parameters of the model}
+\item{param}{or \code{par.sim} - data frame of parameters of the model}
 
 \item{stat.sim}{Summary statistics of the simulations (model output)}
 
@@ -85,10 +97,13 @@ spiderweb_slow(
 
 \item{iKernelABC}{Result of function \code{iKernelABC}}
 
-\item{n_bullets}{Integer number of tracer bullets / additional points between the TWO most distant points}
-
 \item{n_best}{Integer number of the best tracer bullets / points
 to consider them at the next algorithmic step}
+
+\item{psi_t}{Initial data.frame of  \code{psi} and \code{t}, by default \cr
+\code{psi_t = data.frame( psi = as.numeric( sapply( X = c(2:8)*2, FUN = function( x ) rep(x, 8) ) ), t = rep( c(4,6,8,10,12,14,16,20), 7) )}}
+
+\item{n_bullets}{Integer number of tracer bullets / additional points between the TWO most distant points}
 
 \item{halfwidth}{Criterion to choose the best tracer points like: \cr
 \code{if similarity_of_point >= halfwidth} then it is the point to be included to the poool of the best points}
@@ -123,6 +138,8 @@ The function \code{iKernelABC()} returns the list of :
 \item iKernel_ABC - parameter estimation based on isolation kernel / weighted sum; \cr
 \item K2_ABC_iKernel - parameter estimation based on K2-ABC method with matrix of isolation kernel.
 }
+
+\code{adjust_psi_t() } returns adjusted hyper parameters \code{psi} and \code{t} as a data.frame with set of pair \code{psi_t}
 
 The function \code{spiderweb()} returns the list of the next objects:
 \itemize{
@@ -200,6 +217,8 @@ from \code{sudoku()} algorithm, based on the simple procedure: \cr
 \itemize{
 \item \code{Get_iKernel_estimation}: function to get parameter estimation based on isolation kernel
 
+\item \code{adjust_psi_t}: Function to adjust hyper parameters \code{psi} and \code{t} for isolation kernel ABC
+
 \item \code{spiderweb_old}: The function to get the best value of parameter corresponding to
 Maxima Weighted Isolation Kernel mapping which is related to an observation point
 
@@ -211,6 +230,7 @@ Maxima Weighted Isolation Kernel mapping which is related to an observation poin
 }}
 
 \examples{
+NULL
 NULL
 NULL
 NULL
