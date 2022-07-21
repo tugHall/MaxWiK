@@ -29,7 +29,8 @@ adjust_psi_t(
   check_pos_def = FALSE,
   n_best = 10,
   psi_t = data.frame(psi = as.numeric(sapply(X = c(2:8) * 2, FUN = function(x) rep(x,
-    8))), t = rep(c(4, 6, 8, 10, 12, 14, 16, 20), 7))
+    8))), t = rep(c(4, 6, 8, 10, 12, 14, 16, 20), 7)),
+  cores = 4
 )
 
 spiderweb_old(

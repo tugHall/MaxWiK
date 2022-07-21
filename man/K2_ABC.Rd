@@ -46,7 +46,8 @@ by default \code{epsilon = (0.05 * 1:20) }}
 
 \item{kernel}{Kernel function of class kernel from kernlab package}
 
-\item{tolerance}{}
+\item{tolerance}{Vector of tolerance values for rejection ABC method to get the best one,
+by default \code{tolerance = c(0.001, 0.002, 0.005, (0.01 * 1:20)}}
 }
 \value{
 \code{K2_ABC()} returns the list of: \cr

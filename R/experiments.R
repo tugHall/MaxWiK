@@ -103,7 +103,7 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
     }
     
     if ( method_name == '' ){
-        par.est  =  do.call( what = ... , args = args )
+        # par.est  =  do.call( what = ... , args = args )
     }
     
     

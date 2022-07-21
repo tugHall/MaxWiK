@@ -888,25 +888,26 @@ Get_iKernel_estimation  <-  function( iKernelABC, par.sim, stat.sim, stat.obs ){
 #' NULL
 adjust_psi_t  <-  function(par.sim, stat.sim, stat.obs, talkative = FALSE, check_pos_def = FALSE, n_best = 10,
                            psi_t = data.frame( psi = as.numeric( sapply( X = c(2:8)*2, FUN = function( x ) rep(x, 8) ) ), 
-                                               t = rep( c(4,6,8,10,12,14,16,20), 7) ) ){
+                                               t = rep( c(4,6,8,10,12,14,16,20), 7) ),
+                           cores = 4 ){
     
     get_dlt  =  function( psi, t, par.sim, stat.sim, stat.obs, par.truth,
                           talkative = talkative, check_pos_def = check_pos_def  ){
         
-        ikernelABC  =  iKernelABC( psi = psi, t = t, param = par.sim, stat.sim = stat.sim, 
+        iKernABC  =  iKernelABC( psi = psi, t = t, param = par.sim, stat.sim = stat.sim, 
                                    stat.obs = stat.obs, talkative = talkative, 
                                    check_pos_def = check_pos_def )
         ### Isolation kernel estimation:
-        weights  =  iKernelABC$similarity
-        sum_wghts  = sum( weights )
-        weights  =  weights / sum_wghts 
+        wghts  =  as.numeric( iKernABC$similarity )
+        sum_wghts  = sum( wghts )
+        wghts  =  wghts / sum_wghts 
         
         par.est  =  par.sim[1, ]
         for( i in 1:ncol(par.est) ){
-            par.est[1, i]  =  sum( weights * par.sim[ , i ] )
+            par.est[1, i]  =  sum( wghts * par.sim[ , i ] )
         }
         
-        dlt  =  sum( ( par.thruth - par.est ) ** 2  )
+        dlt  =  sum( ( par.truth - par.est ) ** 2  )
         
         return( dlt )
     }
@@ -918,19 +919,31 @@ adjust_psi_t  <-  function(par.sim, stat.sim, stat.obs, talkative = FALSE, check
     ### Get new sets and truth parameter to check hyper parameters psi_t:
     x    =  stat.sim[ -id, ] 
     y    =  stat.sim[  id, ] 
-    par.thruth  =  par.sim[ id, ]
+    par.truth  =  par.sim[ id, ]
     
     psi_t$dlt = 0
     
+    dlt  =  mclapply( 1:nrow( psi_t ), FUN = function(i){
+                            get_dlt( psi = psi_t$psi[ i ], 
+                                     t = psi_t$t[ i ], 
+                                     par.sim  = par.sim[-id, ], 
+                                     stat.sim = x, 
+                                     stat.obs = y, 
+                                     par.truth = par.truth,
+                                     talkative = talkative, check_pos_def = check_pos_def  )}, 
+                      mc.cores = cores )
+    
     for( i in 1:nrow( psi_t ) ){
-        dlt  =  get_dlt( psi = psi_t$psi[ i ], 
+        if(FALSE){
+            dlt  =  get_dlt( psi = psi_t$psi[ i ], 
                          t = psi_t$t[ i ], 
                          par.sim  = par.sim[-id, ], 
                          stat.sim = x, 
                          stat.obs = y, 
                          par.truth = par.truth,
                          talkative = talkative, check_pos_def = check_pos_def  )
-        psi_t$dlt[ i ]  =  dlt 
+        }
+        psi_t$dlt[ i ]  =  dlt[[ i ]] 
     }
     
     rdr  =  order( psi_t$dlt, decreasing = TRUE )[1:n_best]
@@ -1417,6 +1430,7 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
 #' - iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters};
 #' - spiderweb that is the list of all the networks during the meta-sampling.
 #' 
+#' @export
 #' 
 #' @examples
 #' NULL
@@ -1545,6 +1559,67 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
                   sim.best = sim.best, 
                   iKernelABC = iKernelABC, 
                   spiderweb = spiderweb ) )
+}
+
+
+
+
+
+# GET_Spider_MAP ---------------------------------------------------------
+
+
+#' @describeIn simulation_example  Function to get MAP of SpiderWeb algorithm based on different psi / t hyperparameters
+#'
+#' @param cores Number of cores for parallel calculation
+#'
+#' @return Maximum A Posteriori of meta-sampling distribution of parameters
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+#' # it takes a time for a simulation and then it will demonstrates results, \cr
+#' # so, please, wait for a while
+#' sim = simulation_example_many_psi_t( verbose = FALSE , to_plot = FALSE )
+get_Spider_MAP  <-  function( stat.sim, par.sim, stat.obs, 
+                              restrict_points_number = 300, cores = 4 ){
+    
+    tol = restrict_points_number / nrow( stat.sim ) 
+    
+    rej = abc::abc( target = stat.obs, param = par.sim, sumstat = stat.sim,
+                    method = 'rejection', tol = tol )
+    
+    stat.sim  =  stat.sim[ rej$region, ]
+    par.sim   =   par.sim[ rej$region, ]    
+    
+    psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, stat.obs = stat.obs,
+                            n_best = 8 )
+    
+    webnet  =  list( )
+    SIM  =  function( j ){
+        psi =  psi_t$psi[ j ]
+        t   =  psi_t$t[ j ]
+        web  =  spiderweb_slow( psi = psi, t = t, param = par.sim, 
+                                stat.sim = stat.sim, stat.obs = stat.obs, 
+                                talkative = TRUE, check_pos_def = FALSE ,
+                                n_bullets = 5, n_best = 20, halfwidth = 0.5, 
+                                epsilon = 0.001 )
+        return( web )
+    } 
+    
+    webnet  =  mclapply( 1:nrow( psi_t ) , FUN = SIM, mc.cores = cores )
+    
+    simnet  =  list(  stat.obs  =  stat.obs, 
+                      stat.sim  =  stat.sim,
+                      par.sim   =  par.sim,
+                      psi_t     =  psi_t,
+                      webnet  = webnet )
+    
+    simnet$networks  =  get_network_from_simnet( simnet = simnet )
+    
+    MAP  =  point_estimate( simnet$networks )$MAP
+    
+    return( MAP )
 }
 
 

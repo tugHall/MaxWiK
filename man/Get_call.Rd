@@ -10,7 +10,11 @@ Get_call(
   model_name,
   stochastic_term,
   iteration,
-  args
+  stat.obs,
+  stat.sim,
+  par.sim,
+  G = NULL,
+  par.truth
 )
 }
 \arguments{
