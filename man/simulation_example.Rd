@@ -74,12 +74,19 @@ plot_3d_net_similarities(simnet, r = range(0, 10), n = 20)
 
 \item{t}{Integer number of trees in the Isolation Forest}
 
-\item{restrict_points_number}{Integer number of points which will be considered in the simulation, \cr
-other points will be skipped by rejection ABC}
+\item{restrict_points_number}{Maximal number of points in the datasets to get MAP}
 
 \item{psi_t}{Data.frame with different set of psi and t hyperparameters}
 
 \item{cores}{Number of cores for parallel calculation}
+
+\item{stat.sim}{Summary statistics of the simulations (model output)}
+
+\item{par.sim}{\itemize{
+\item data frame of parameters of the model
+}}
+
+\item{stat.obs}{Summary statistics of the observation point}
 
 \item{sim}{Results of the function \code{simulation_example}}
 

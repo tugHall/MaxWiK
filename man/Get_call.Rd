@@ -28,7 +28,15 @@ Get_call(
 
 \item{iteration}{Iteration number of trial with the same model and other parameters}
 
-\item{args}{List of arguments for a function to get MSE}
+\item{stat.obs}{Data frame of statistics of observation point}
+
+\item{stat.sim}{Data frame of statistics of simulations}
+
+\item{par.sim}{Data frame of parameters}
+
+\item{G}{Matrix of similarities for K2-ABC based on isolation kernel}
+
+\item{par.truth}{Truth parameter value to check result of estimation}
 }
 \value{
 \code{Get_call()} returns the list: \cr

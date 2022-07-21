@@ -222,7 +222,7 @@ plot_sudoku_2D   <-  function( stat.sim, par.sim, par.truth, iKernelABC, rslt,
 #' @description The function \code{plot_web_2D()} draws all the results of the function \code{spiderweb()}
 #'
 #' @param web Results of the function \code{spiderweb()} to draw on the plot
-#' @param show_top Logical to show or do not show the top points of the results of \code{sudoku()} function
+#' @param show_network Logical to show or do not show network points
 #'
 #' @return The function \code{plot_web_2D()} draws all the results of the function \code{spiderweb()}
 #' 

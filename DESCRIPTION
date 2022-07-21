@@ -16,7 +16,11 @@ Imports:
     utils,
     scales,
     bayestestR,
-    parallel
+    parallel,
+    plotly,
+    kernlab,
+    abc,
+    magrittr
 Suggests: 
     rmarkdown,
     knitr,

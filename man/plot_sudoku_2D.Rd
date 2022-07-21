@@ -80,7 +80,7 @@ the object \code{rslt$surroundings_best_points} from results of \code{sudoku()} 
 
 \item{web}{Results of the function \code{spiderweb()} to draw on the plot}
 
-\item{show_top}{Logical to show or do not show the top points of the results of \code{sudoku()} function}
+\item{show_network}{Logical to show or do not show network points}
 }
 \value{
 Plot all the results of \code{sudoku()} function

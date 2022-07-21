@@ -2,6 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom abc abc
 #' @importFrom bayestestR point_estimate
 #' @importFrom graphics axis
 #' @importFrom graphics legend
@@ -14,8 +15,15 @@
 #' @importFrom grDevices dev.off
 #' @importFrom grDevices pdf
 #' @importFrom grDevices rgb
+#' @importFrom kernlab kernelMatrix
+#' @importFrom kernlab laplacedot
+#' @importFrom kernlab rbfdot
+#' @importFrom magrittr %>%
 #' @importFrom methods new
 #' @importFrom parallel mclapply
+#' @importFrom plotly add_surface
+#' @importFrom plotly add_trace
+#' @importFrom plotly plot_ly
 #' @importFrom randomcoloR randomColor
 #' @importFrom scales alpha
 #' @importFrom stats aggregate

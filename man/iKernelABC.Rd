@@ -98,11 +98,15 @@ spiderweb_slow(
 
 \item{iKernelABC}{Result of function \code{iKernelABC}}
 
+\item{par.sim}{Data frame of parameters}
+
 \item{n_best}{Integer number of the best tracer bullets / points
 to consider them at the next algorithmic step}
 
 \item{psi_t}{Initial data.frame of  \code{psi} and \code{t}, by default \cr
 \code{psi_t = data.frame( psi = as.numeric( sapply( X = c(2:8)*2, FUN = function( x ) rep(x, 8) ) ), t = rep( c(4,6,8,10,12,14,16,20), 7) )}}
+
+\item{cores}{Number of available cores for parallel computing}
 
 \item{n_bullets}{Integer number of tracer bullets / additional points between the TWO most distant points}
 

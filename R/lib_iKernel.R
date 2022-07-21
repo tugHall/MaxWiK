@@ -135,14 +135,14 @@ adjust_K2_ABC  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ),
     ### Get new sets and truth parameter to check hyper parameter epsilon
     x    =  as.matrix( stat.sim[ -id, ] )
     y    =  as.matrix( stat.sim[  id, ]  )
-    par.thruth  =  as.matrix( par.sim[ id, ] )
+    par.truth  =  as.matrix( par.sim[ id, ] )
     
     ### Get adjusted Gram matrix for x and y
     G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, x, y )
     
     ### Get the best epsilon for K2_ABC method based on par.truth
     dlt  =  sapply( epsilon, 
-                    FUN = function( eps ) sum( ( par.thruth - K2_ABC( G, epsilon = eps, par.sim = par.sim[-id, ] )$par.est   ) ** 2  )
+                    FUN = function( eps ) sum( ( par.truth - K2_ABC( G, epsilon = eps, par.sim = par.sim[-id, ] )$par.est   ) ** 2  )
                   )
     epsilon  =  epsilon[ which.min( dlt ) ]
     
@@ -178,14 +178,14 @@ adjust_K2_ABC_iKernel  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 
     ### Get new sets and truth parameter to check hyper parameter epsilon
     x    =  as.matrix( stat.sim[ -id, ] )
     y    =  as.matrix( stat.sim[  id, ]  )
-    par.thruth  =  as.matrix( par.sim[ id, ] )
+    par.truth  =  as.matrix( par.sim[ id, ] )
     
     ### Get Gram matrix for x and y
     G_xy = G[ -id, ]
     
     ### Get the best epsilon for K2_ABC method based on par.truth
     dlt  =  sapply( epsilon, 
-                    FUN = function( eps ) sum( ( par.thruth - K2_ABC( G_xy, epsilon = eps, par.sim = par.sim[-id, ] )$par.est   ) ** 2  )
+                    FUN = function( eps ) sum( ( par.truth - K2_ABC( G_xy, epsilon = eps, par.sim = par.sim[-id, ] )$par.est   ) ** 2  )
     )
     epsilon  =  epsilon[ which.min( dlt ) ]
     
@@ -260,7 +260,7 @@ adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1
     ### Get new sets and truth parameter to check hyper parameter epsilon
     x    =  as.matrix( stat.sim[ -id, ] )
     y    =  as.matrix( stat.sim[  id, ]  )
-    par.thruth  =  as.matrix( par.sim[ id, ] )
+    par.truth  =  as.matrix( par.sim[ id, ] )
     
     ### Get the best epsilon for K2_ABC method based on par.truth
     dlt  =  sapply( tolerance, 
@@ -268,7 +268,7 @@ adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1
                         rej      =  abc( target = y, param = par.sim[-id, ], 
                                          sumstat = x, tol = tlr, method = 'rejection' ) 
                         par.est  =  point_estimate( rej$unadj.values)$MAP
-                        return ( sum( ( par.thruth - par.est ) ** 2  ) )
+                        return ( sum( ( par.truth - par.est ) ** 2  ) )
                     }
     )
     tolerance  =  tolerance[ which.min( dlt ) ][ 1 ]
@@ -878,8 +878,10 @@ Get_iKernel_estimation  <-  function( iKernelABC, par.sim, stat.sim, stat.obs ){
 #'
 #' @param psi_t Initial data.frame of  \code{psi} and \code{t}, by default \cr
 #' \code{psi_t = data.frame( psi = as.numeric( sapply( X = c(2:8)*2, FUN = function( x ) rep(x, 8) ) ), t = rep( c(4,6,8,10,12,14,16,20), 7) )}
+#' @param cores Number of available cores for parallel computing
 #' @param n_best Number of the best adjusted values of psi_t pairs regarding to MSE 
-#'
+#' @param par.sim Data frame of parameters 
+#' 
 #' @return \code{adjust_psi_t() } returns adjusted hyper parameters \code{psi} and \code{t} as a data.frame with set of pair \code{psi_t} 
 #' 
 #' @export
@@ -1571,6 +1573,10 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
 #' @describeIn simulation_example  Function to get MAP of SpiderWeb algorithm based on different psi / t hyperparameters
 #'
 #' @param cores Number of cores for parallel calculation
+#' @param par.sim - data frame of parameters of the model
+#' @param stat.sim Summary statistics of the simulations (model output)
+#' @param stat.obs Summary statistics of the observation point
+#' @param restrict_points_number Maximal number of points in the datasets to get MAP
 #'
 #' @return Maximum A Posteriori of meta-sampling distribution of parameters
 #' 

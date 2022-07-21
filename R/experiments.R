@@ -8,7 +8,11 @@
 #' @param model_name Name of a model
 #' @param stochastic_term A number (usually in the range \code{[0,1]}) of stochastic term in the dataset \code{stat.sim}
 #' @param iteration Iteration number of trial with the same model and other parameters
-#' @param args List of arguments for a function to get MSE
+#' @param stat.obs Data frame of statistics of observation point
+#' @param stat.sim Data frame of statistics of simulations
+#' @param par.sim Data frame of parameters
+#' @param G Matrix of similarities for K2-ABC based on isolation kernel
+#' @param par.truth Truth parameter value to check result of estimation
 #'
 #' @return \code{Get_call()} returns the list: \cr
 #' method_name = method_name, \cr
@@ -108,7 +112,7 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
     
     ### Get MSE 
     MSE = NULL
-    if ( !is.na( par.est ) ) MSE  =  sum( ( par.thruth - par.est ) ** 2  )
+    if ( !is.na( par.est ) ) MSE  =  sum( ( par.truth - par.est ) ** 2  )
     
     running_time  =  as.numeric( difftime(Sys.time(), time_start, units = "secs")[[1]] )
     
