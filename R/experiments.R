@@ -102,10 +102,9 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
         }
     }
     
-    if ( method_name == '' ){
-        # par.est  =  do.call( what = ... , args = args )
+    if ( method_name == 'MaxWiK' ){
+        par.est  =  get_Spider_MAP( par.sim = par.sim, stat.sim = stat.sim, stat.obs = stat.obs )
     }
-    
     
     ### Get MSE 
     MSE = NULL
