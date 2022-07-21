@@ -22,37 +22,84 @@
 #' 
 #' @examples
 #' NULL
-Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_term, iteration, args ){
+Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_term, iteration, 
+                        stat.obs, stat.sim, par.sim, G = NULL, par.truth ){
     
     time_start  =  Sys.time()
     par.est  =  NA 
     
     if ( method_name == 'K2_ABC' & kernel_name != 'iKernel' ){
         if ( kernel_name == 'Gaussian'){
-            args$kernel  =  rbfdot
+            kernel  =  rbfdot
         } else {
-            args$kernel  =  laplacedot
+            kernel  =  laplacedot
         }
-        par.est  =  do.call( what = adjust_K2_ABC, args = args )
+        par.est  =  adjust_K2_ABC( par.sim = par.sim, stat.sim = stat.sim, 
+                                   stat.obs = stat.obs, kernel = kernel )
     }
+    
     if ( method_name == 'K2_ABC' & kernel_name == 'iKernel' ){
-        par.est  =  do.call( what = adjust_K2_ABC_iKernel, args = args )
+        par.est  =  adjust_K2_ABC_iKernel( par.sim = par.sim, stat.sim = stat.sim, 
+                                           stat.obs = stat.obs, G = G )
     }
     
     if ( method_name == 'Rejection' ){
-        par.est  =  do.call( what = adjust_ABC_tolerance$par.est, args = args )
+        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
+                                          stat.obs = stat.obs )
+        par.est  =  res$par.est
     }
     
-    if ( method_name == '' ){
-        par.est  =  do.call( what = ... , args = args )
+    if ( method_name == 'Loclinear' ){
+        
+        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
+                                          stat.obs = stat.obs )
+        tol   =   res$tolerance
+        if ( tol * nrow(stat.sim) < 5 ) tol = 5 / nrow( stat.sim )
+        
+        loclin   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
+                           tol = tol, method  =  'loclinear', hcorr   =  FALSE, 
+                           transf=c("none","log") )
+        lc = round( loclin$adj.values, digits = 9 )
+        
+        if (nrow( unique.data.frame(lc) ) > 1 ){
+            par.est  =  point_estimate( lc )$MAP
+        } else {
+            par.est  =  unique.data.frame(lc)
+        }
     }
     
-    if ( method_name == '' ){
-        par.est  =  do.call( what = ... , args = args )
+    if ( method_name == 'Neuralnet' ){
+        
+        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
+                                          stat.obs = stat.obs )
+        tol   =   res$tolerance
+        if ( tol * nrow(stat.sim) < 5 ) tol = 5 / nrow( stat.sim )
+        
+        nn   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
+                       tol = tol, method  =  'neuralnet', hcorr   =  FALSE, 
+                       transf=c("none","log") )
+        
+        par.est  =  point_estimate( nn$adj.values )$MAP
     }
     
-    if ( method_name == '' ){
-        par.est  =  do.call( what = ... , args = args )
+    if ( method_name == 'Ridge' ){
+        
+        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
+                                          stat.obs = stat.obs )
+        tol   =   res$tolerance
+        if ( tol * nrow(stat.sim) < 5 ) tol = 5 / nrow( stat.sim )
+        
+        rdg   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
+                        tol = tol, method  =  'ridge', hcorr   =  FALSE, 
+                        transf=c("none","log"), kernel = 'epanechnikov' )
+        
+        rdg_adj = round( rdg$adj.values, digits = 9 )
+        
+        if ( nrow( unique.data.frame( rdg_adj ) ) > 1 ){
+            par.est  =  point_estimate( rdg_adj )$MAP
+        } else {
+            par.est  =  unique.data.frame(rdg_adj)
+        }
     }
     
     if ( method_name == '' ){
@@ -61,7 +108,8 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
     
     
     ### Get MSE 
-    if ( !is.na(par.est) ) MSE  =  
+    MSE = NULL
+    if ( !is.na( par.est ) ) MSE  =  sum( ( par.thruth - par.est ) ** 2  )
     
     running_time  =  as.numeric( difftime(Sys.time(), time_start, units = "secs")[[1]] )
     

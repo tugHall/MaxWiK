@@ -242,7 +242,8 @@ adjust_Gram  <-  function( kernel, sigma = ( 2**(1:20) ) * 1E-3, x, y ){
 #' @description \code{adjust_ABC_tolerance()} allows to adjust tolerance parameter for rejection ABC method
 #' using numeric vector of tolerance, find parameter estimation for each tolerance and choose the best one.
 #'
-#' @param tolerance 
+#' @param tolerance Vector of tolerance values for rejection ABC method to get the best one, 
+#' by default \code{tolerance = c(0.001, 0.002, 0.005, (0.01 * 1:20)}
 #'
 #' @return \code{adjust_ABC_tolerance()} returns the best parameter estimation using rejection ABC method varying tolerance and tolerance value
 #' 
