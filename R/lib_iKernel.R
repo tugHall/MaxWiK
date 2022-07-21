@@ -411,7 +411,7 @@ add_new_point_iKernel  <-  function( data, d1, Matrix_Voronoi, dissim, t, psi, n
 #' @export
 #'
 #' @examples
-#' 
+#' NULL
 #' 
 GET_SUBSET  <-  function( data_set, pnts ){
     voronoi_subset  <-  data_set[  , pnts]

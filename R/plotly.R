@@ -26,7 +26,7 @@ plot_3d_similarities  <-  function( sim, r = range(0, 10), n = 12 ){
     
     
     # Prepare 3D plotly
-    library(plotly)
+    # library(plotly)
     generate_net  <-  function( st = (0:20)/2 ){
         # st  =  (0:20)/2
         net  =  NULL

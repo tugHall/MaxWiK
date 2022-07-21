@@ -18,6 +18,6 @@ Subset of data_set with columns pnts
 The function to get subset with size psi for Voronoi diagram
 }
 \examples{
-
+NULL
 
 }
