@@ -35,18 +35,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
     if ( verbose ) print( simulation_example )
 
     # Attach packages from import list
-    packages  =  list(  randomcoloR = 'randomColor',
-                        scales = 'alpha',
-                        methods = 'new',
-                        stats = c('aggregate', 'rbinom', 'rexp', 'rnorm', 'runif', 'dist' ),
-                        utils = c('read.delim', 'read.table', 'write.table', 'globalVariables' ),
-                        grDevices = c('dev.off', 'pdf', 'rgb'),
-                        graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title', 'points' ),
-                        abc = 'abc' )
-
-    for( pck in names( packages ) ){
-        library( package = pck, character.only = TRUE, include.only = packages[[ pck ]])
-    }
+    check_packages()
 
     if ( model == 'Gaussian' ) {
         input = Gaussian_model( d = d, x0 = x0, probability = probability, 
@@ -133,20 +122,8 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
     if ( verbose ) print( simulation_example )
     
     # Attach packages from import list
-    packages  =  list(  randomcoloR = 'randomColor',
-                        scales = 'alpha',
-                        methods = 'new',
-                        stats = c('aggregate', 'rbinom', 'rexp', 'rnorm', 'runif', 'dist' ),
-                        utils = c('read.delim', 'read.table', 'write.table', 'globalVariables' ),
-                        grDevices = c('dev.off', 'pdf', 'rgb'),
-                        graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title', 'points' ),
-                        abc = 'abc',
-                        parallel = 'mclapply' )
-    
-    for( pck in names( packages ) ){
-        library( package = pck, character.only = TRUE, include.only = packages[[ pck ]])
-    }
-    
+    check_packages()
+
     if ( model == 'Gaussian' ) {
         input = Gaussian_model( d = d, x0 = x0, probability = probability, 
                                 n = n, r = r)

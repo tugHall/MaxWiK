@@ -33,7 +33,7 @@ adjust_ABC_tolerance(
 )
 }
 \arguments{
-\item{G}{Kernel matrix \code{G} conteiners similarities between simulation points and observation point based on isolation kernel}
+\item{G}{Kernel matrix \code{G} containers similarities between simulation points and observation point based on isolation kernel}
 
 \item{epsilon}{Numeric vector of possible values of epsilon,
 by default \code{epsilon = (0.05 * 1:20) }}

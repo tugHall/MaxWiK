@@ -161,7 +161,7 @@ adjust_K2_ABC  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ),
 #' using numeric vector of epsilon, find parameter estimation for each epsilon and choose the best one
 #' based on matrix of isolation kernel.
 #'
-#' @param G Kernel matrix \code{G} conteiners similarities between simulation points and observation point based on isolation kernel
+#' @param G Kernel matrix \code{G} containers similarities between simulation points and observation point based on isolation kernel
 #'
 #' @return \code{adjust_K2_ABC_iKernel()} returns the best parameter estimation using K2-ABC method varying epsilon and based on isolation kernel
 #' 

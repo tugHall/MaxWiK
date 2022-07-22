@@ -1,5 +1,5 @@
 
-### file to organize toy experiments
+### File to organize toy experiments
 
 #' Function to call a method to get MSE
 #'
@@ -123,4 +123,17 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
                           MSE = MSE, 
                           running_time = running_time, 
                           iteration = iteration ) )
+}
+
+
+#' Function to prepare toy experiments
+#'
+#' @return
+#' @export
+#'
+#' @examples
+experiment  <-  function( ){
+    
+    
+    
 }

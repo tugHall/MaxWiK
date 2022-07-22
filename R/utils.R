@@ -1,6 +1,6 @@
 
-# Define global variables in tugHall.3:
-# utils::globalVariables( c( 'CF', 'Compaction_factor' ) )
+# Define global variables:
+# utils::globalVariables( c( 'var1', 'Var2' ) )
 
 
 
@@ -86,3 +86,41 @@ check_pkg  <-  function( pkg ){
     if ( !requireNamespace( pkg , quietly = TRUE ) )    stop( msg, call. = FALSE )
 }
 
+
+#' Check the installation of packages and attach them with corresponding functions
+#'
+#' @param pkgs List of package names with related function names, 
+#' by default (or when pkgs = NULL) the list of packages are described in Namespace file of the package or
+#' 'R/MaxWiK-package.R' file
+#' 
+#' @return if the packages are installed then it returns NULL else it returns error message
+#'
+#' @export
+#' 
+#' @examples
+#' check_packages(  )
+check_packages  <-  function( pkgs = NULL ){
+    
+    if ( is.null( pkgs ) ) {
+        pkgs  =  list(  abc = 'abc',
+                        bayestestR    =  'point_estimate',
+                        graphics      =  c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title', 'points' ),
+                        grDevices     =  c('dev.off', 'pdf', 'rgb'),
+                        kernlab       =  c( 'kernelMatrix', 'laplacedot', 'rbfdot' ),
+                        magrittr      =  '%>%',
+                        methods       =  'new',
+                        parallel      =  'mclapply',
+                        plotly        =  c( 'plot_ly', 'add_trace', 'add_surface' ),
+                        randomcoloR   =  'randomColor',
+                        scales        =  'alpha',
+                        stats         =  c('aggregate', 'rbinom', 'rexp', 'rnorm', 'runif', 'dist' ),
+                        utils         =  c('read.delim', 'read.table', 'write.table', 'globalVariables' )
+                        )
+    }
+    
+    ### Attach the packages
+    for( pck in names( pkgs ) ){
+        check_pkg( pkg = pck )
+        require( package = pck, character.only = TRUE, include.only = pkgs[[ pck ]])
+    }
+}
