@@ -44,7 +44,8 @@ get_Spider_MAP(
   par.sim,
   stat.obs,
   restrict_points_number = 300,
-  cores = 4
+  cores = 4,
+  n_best = 8
 )
 
 plot_3d_similarities(sim, r = range(0, 10), n = 12)
@@ -74,7 +75,7 @@ plot_3d_net_similarities(simnet, r = range(0, 10), n = 20)
 
 \item{t}{Integer number of trees in the Isolation Forest}
 
-\item{restrict_points_number}{Maximal number of points in the datasets to get MAP}
+\item{restrict_points_number}{Maximal number of points in the data sets to get MAP}
 
 \item{psi_t}{Data.frame with different set of psi and t hyperparameters}
 
@@ -87,6 +88,8 @@ plot_3d_net_similarities(simnet, r = range(0, 10), n = 20)
 }}
 
 \item{stat.obs}{Summary statistics of the observation point}
+
+\item{n_best}{Number of best psi_t pairs adjusted for MaxWiK algorithm}
 
 \item{sim}{Results of the function \code{simulation_example}}
 

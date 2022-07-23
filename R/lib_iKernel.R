@@ -1576,7 +1576,8 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
 #' @param par.sim - data frame of parameters of the model
 #' @param stat.sim Summary statistics of the simulations (model output)
 #' @param stat.obs Summary statistics of the observation point
-#' @param restrict_points_number Maximal number of points in the datasets to get MAP
+#' @param restrict_points_number Maximal number of points in the data sets to get MAP
+#' @param n_best Number of best psi_t pairs adjusted for MaxWiK algorithm
 #'
 #' @return Maximum A Posteriori of meta-sampling distribution of parameters
 #' 
@@ -1588,7 +1589,8 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
 #' # so, please, wait for a while
 #' sim = simulation_example_many_psi_t( verbose = FALSE , to_plot = FALSE )
 get_Spider_MAP  <-  function( stat.sim, par.sim, stat.obs, 
-                              restrict_points_number = 300, cores = 4 ){
+                              restrict_points_number = 300, cores = 4,
+                              n_best = 8 ){
     
     tol = restrict_points_number / nrow( stat.sim ) 
     
@@ -1599,7 +1601,7 @@ get_Spider_MAP  <-  function( stat.sim, par.sim, stat.obs,
     par.sim   =   par.sim[ rej$region, ]    
     
     psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, stat.obs = stat.obs,
-                            n_best = 8 )
+                            n_best = n_best )
     
     webnet  =  list( )
     SIM  =  function( j ){
@@ -1607,8 +1609,8 @@ get_Spider_MAP  <-  function( stat.sim, par.sim, stat.obs,
         t   =  psi_t$t[ j ]
         web  =  spiderweb_slow( psi = psi, t = t, param = par.sim, 
                                 stat.sim = stat.sim, stat.obs = stat.obs, 
-                                talkative = TRUE, check_pos_def = FALSE ,
-                                n_bullets = 5, n_best = 20, halfwidth = 0.5, 
+                                talkative = FALSE, check_pos_def = FALSE ,
+                                n_bullets = 10, n_best = 20, halfwidth = 0.5, 
                                 epsilon = 0.001 )
         return( web )
     } 

@@ -29,7 +29,7 @@
 Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_term, iteration, 
                         stat.obs, stat.sim, par.sim, G = NULL, par.truth ){
     
-    time_start  =  Sys.time()
+    time_start  =  Sys.time( )
     par.est  =  NA 
     
     if ( method_name == 'K2_ABC' & kernel_name != 'iKernel' ){
@@ -106,8 +106,13 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
         }
     }
     
-    if ( method_name == 'MaxWiK' ){
+    if ( method_name == 'MaxWiK_MAP' ){
         par.est  =  get_Spider_MAP( par.sim = par.sim, stat.sim = stat.sim, stat.obs = stat.obs )
+    }
+    
+    if ( method_name == 'MaxWiK' ){
+        par.est  =  get_Spider_MAP( par.sim = par.sim, stat.sim = stat.sim, 
+                                    stat.obs = stat.obs, n_best = 1 )
     }
     
     ### Get MSE 
@@ -126,14 +131,137 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
 }
 
 
+#' @describeIn Get_call  Function to call all the methods to get estimation of parameter and MSE
+#'
+#' @return \code{Get_call_all_methods()} returns data.frame with MSE for all defined methods
+#' @export
+#'
+#' @examples
+#' NULL 
+Get_call_all_methods  <-  function( model_name, stochastic_term, iteration, 
+                                    stat.obs, stat.sim, par.sim, G, par.truth ){
+    
+    DF  =  NULL
+    Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 'Rejection', 
+                                         'Loclinear', 'Neuralnet', 'Ridge', 
+                                         'MaxWiK_MAP', 'MaxWiK' ), 
+                              Kernel = c('Gaussian', 'Laplacian', 'iKernel', '',
+                                         '',          '',          'epanechnikov', 
+                                         'iKernel', 'iKernel') 
+                              )
+    ### Get G matrix for K2-ABC based on iKernel:
+    
+    
+    for( mk in 1:nrow(Meth_Kern) ){
+        DF_1  =  Get_call( method_name =  Meth_Kern$Method[mk], 
+                           kernel_name =  Meth_Kern$Kernel[mk], 
+                           model_name  =  model_name, 
+                           stochastic_term  =  stochastic_term, 
+                           iteration  =  iteration,
+                           stat.obs   =  stat.obs, 
+                           stat.sim   =  stat.sim, 
+                           par.sim    =  par.sim, 
+                           G          =  G, 
+                           par.truth  =  par.truth 
+                        )
+        DF  =  rbind( DF, DF_1 )
+    }
+    
+    return( DF )
+}
+
 #' Function to prepare toy experiments
+#'
+#' @param file_name Name of file to output results
+#' @param models Names of models for simulation, by default
+#' \code{models = c( 'Gaussian', 'Linear' )}
+#' @param dimensions Dimensions of models, by default
+#' \code{ dimensions = (1:20)*2 }
+#' @param stochastic_terms Stochastic terms for each model, by default
+#' \code{ stochastic_terms  =  c( 0, 0.1, 0.3, 0.7, 1 ) }
+#' @param rng Range for each variable, by default
+#' \code{rng  =  c( 0,10 ) }
 #'
 #' @return
 #' @export
 #'
 #' @examples
-experiment  <-  function( ){
+experiment_models  <-  function( file_name = 'output.txt', 
+                                 models = c( 'Gaussian', 'Linear' ),
+                                 dimensions = (1:20)*2, 
+                                 stochastic_terms  =  c( 0, 0.1, 0.3, 0.7, 1 ),
+                                 rng  =  c( 0,10 ), 
+                                 restrict_points_number = 1000 ){
     
+    ### Check installation of libraries:
+    check_packages()
     
+    # delete old file
+    if ( file.exists( file_name) ) unlink( file_name )
     
+    DF = NULL
+    for( model in models ){
+        for( dimension in dimensions ){
+            for( stochastic_term in stochastic_terms ){
+                
+                input  =  NULL
+                x0  =  runif( n = dimension, min = rng[1], max = rng[2] )
+                Number_of_points  =  500 * dimension
+                
+                if ( model == 'Gaussian' ) {
+                    input = Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
+                                            n = Number_of_points, r = rng )
+                }
+                if ( model == 'Linear' ) {
+                    input  =  linear_model( d = dimension, x0 = x0, probability = TRUE, 
+                                            n = Number_of_points, r = rng,
+                                            noise = stochastic_term )
+                }
+                
+                if ( is.null( input ) ) stop( 'Model name is incorrect' )
+                stat.sim_origin  =  input$stat.sim
+                stat.obs  =  input$stat.obs
+                par.sim_origin  =  input$par.sim
+                rm( input )
+                
+                # Apply restict number of points:
+                tol = restrict_points_number / nrow( stat.sim_origin )
+                rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
+                                method = 'rejection', tol = tol )
+                
+                stat.sim  =  stat.sim_origin[ rej$region, ]
+                par.sim   =   par.sim_origin[ rej$region, ] 
+                
+                psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
+                                        stat.obs = stat.obs, talkative = FALSE, 
+                                        check_pos_def = FALSE, 
+                                        n_best = 8, cores = 4 )
+                
+                ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
+                                      param = par.sim, 
+                                      stat.sim = stat.sim, 
+                                      stat.obs = stat.obs, 
+                                      talkative = FALSE, 
+                                      check_pos_def = FALSE )
+                
+                G = matrix( data = ikern$similarity, ncol = 1 )
+                
+                DF_new  =  Get_call_all_methods(    model_name = model, 
+                                                    stochastic_term = stochastic_term, 
+                                                    iteration  =  1,
+                                                    stat.obs = stat.obs, 
+                                                    stat.sim = stat.sim, 
+                                                    par.sim  = par.sim, 
+                                                    G        = G, 
+                                                    par.truth  =  x0 )
+                
+                DF  =  rbind( DF, DF_new )
+                
+                write.table(file = file_name, x = DF_new , append = TRUE, sep = '\t', 
+                            row.names = FALSE, col.names = TRUE )
+            }
+        }
+    }
+    
+    return( DF )
 }

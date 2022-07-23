@@ -2,6 +2,7 @@
 % Please edit documentation in R/experiments.R
 \name{Get_call}
 \alias{Get_call}
+\alias{Get_call_all_methods}
 \title{Function to call a method to get MSE}
 \usage{
 Get_call(
@@ -14,6 +15,17 @@ Get_call(
   stat.sim,
   par.sim,
   G = NULL,
+  par.truth
+)
+
+Get_call_all_methods(
+  model_name,
+  stochastic_term,
+  iteration,
+  stat.obs,
+  stat.sim,
+  par.sim,
+  G,
   par.truth
 )
 }
@@ -49,10 +61,18 @@ method_name = method_name, \cr
 \item running_time, \cr
 \item iteration.
 }
+
+\code{Get_call_all_methods()} returns data.frame with MSE for all defined methods
 }
 \description{
 Function to call a method to get MSE
 }
+\section{Functions}{
+\itemize{
+\item \code{Get_call_all_methods}: Function to call all the methods to get estimation of parameter and MSE
+}}
+
 \examples{
 NULL
+NULL 
 }
