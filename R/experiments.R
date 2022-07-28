@@ -29,10 +29,11 @@
 Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_term, iteration, 
                         stat.obs, stat.sim, par.sim, G = NULL, par.truth ){
     
+    n_min  =  100 
     time_start  =  Sys.time( )
     par.est  =  NA 
     
-    if ( method_name == 'K2_ABC' & kernel_name != 'iKernel' ){
+    if ( method_name == 'K2-ABC' & kernel_name != 'iKernel' ){
         if ( kernel_name == 'Gaussian'){
             kernel  =  rbfdot
         } else {
@@ -42,7 +43,7 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
                                    stat.obs = stat.obs, kernel = kernel )
     }
     
-    if ( method_name == 'K2_ABC' & kernel_name == 'iKernel' ){
+    if ( method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
         par.est  =  adjust_K2_ABC_iKernel( par.sim = par.sim, stat.sim = stat.sim, 
                                            stat.obs = stat.obs, G = G )
     }
@@ -58,12 +59,13 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
         res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
                                           stat.obs = stat.obs )
         tol   =   res$tolerance
-        if ( tol * nrow(stat.sim) < 5 ) tol = 5 / nrow( stat.sim )
+        if ( tol * nrow(stat.sim) < n_min ) tol = n_min / nrow( stat.sim )
         
         loclin   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
                            tol = tol, method  =  'loclinear', hcorr   =  FALSE, 
-                           transf=c("none","log") )
-        lc = round( loclin$adj.values, digits = 9 )
+                           transf=c( "none" ) )
+        
+        lc = round( loclin$adj.values + runif( n= length(loclin$adj.values) )/1E6, digits = 9 )
         
         if (nrow( unique.data.frame(lc) ) > 1 ){
             par.est  =  point_estimate( lc )$MAP
@@ -77,13 +79,14 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
         res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
                                           stat.obs = stat.obs )
         tol   =   res$tolerance
-        if ( tol * nrow(stat.sim) < 5 ) tol = 5 / nrow( stat.sim )
+        if ( tol * nrow(stat.sim) < n_min ) tol  =  n_min / nrow( stat.sim )
         
         nn   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
-                       tol = tol, method  =  'neuralnet', hcorr   =  FALSE, 
-                       transf=c("none","log") )
+                       tol = tol, method  =  'neuralnet', hcorr   =  TRUE, 
+                       transf=c("none","log"), lambda = 0.0001, trace = FALSE )
         
-        par.est  =  point_estimate( nn$adj.values )$MAP
+        nn_adj = round( nn$adj.values + runif( n= length( nn$adj.values ) ) / 1E6, digits = 9 )
+        par.est  =  point_estimate( nn_adj )$MAP
     }
     
     if ( method_name == 'Ridge' ){
@@ -91,13 +94,13 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
         res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
                                           stat.obs = stat.obs )
         tol   =   res$tolerance
-        if ( tol * nrow(stat.sim) < 5 ) tol = 5 / nrow( stat.sim )
+        if ( tol * nrow(stat.sim) < n_min ) tol = n_min / nrow( stat.sim )
         
         rdg   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
                         tol = tol, method  =  'ridge', hcorr   =  FALSE, 
                         transf=c("none","log"), kernel = 'epanechnikov' )
         
-        rdg_adj = round( rdg$adj.values, digits = 9 )
+        rdg_adj = round( rdg$adj.values + runif( n= length( rdg$adj.values ) )/1E6, digits = 9 )
         
         if ( nrow( unique.data.frame( rdg_adj ) ) > 1 ){
             par.est  =  point_estimate( rdg_adj )$MAP
@@ -117,7 +120,7 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
     
     ### Get MSE 
     MSE = NULL
-    if ( !is.na( par.est ) ) MSE  =  sum( ( par.truth - par.est ) ** 2  )
+    if ( !is.na( par.est )[1] ) MSE  =  sum( ( par.truth - par.est ) ** 2  )
     
     running_time  =  as.numeric( difftime(Sys.time(), time_start, units = "secs")[[1]] )
     
@@ -134,12 +137,16 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
 #' @describeIn Get_call  Function to call all the methods to get estimation of parameter and MSE
 #'
 #' @return \code{Get_call_all_methods()} returns data.frame with MSE for all defined methods
+#' 
+#' @param cores Number of cores for parallel calculation with iterations
+#' 
 #' @export
 #'
 #' @examples
 #' NULL 
-Get_call_all_methods  <-  function( model_name, stochastic_term, iteration, 
-                                    stat.obs, stat.sim, par.sim, G, par.truth ){
+Get_call_all_methods  <-  function( model_name, stochastic_term, iterations, 
+                                    stat.obs, stat.sim, par.sim, G, par.truth,
+                                    cores ){
     
     DF  =  NULL
     Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 'Rejection', 
@@ -149,15 +156,14 @@ Get_call_all_methods  <-  function( model_name, stochastic_term, iteration,
                                          '',          '',          'epanechnikov', 
                                          'iKernel', 'iKernel') 
                               )
-    ### Get G matrix for K2-ABC based on iKernel:
-    
     
     for( mk in 1:nrow(Meth_Kern) ){
-        DF_1  =  Get_call( method_name =  Meth_Kern$Method[mk], 
-                           kernel_name =  Meth_Kern$Kernel[mk], 
+    mclapply( X = iterations , FUN = function( it ){     
+        DF_1  =  Get_call( method_name =  as.character( Meth_Kern$Method[mk] ), 
+                           kernel_name =  as.character( Meth_Kern$Kernel[mk] ), 
                            model_name  =  model_name, 
                            stochastic_term  =  stochastic_term, 
-                           iteration  =  iteration,
+                           iteration  =  it,
                            stat.obs   =  stat.obs, 
                            stat.sim   =  stat.sim, 
                            par.sim    =  par.sim, 
@@ -165,13 +171,14 @@ Get_call_all_methods  <-  function( model_name, stochastic_term, iteration,
                            par.truth  =  par.truth 
                         )
         DF  =  rbind( DF, DF_1 )
+        }, mc.cores = cores )
     }
     
     return( DF )
 }
 
 #' Function to prepare toy experiments
-#'
+#' 
 #' @param file_name Name of file to output results
 #' @param models Names of models for simulation, by default
 #' \code{models = c( 'Gaussian', 'Linear' )}
@@ -186,6 +193,7 @@ Get_call_all_methods  <-  function( model_name, stochastic_term, iteration,
 #' @export
 #'
 #' @examples
+#' NULL
 experiment_models  <-  function( file_name = 'output.txt', 
                                  models = c( 'Gaussian', 'Linear' ),
                                  dimensions = (1:20)*2, 
@@ -245,16 +253,15 @@ experiment_models  <-  function( file_name = 'output.txt',
                                       check_pos_def = FALSE )
                 
                 G = matrix( data = ikern$similarity, ncol = 1 )
-                
-                DF_new  =  Get_call_all_methods(    model_name = model, 
-                                                    stochastic_term = stochastic_term, 
-                                                    iteration  =  1,
-                                                    stat.obs = stat.obs, 
-                                                    stat.sim = stat.sim, 
-                                                    par.sim  = par.sim, 
-                                                    G        = G, 
-                                                    par.truth  =  x0 )
-                
+                DF_new  =  Get_call_all_methods(    
+                                    model_name = model, 
+                                    stochastic_term = stochastic_term, 
+                                    iterations  =  1:10,
+                                    stat.obs = stat.obs, 
+                                    stat.sim = stat.sim, 
+                                    par.sim  = par.sim, 
+                                    G        = G, 
+                                    par.truth  =  x0 )
                 DF  =  rbind( DF, DF_new )
                 
                 write.table(file = file_name, x = DF_new , append = TRUE, sep = '\t', 

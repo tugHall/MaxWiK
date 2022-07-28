@@ -34,3 +34,6 @@ experiment_models(
 \description{
 Function to prepare toy experiments
 }
+\examples{
+NULL
+}
