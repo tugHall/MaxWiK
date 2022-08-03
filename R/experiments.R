@@ -150,33 +150,31 @@ Get_call_all_methods  <-  function( model_name, stochastic_term, iterations,
     
     DF  =  NULL
     Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 'Rejection', 
-                                         # 'Loclinear', 'Neuralnet', 'Ridge', 
-                                         'Loclinear', 'Ridge', 
+                                         'Loclinear', 'Neuralnet', 'Ridge',
                                          'MaxWiK_MAP', 'MaxWiK' ), 
                               Kernel = c('Gaussian', 'Laplacian', 'iKernel', '',
-                                         # '',          '',          'epanechnikov', 
-                                         '',          'epanechnikov',
+                                         '',          '',          'epanechnikov',
                                          'iKernel', 'iKernel') 
                               )
-    DF1 = NULL
+    
     for( mk in 1:nrow(Meth_Kern) ){
-        DF_1  =  mclapply( X = iterations , FUN = function( it ){     
+        DF_1  =  mclapply( iterations , FUN = function( x ){     
                         Get_call(  method_name =  as.character( Meth_Kern$Method[mk] ), 
                                    kernel_name =  as.character( Meth_Kern$Kernel[mk] ), 
                                    model_name  =  model_name, 
                                    stochastic_term  =  stochastic_term, 
-                                   iteration  =  it,
+                                   iteration  =  x,
                                    stat.obs   =  stat.obs, 
                                    stat.sim   =  stat.sim, 
                                    par.sim    =  par.sim, 
                                    G          =  G, 
                                    par.truth  =  par.truth 
                                 )
-                        # DF  =  rbind( DF, DF_1 )
-        }, mc.cores = cores )
-    DF_1  =  do.call( rbind, DF_1)
+        }, mc.cores  =  cores )
+    DF_1  =  do.call( rbind.data.frame, DF_1 )
     DF  =  rbind( DF, DF_1 )
     }
+    
     return( DF )
 }
 
@@ -200,7 +198,7 @@ Get_call_all_methods  <-  function( model_name, stochastic_term, iterations,
 experiment_models  <-  function( file_name = 'output.txt', 
                                  models = c( 'Gaussian', 'Linear' ),
                                  dimensions = (1:20)*2, 
-                                 stochastic_terms  =  c( 0, 0.1, 0.3, 0.7, 1 ),
+                                 stochastic_terms  =  c( 0, 0.1, 0.3, 0.7, 1, 1.5 ),
                                  rng  =  c( 0,10 ), 
                                  restrict_points_number = 1000 ){
     
@@ -259,7 +257,7 @@ experiment_models  <-  function( file_name = 'output.txt',
                 DF_new  =  Get_call_all_methods(    
                                     model_name = model, 
                                     stochastic_term = stochastic_term, 
-                                    iterations  =  1:10,
+                                    iterations  =  1:12,
                                     stat.obs = stat.obs, 
                                     stat.sim = stat.sim, 
                                     par.sim  = par.sim, 
@@ -267,8 +265,13 @@ experiment_models  <-  function( file_name = 'output.txt',
                                     par.truth  =  x0 )
                 DF  =  rbind( DF, DF_new )
                 
-                write.table(file = file_name, x = DF_new , append = TRUE, sep = '\t', 
-                            row.names = FALSE, col.names = TRUE )
+                if ( file.exists( file_name ) ){
+                    write.table(file = file_name, x = DF_new , append = TRUE, sep = '\t', 
+                                row.names = FALSE, col.names = FALSE )
+                } else {
+                    write.table(file = file_name, x = DF_new , append = TRUE, sep = '\t', 
+                                row.names = FALSE, col.names = TRUE )
+                }
             }
         }
     }
