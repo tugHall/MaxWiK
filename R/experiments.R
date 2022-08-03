@@ -146,34 +146,37 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
 #' NULL 
 Get_call_all_methods  <-  function( model_name, stochastic_term, iterations, 
                                     stat.obs, stat.sim, par.sim, G, par.truth,
-                                    cores ){
+                                    cores = 4 ){
     
     DF  =  NULL
     Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 'Rejection', 
-                                         'Loclinear', 'Neuralnet', 'Ridge', 
+                                         # 'Loclinear', 'Neuralnet', 'Ridge', 
+                                         'Loclinear', 'Ridge', 
                                          'MaxWiK_MAP', 'MaxWiK' ), 
                               Kernel = c('Gaussian', 'Laplacian', 'iKernel', '',
-                                         '',          '',          'epanechnikov', 
+                                         # '',          '',          'epanechnikov', 
+                                         '',          'epanechnikov',
                                          'iKernel', 'iKernel') 
                               )
-    
+    DF1 = NULL
     for( mk in 1:nrow(Meth_Kern) ){
-    mclapply( X = iterations , FUN = function( it ){     
-        DF_1  =  Get_call( method_name =  as.character( Meth_Kern$Method[mk] ), 
-                           kernel_name =  as.character( Meth_Kern$Kernel[mk] ), 
-                           model_name  =  model_name, 
-                           stochastic_term  =  stochastic_term, 
-                           iteration  =  it,
-                           stat.obs   =  stat.obs, 
-                           stat.sim   =  stat.sim, 
-                           par.sim    =  par.sim, 
-                           G          =  G, 
-                           par.truth  =  par.truth 
-                        )
-        DF  =  rbind( DF, DF_1 )
+        DF_1  =  mclapply( X = iterations , FUN = function( it ){     
+                        Get_call(  method_name =  as.character( Meth_Kern$Method[mk] ), 
+                                   kernel_name =  as.character( Meth_Kern$Kernel[mk] ), 
+                                   model_name  =  model_name, 
+                                   stochastic_term  =  stochastic_term, 
+                                   iteration  =  it,
+                                   stat.obs   =  stat.obs, 
+                                   stat.sim   =  stat.sim, 
+                                   par.sim    =  par.sim, 
+                                   G          =  G, 
+                                   par.truth  =  par.truth 
+                                )
+                        # DF  =  rbind( DF, DF_1 )
         }, mc.cores = cores )
+    DF_1  =  do.call( rbind, DF_1)
+    DF  =  rbind( DF, DF_1 )
     }
-    
     return( DF )
 }
 

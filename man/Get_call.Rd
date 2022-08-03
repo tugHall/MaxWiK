@@ -21,12 +21,13 @@ Get_call(
 Get_call_all_methods(
   model_name,
   stochastic_term,
-  iteration,
+  iterations,
   stat.obs,
   stat.sim,
   par.sim,
   G,
-  par.truth
+  par.truth,
+  cores = 4
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ Get_call_all_methods(
 \item{G}{Matrix of similarities for K2-ABC based on isolation kernel}
 
 \item{par.truth}{Truth parameter value to check result of estimation}
+
+\item{cores}{Number of cores for parallel calculation with iterations}
 }
 \value{
 \code{Get_call()} returns the list: \cr
