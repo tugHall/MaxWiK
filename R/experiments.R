@@ -160,7 +160,7 @@ Get_call_all_methods  <-  function( model_name, dimension, stochastic_term, iter
                               )
     
     for( mk in 1:nrow(Meth_Kern) ){
-        DF_1  =  mclapply( iterations , FUN = function( x ){     
+         DF_1  =  mclapply( iterations , FUN = function( x ){     
                         Get_call(  method_name =  as.character( Meth_Kern$Method[mk] ), 
                                    kernel_name =  as.character( Meth_Kern$Kernel[mk] ), 
                                    model_name  =  model_name, 
@@ -174,8 +174,8 @@ Get_call_all_methods  <-  function( model_name, dimension, stochastic_term, iter
                                    par.truth  =  par.truth 
                                 )
         }, mc.cores  =  cores )
-    DF_1  =  do.call( rbind.data.frame, DF_1 )
-    DF  =  rbind( DF, DF_1 )
+        DF_2  =  do.call( rbind.data.frame, DF_1 )
+        DF    =  rbind( DF, DF_2 )
     }
     
     return( DF )
