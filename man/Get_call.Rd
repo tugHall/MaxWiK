@@ -9,6 +9,7 @@ Get_call(
   method_name,
   kernel_name = "",
   model_name,
+  dimension,
   stochastic_term,
   iteration,
   stat.obs,
@@ -20,6 +21,7 @@ Get_call(
 
 Get_call_all_methods(
   model_name,
+  dimension,
   stochastic_term,
   iterations,
   stat.obs,
@@ -36,6 +38,8 @@ Get_call_all_methods(
 \item{kernel_name}{Name of kernel function}
 
 \item{model_name}{Name of a model}
+
+\item{dimension}{Dimension of the model}
 
 \item{stochastic_term}{A number (usually in the range \code{[0,1]}) of stochastic term in the dataset \code{stat.sim}}
 

@@ -6,6 +6,7 @@
 #' @param method_name Name of a method
 #' @param kernel_name Name of kernel function
 #' @param model_name Name of a model
+#' @param dimension  Dimension of the model
 #' @param stochastic_term A number (usually in the range \code{[0,1]}) of stochastic term in the dataset \code{stat.sim}
 #' @param iteration Iteration number of trial with the same model and other parameters
 #' @param stat.obs Data frame of statistics of observation point
@@ -26,7 +27,7 @@
 #' 
 #' @examples
 #' NULL
-Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_term, iteration, 
+Get_call  <-  function( method_name, kernel_name = '', model_name, dimension, stochastic_term, iteration, 
                         stat.obs, stat.sim, par.sim, G = NULL, par.truth ){
     
     n_min  =  100 
@@ -127,6 +128,7 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
     return( data.frame(   method_name = method_name,
                           kernel_name = kernel_name,
                           model_name  = model_name,
+                          dimension   = dimension, 
                           stochastic_term = stochastic_term,
                           MSE = MSE, 
                           running_time = running_time, 
@@ -144,7 +146,7 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, stochastic_te
 #'
 #' @examples
 #' NULL 
-Get_call_all_methods  <-  function( model_name, stochastic_term, iterations, 
+Get_call_all_methods  <-  function( model_name, dimension, stochastic_term, iterations, 
                                     stat.obs, stat.sim, par.sim, G, par.truth,
                                     cores = 4 ){
     
@@ -162,6 +164,7 @@ Get_call_all_methods  <-  function( model_name, stochastic_term, iterations,
                         Get_call(  method_name =  as.character( Meth_Kern$Method[mk] ), 
                                    kernel_name =  as.character( Meth_Kern$Kernel[mk] ), 
                                    model_name  =  model_name, 
+                                   dimension   =  dimension, 
                                    stochastic_term  =  stochastic_term, 
                                    iteration  =  x,
                                    stat.obs   =  stat.obs, 
@@ -256,6 +259,7 @@ experiment_models  <-  function( file_name = 'output.txt',
                 G = matrix( data = ikern$similarity, ncol = 1 )
                 DF_new  =  Get_call_all_methods(    
                                     model_name = model, 
+                                    dimension  = dimension,
                                     stochastic_term = stochastic_term, 
                                     iterations  =  1:12,
                                     stat.obs = stat.obs, 
