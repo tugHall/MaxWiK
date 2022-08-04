@@ -236,7 +236,8 @@ experiment_models  <-  function( file_name = 'output.txt',
     DF = NULL
     for( model in models ){
         for( dimension in dimensions ){
-            for( stochastic_term in stochastic_terms ){
+            if ( model == 'Linear') stoch = stochastic_terms else stoch  =  0
+            for( stochastic_term in stoch ){
                 
                 input  =  NULL
                 x0  =  runif( n = dimension, min = rng[1], max = rng[2] )
@@ -298,7 +299,7 @@ experiment_models  <-  function( file_name = 'output.txt',
                     write.table(file = file_name, x = DF_new , append = TRUE, sep = '\t', 
                                 row.names = FALSE, col.names = TRUE )
                 }
-            }
+        }
         }
     }
     
