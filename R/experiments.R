@@ -428,9 +428,13 @@ analyze_experiments  <-  function( DF, file_to_save = '../gplot.pdf'  ){
                                  stochastic_term = stochastic_term, best_method = NA , kernel = NA )
                 # min_MSE  =  min( DF[ region, 'MSE'] )
                 w = which.min( DF[ region, 'MSE'] )
-                bm[ 1, 'best_method']  =  DF[ region, 'method_name' ][ w ]
-                bm[ 1, 'kernel']       =  DF[ region, 'kernel_name' ][ w ]
-                
+                if ( length( w ) > 0 ){
+                    bm[ 1, 'best_method']  =  DF[ region, 'method_name' ][ w ]
+                    bm[ 1, 'kernel']       =  DF[ region, 'kernel_name' ][ w ]
+                } else {
+                    bm[ 1, 'best_method']  =  NA
+                    bm[ 1, 'kernel']       =  NA
+                }
                 best_methods  =   rbind( best_methods, bm )
                 
             }
