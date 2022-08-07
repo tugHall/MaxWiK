@@ -27,6 +27,7 @@
 #' @importFrom randomcoloR randomColor
 #' @importFrom scales alpha
 #' @importFrom stats aggregate
+#' @importFrom stats complete.cases
 #' @importFrom stats dist
 #' @importFrom stats rbinom
 #' @importFrom stats rexp

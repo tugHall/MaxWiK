@@ -113,7 +113,7 @@ check_packages  <-  function( pkgs = NULL ){
                         plotly        =  c( 'plot_ly', 'add_trace', 'add_surface' ),
                         randomcoloR   =  'randomColor',
                         scales        =  'alpha',
-                        stats         =  c('aggregate', 'rbinom', 'rexp', 'rnorm', 'runif', 'dist' ),
+                        stats         =  c('aggregate', 'rbinom', 'rexp', 'rnorm', 'runif', 'dist', 'complete.cases' ),
                         utils         =  c('read.delim', 'read.table', 'write.table', 'globalVariables' )
                         )
     }

@@ -305,3 +305,157 @@ experiment_models  <-  function( file_name = 'output.txt',
     
     return( DF )
 }
+
+
+#' Function to get statistics from the results of experiments and find the best methods for each simulation case
+#'
+#' @param DF Data frame with results of experiments, output of \code{experiment_models()} function.
+#'
+#' @return List of statistical data with analysis of results: \cr
+#' - ; \cr
+#' - ; \cr
+#' - ; \cr
+#' - ; \cr
+#' - ; \cr
+#' - ; \cr
+#' - .
+#' 
+#' @export
+#'
+#' @examples
+#' NULL 
+analyze_experiments  <-  function( DF, file_to_save = '../gplot.pdf'  ){
+    
+    check_packages()
+    
+    get_region  =  function( DF, model_name, dimension, stochastic_term ){
+        
+        region  =  NULL
+        if ( dimension != '' ){
+            if ( model_name == 'Linear'){ 
+                region = which(DF$model_name       ==  'Linear'        & 
+                               DF$stochastic_term  ==  stochastic_term & 
+                               DF$dimension        ==  dimension ) 
+            }
+            
+            if ( model_name == 'Gaussian'){ 
+                region = which(DF$model_name       ==  'Gaussian'      & 
+                               DF$dimension        ==  dimension ) 
+            }
+        } else {
+            if ( model_name == 'Linear'){ 
+                region = which(DF$model_name       ==  'Linear'        & 
+                                   DF$stochastic_term  ==  stochastic_term ) 
+            }
+            
+            if ( model_name == 'Gaussian'){ 
+                region = which(DF$model_name       ==  'Gaussian'  ) 
+            }
+        }
+        if ( is.null(region) ) print( 'Model name is incorrect' )
+        
+        check_NA  =  complete.cases( DF[ region, ] )
+        region    =  region[ check_NA ]
+
+        return( region )
+    }
+    get_region_method  =  function( DF, model_name, dimension, stochastic_term, method_name ){
+        
+        region  =  NULL
+        
+        if ( model_name == 'Linear'){ 
+            region = which(DF$model_name       ==  'Linear'        & 
+                               DF$stochastic_term  ==  stochastic_term & 
+                               DF$dimension        ==  dimension  &
+                               DF$method_name      ==  method_name  ) 
+        }
+        
+        if ( model_name == 'Gaussian'){ 
+            region = which(DF$model_name       ==  'Gaussian'      & 
+                               DF$dimension        ==  dimension   &
+                               DF$method_name      ==  method_name ) 
+        }
+        
+        if ( is.null(region) ) print( 'Model name is incorrect' )
+        
+        check_NA  =  complete.cases( DF[ region, ] )
+        region    =  region[ check_NA ]
+        
+        return( region )
+    }
+    
+    # Get ranges:
+    models      =  unique( DF$model_name )
+    dimensions  =  unique( DF$dimension  )
+    stochastic_terms  =  unique( DF$stochastic_term )
+    
+    # Get the best methods for each case:
+    best_methods  =  NULL
+    
+    for( model_name in models ){
+        if ( model_name == 'Linear') stoch = stochastic_terms else stoch  =  0
+        for( dimension in dimensions ){
+            for( stochastic_term in stoch ){
+                
+                region  =  get_region(  DF, model_name, dimension, stochastic_term )
+                bm = data.frame( model_name = model_name, dimension = dimension, 
+                                 stochastic_term = stochastic_term, best_method = NA , kernel = NA )
+                # min_MSE  =  min( DF[ region, 'MSE'] )
+                w = which.min( DF[ region, 'MSE'] )
+                bm[ 1, 'best_method']  =  DF[ region, 'method_name' ][ w ]
+                bm[ 1, 'kernel']       =  DF[ region, 'kernel_name' ][ w ]
+                
+                best_methods  =   rbind( best_methods, bm )
+                
+            }
+        }
+    }
+    
+    methods_all  =  unique( DF$method_name )
+    MvsD = NULL
+    pdf( file_to_save )
+    for( model_name in models ){
+        if ( model_name == 'Linear') stoch = stochastic_terms else stoch  =  0
+        for( stochastic_term in stoch ){
+            for( mthd  in methods_all ){
+                for( dimension in dimensions ){    
+                    region  =  get_region_method(  DF, model_name, dimension, stochastic_term, mthd )
+                    if ( length( region ) >0 ){
+                        krnl  =  DF[ region, 'kernel_name'][1]
+                        if ( krnl == '' ) { mwk = mthd } else { mwk = paste(mthd, krnl, sep = '_') }
+                        md = data.frame( model_name = model_name, dimension = dimension, 
+                                           stochastic_term = stochastic_term, 
+                                           method = mthd , kernel = krnl,
+                                           MSE_min_per_dim  = min( DF[ region, 'MSE'] ) / dimension, 
+                                           MSE_max_per_dim  = max( DF[ region, 'MSE'] ) / dimension, 
+                                           MSE_mean_per_dim = mean( DF[ region, 'MSE'] ) / dimension,
+                                           method_with_kernel  =  mwk )
+                    }
+                MvsD  =  rbind(  MvsD, md )
+                }
+            }
+        # Plot data frame:
+        region   =  get_region(  MvsD, model_name, dimension = '', stochastic_term )
+        df_plot  =  MvsD[ region, ]
+        if ( model_name == 'Linear')  { 
+            ttl  =  paste( 'Linear model with stochastic term', stochastic_term )
+        } else {
+            ttl  =  paste( 'Gaussian model' )
+        }
+        p = ggplot( df_plot, aes( x = dimension, y = MSE_min_per_dim ) ) + 
+                geom_line( aes( color = method_with_kernel, 
+                                linetype = method_with_kernel ), size = 1.2 ) + 
+            scale_color_manual( values = c( 'darkmagenta', 'blue3', 'darkgreen', 
+                                            'coral4', 'deeppink', 'darkorange', 'black' ) ) +
+            ggtitle( ttl ) +
+            ylab( 'Min of MSE per dimension' ) + xlab( 'Dimension' )
+        
+        print( p )    
+        
+        }
+    }
+    dev.off()
+    print( paste('All the plots are saved into file', file_to_save ) )
+    return( list( best_methods = best_methods,
+                  MvsD  =  MvsD ) )
+}
