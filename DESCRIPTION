@@ -20,7 +20,8 @@ Imports:
     plotly,
     kernlab,
     abc,
-    magrittr
+    magrittr,
+    ggplot2
 Suggests: 
     rmarkdown,
     knitr,
