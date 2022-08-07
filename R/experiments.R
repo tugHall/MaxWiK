@@ -383,6 +383,32 @@ analyze_experiments  <-  function( DF, file_to_save = '../gplot.pdf'  ){
         
         return( region )
     }
+    get_region_method_kernel  =  function( DF, model_name, dimension, stochastic_term, method_name, krnl ){
+        
+        region  =  NULL
+        
+        if ( model_name == 'Linear'){ 
+            region = which(DF$model_name       ==  'Linear'        & 
+                               DF$stochastic_term  ==  stochastic_term & 
+                               DF$dimension        ==  dimension  &
+                               DF$method_name      ==  method_name &
+                               DF$kernel_name      ==  krnl ) 
+        }
+        
+        if ( model_name == 'Gaussian'){ 
+            region = which(DF$model_name       ==  'Gaussian'      & 
+                               DF$dimension        ==  dimension   &
+                               DF$method_name      ==  method_name &
+                               DF$kernel_name      ==  krnl ) 
+        }
+        
+        if ( is.null(region) ) print( 'Model name is incorrect' )
+        
+        check_NA  =  complete.cases( DF[ region, ] )
+        region    =  region[ check_NA ]
+        
+        return( region )
+    }
     
     # Get ranges:
     models      =  unique( DF$model_name )
@@ -411,24 +437,27 @@ analyze_experiments  <-  function( DF, file_to_save = '../gplot.pdf'  ){
         }
     }
     
-    methods_all  =  unique( DF$method_name )
+    methods_all  =  unique( DF[, c(1,2)] )
     MvsD = NULL
     pdf( file_to_save )
     for( model_name in models ){
         if ( model_name == 'Linear') stoch = stochastic_terms else stoch  =  0
         for( stochastic_term in stoch ){
-            for( mthd  in methods_all ){
+            for( j in 1:nrow( methods_all ) ){
+                mthd  =  methods_all[ j, 'method_name']
+                krnl  =  methods_all[ j, 'kernel_name']
                 for( dimension in dimensions ){    
-                    region  =  get_region_method(  DF, model_name, dimension, stochastic_term, mthd )
+                    region  =  get_region_method_kernel(  DF, model_name, dimension, stochastic_term, mthd, krnl )
+                    
                     if ( length( region ) >0 ){
-                        krnl  =  DF[ region, 'kernel_name'][1]
+                        # krnl  =  DF[ region, 'kernel_name'][1]
                         if ( krnl == '' ) { mwk = mthd } else { mwk = paste(mthd, krnl, sep = '_') }
                         md = data.frame( model_name = model_name, dimension = dimension, 
                                            stochastic_term = stochastic_term, 
                                            method = mthd , kernel = krnl,
-                                           MSE_min_per_dim  = min( DF[ region, 'MSE'] ) / dimension, 
-                                           MSE_max_per_dim  = max( DF[ region, 'MSE'] ) / dimension, 
-                                           MSE_mean_per_dim = mean( DF[ region, 'MSE'] ) / dimension,
+                                           RMSE_min_per_dim  = sqrt(min(  DF[ region, 'MSE'] )) / dimension, 
+                                           RMSE_max_per_dim  = sqrt(max(  DF[ region, 'MSE'] )) / dimension, 
+                                           RMSE_mean_per_dim = sqrt(mean( DF[ region, 'MSE'] )) / dimension,
                                            method_with_kernel  =  mwk )
                     }
                 MvsD  =  rbind(  MvsD, md )
@@ -442,13 +471,14 @@ analyze_experiments  <-  function( DF, file_to_save = '../gplot.pdf'  ){
         } else {
             ttl  =  paste( 'Gaussian model' )
         }
-        p = ggplot( df_plot, aes( x = dimension, y = MSE_min_per_dim ) ) + 
+        p = ggplot( df_plot, aes( x = dimension, y = RMSE_min_per_dim ) ) + 
                 geom_line( aes( color = method_with_kernel, 
                                 linetype = method_with_kernel ), size = 1.2 ) + 
             scale_color_manual( values = c( 'darkmagenta', 'blue3', 'darkgreen', 
-                                            'coral4', 'deeppink', 'darkorange', 'black' ) ) +
+                                            'coral4', 'deeppink', 'darkorange', 
+                                            'blueviolet', 'cyan3', 'black' ) ) +
             ggtitle( ttl ) +
-            ylab( 'Min of MSE per dimension' ) + xlab( 'Dimension' )
+            ylab( 'Min of RMSE per dimension' ) + xlab( 'Dimension' )
         
         print( p )    
         
