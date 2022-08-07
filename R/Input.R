@@ -104,7 +104,8 @@ linear_model  <-  function( d = 1, x0 = 3, probability = TRUE, noise = 0.2,
     stat.sim  =  data.frame( matrix( NA, nrow = n, ncol = d ) )
     names( stat.sim )  =  paste0( 'Y', 1:d )
     for( i in 1:d ){
-        stat.sim[ , i ]  = 1 + ( par.sim[ , i ] - x0[ i ] ) / x0[ i ]
+        stat.sim[ , i ]  = 1 + ( par.sim[ , i ] - x0[ i ] ) / x0[ i ] + 
+            runif( n = n, min = -0.5, max = 0.5 ) * noise
     }
     
     
