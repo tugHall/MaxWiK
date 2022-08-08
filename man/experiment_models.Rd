@@ -10,7 +10,7 @@ experiment_models(
   dimensions = (1:20) * 2,
   stochastic_terms = c(0, 0.1, 0.3, 0.7, 1, 1.5),
   rng = c(0, 10),
-  restrict_points_number = 1000
+  restrict_points_number = 300
 )
 }
 \arguments{

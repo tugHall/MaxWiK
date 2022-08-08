@@ -1,5 +1,5 @@
 ### Job submission
-if( TRUE ){
+if( FALSE ){
     library('MaxWiK')
     DF  =  experiment_models( file_name = '../Results.txt', 
                                       models = c( 'Gaussian', 'Linear' ),
