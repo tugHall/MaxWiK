@@ -237,7 +237,7 @@ experiment_models  <-  function( file_name = 'output.txt',
     for( model in models ){
         # if ( model == 'Linear') stoch = stochastic_terms else stoch  =  0
         for( dimension in dimensions ){
-            for( stochastic_term in stoch ){
+            for( stochastic_term in stochastic_terms ){
                 
                 input  =  NULL
                 x0  =  runif( n = dimension, min = rng[1], max = rng[2] )
