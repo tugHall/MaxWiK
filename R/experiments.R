@@ -412,17 +412,17 @@ analyze_experiments  <-  function( DF, file_to_save = '../gplot.pdf'  ){
     }
     
     # Get ranges:
-    models      =  unique( DF$model_name )
-    dimensions  =  unique( DF$dimension  )
-    stochastic_terms  =  unique( DF$stochastic_term )
+    models      =  as.character( unique( DF$model_name ) )
+    dimensions  =  as.numeric( unique( DF$dimension  ) )
+    stochastic_terms  = as.numeric( unique( DF$stochastic_term ) )
     
     # Get the best methods for each case:
     best_methods  =  NULL
     
     for( model_name in models ){
-        if ( model_name == 'Linear') stoch = stochastic_terms else stoch  =  0
+        # if ( model_name == 'Linear') stoch = stochastic_terms else stoch  =  0
         for( dimension in dimensions ){
-            for( stochastic_term in stoch ){
+            for( stochastic_term in stochastic_terms ){
                 
                 region  =  get_region(  DF, model_name, dimension, stochastic_term )
                 bm = data.frame( model_name = model_name, dimension = dimension, 
@@ -430,8 +430,8 @@ analyze_experiments  <-  function( DF, file_to_save = '../gplot.pdf'  ){
                 # min_MSE  =  min( DF[ region, 'MSE'] )
                 w = which.min( DF[ region, 'MSE'] )
                 if ( length( w ) > 0 ){
-                    bm[ 1, 'best_method']  =  DF[ region, 'method_name' ][ w ]
-                    bm[ 1, 'kernel']       =  DF[ region, 'kernel_name' ][ w ]
+                    bm[ 1, 'best_method']  =  as.character( DF[ region, 'method_name' ][ w ] )
+                    bm[ 1, 'kernel']       =  as.character( DF[ region, 'kernel_name' ][ w ] )
                 } else {
                     bm[ 1, 'best_method']  =  NA
                     bm[ 1, 'kernel']       =  NA
@@ -446,8 +446,7 @@ analyze_experiments  <-  function( DF, file_to_save = '../gplot.pdf'  ){
     MvsD = NULL
     pdf( file_to_save )
     for( model_name in models ){
-        if ( model_name == 'Linear') stoch = stochastic_terms else stoch  =  0
-        for( stochastic_term in stoch ){
+        for( stochastic_term in stochastic_terms ){
             for( j in 1:nrow( methods_all ) ){
                 mthd  =  methods_all[ j, 'method_name']
                 krnl  =  methods_all[ j, 'kernel_name']
@@ -474,7 +473,7 @@ analyze_experiments  <-  function( DF, file_to_save = '../gplot.pdf'  ){
         if ( model_name == 'Linear')  { 
             ttl  =  paste( 'Linear model with stochastic term', stochastic_term )
         } else {
-            ttl  =  paste( 'Gaussian model' )
+            ttl  =  paste( 'Gaussian model with stochastic term', stochastic_term )
         }
         p = ggplot( df_plot, aes( x = dimension, y = RMSE_min_per_dim ) ) + 
                 geom_line( aes( color = method_with_kernel, 
