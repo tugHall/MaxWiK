@@ -235,7 +235,7 @@ experiment_models  <-  function( file_name = 'output.txt',
     
     DF = NULL
     for( model in models ){
-        if ( model == 'Linear') stoch = stochastic_terms else stoch  =  0
+        # if ( model == 'Linear') stoch = stochastic_terms else stoch  =  0
         for( dimension in dimensions ){
             for( stochastic_term in stoch ){
                 
@@ -245,7 +245,8 @@ experiment_models  <-  function( file_name = 'output.txt',
                 
                 if ( model == 'Gaussian' ) {
                     input = Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
-                                            n = Number_of_points, r = rng )
+                                            n = Number_of_points, r = rng,
+                                            noise = stochastic_term )
                 }
                 if ( model == 'Linear' ) {
                     input  =  linear_model( d = dimension, x0 = x0, probability = TRUE, 

@@ -5,7 +5,14 @@
 \alias{linear_model}
 \title{The model of simulations that is based on Gaussian functions for each dimension}
 \usage{
-Gaussian_model(d = 1, x0 = 3, probability = TRUE, n = 1000, r = range(0, 10))
+Gaussian_model(
+  d = 1,
+  x0 = 3,
+  probability = TRUE,
+  n = 1000,
+  r = range(0, 10),
+  noise = 0
+)
 
 linear_model(
   d = 1,
