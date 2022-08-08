@@ -225,7 +225,7 @@ experiment_models  <-  function( file_name = 'output.txt',
                                  dimensions = (1:20)*2, 
                                  stochastic_terms  =  c( 0, 0.1, 0.3, 0.7, 1, 1.5 ),
                                  rng  =  c( 0,10 ), 
-                                 restrict_points_number = 1000 ){
+                                 restrict_points_number = 300 ){
     
     ### Check installation of libraries:
     check_packages()
@@ -235,13 +235,12 @@ experiment_models  <-  function( file_name = 'output.txt',
     
     DF = NULL
     for( model in models ){
-        # if ( model == 'Linear') stoch = stochastic_terms else stoch  =  0
         for( dimension in dimensions ){
             for( stochastic_term in stochastic_terms ){
                 
                 input  =  NULL
                 x0  =  runif( n = dimension, min = rng[1], max = rng[2] )
-                Number_of_points  =  500 * dimension
+                Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
                 
                 if ( model == 'Gaussian' ) {
                     input = Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 

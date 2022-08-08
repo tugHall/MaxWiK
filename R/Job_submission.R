@@ -1,13 +1,13 @@
 ### Job submission
-if( FALSE ){
+if( TRUE ){
     library('MaxWiK')
-    DF_Gauss  =  experiment_models( file_name = '../Results_Gauss.txt', 
-                                      models = c( 'Gaussian' ),
-                                      dimensions = (1:20)*2, 
-                                      stochastic_terms  =  c( 0.5, 1, 5 ),
+    DF  =  experiment_models( file_name = '../Results.txt', 
+                                      models = c( 'Gaussian', 'Linear' ),
+                                      dimensions = (1:10)*2, 
+                                      stochastic_terms  =  c( 0, 1, 5, 10 ),
                                       rng  =  c( 0,10 ), 
-                                      restrict_points_number = 1000 )
-}    
+                                      restrict_points_number = 300 )
+}
 
 
 
