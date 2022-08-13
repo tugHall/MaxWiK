@@ -7,7 +7,11 @@
 #' \code{                           stochastic_terms  =  c( 0, 1, 5, 10, 20, 30 ), } \cr
 #' \code{                           rng  =  c( 0,10 ), } \cr
 #' \code{                           restrict_points_number = 300 ) ) } \cr
-#'
+#' Please, pay attention it will take 4-6 hours for 4 cores. \cr
+#' \cr
+#' To analyze these data, please, use: \cr
+#' \code{ RES_methods = analyze_experiments( Results_toy_experiments, file_to_save = '../ggplot.pdf'  ) } \cr
+#' that gives the best methods for each case and statistical data of simulations
 #' @format A data frame with 12960 rows and 8 variables:
 #' \describe{
 #'   \item{method_name}{ Name of a method for calculation }
