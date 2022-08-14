@@ -70,7 +70,7 @@ restricrt_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
 #' @param arg0 is a list with arguments for a model function, so that arg0 is NOT changed during sampling
 #' @param size Number of point to restrict original dataset
 #' @param nmax is maximal number of iterations
-#' @param include_top 
+#' @param include_top Logical to include top points from \code{spider_web()} function to simulate or do not
 #' @param slowly Logical for two algorithms: slow and fast seekers in sampling
 #' @param rate Rate value in the range \code{[0,1]} to define 
 #' the rate of changing in the original top of sampled points 
@@ -89,7 +89,7 @@ restricrt_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
 sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model, 
                                              arg0 = list(),  size = 500, 
                                              psi_t, epsilon, nmax = 100, 
-                                             include_top = TRUE,
+                                             include_top = FALSE,
                                              slowly = FALSE, rate = 0.2 ){ 
     # epsilon is a criterion to stop simulation
     # nmax is maximal number of iterations
@@ -129,7 +129,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
         
         ### Get new parameters and corresponding results of simulations based on each set of psi and t
         # source( './lib_iKernel.R' )
-        for ( j in 1:20 ){
+        for ( j in 1:10 ){
             
             web = spiderweb( param = par_sim, stat.sim = stat_sim, stat.obs = stat_obs, 
                              psi = psi_t$psi[ j ], t = psi_t$t[ j ], talkative = FALSE )

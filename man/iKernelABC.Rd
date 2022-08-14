@@ -23,7 +23,7 @@ sampler_MaxWiK(
   psi_t,
   epsilon,
   nmax = 100,
-  include_top = TRUE,
+  include_top = FALSE,
   slowly = FALSE,
   rate = 0.2
 )
@@ -121,7 +121,7 @@ spiderweb_slow(
 
 \item{nmax}{is maximal number of iterations}
 
-\item{include_top}{}
+\item{include_top}{Logical to include top points from \code{spider_web()} function to simulate or do not}
 
 \item{slowly}{Logical for two algorithms: slow and fast seekers in sampling}
 

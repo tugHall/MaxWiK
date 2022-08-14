@@ -42,6 +42,8 @@
 #' @importFrom utils globalVariables
 #' @importFrom utils read.delim
 #' @importFrom utils read.table
+#' @importFrom utils setTxtProgressBar
+#' @importFrom utils txtProgressBar
 #' @importFrom utils write.table
 ## usethis namespace: end
 NULL
