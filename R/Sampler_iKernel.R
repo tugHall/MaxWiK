@@ -1,6 +1,56 @@
 # This is a sampler for ABC method that based on maxima weighted isolation kernel method
 
-# the function to restrict data in the size to accelerate the calculations later
+#' Model definition for sampler to calculate one simulation
+#'
+#' @param name Name of a model, can be either \code{ 'Gaussian' or 'Linear' }
+#' @param parameter Value of a parameter
+#' @param x0 True value of parameter
+#' @param stat.obs Data frame of statistics of observation point
+#' @param noise Value of stochastic term 
+#'
+#' @return \code{model()} returns data frame with a result of a simulation based on the model
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+model  <-  function( name = c( 'Gaussian', 'Linear' )[1], 
+                     parameter, x0, stat.obs, noise = 0 ){
+    
+    d = length( x0 )
+    sim = as.data.frame( matrix( data = 0, nrow = 1, ncol = d ) ) 
+    names( sim )  =  names( stat.obs )
+    
+    if ( name == 'Gaussian' ){
+        for( i in 1:d ){
+            sim[ 1, i ]  = exp( x = - ( parameter[1 , i ] - x0[ i ] ) ** 2 / 2 ) + noise * runif(1)
+        }
+    } else {
+        if ( name == 'Linear' ){
+            for( i in 1:d ){
+                sim[ 1, i ]  =  1  +  ( parameter[1 , i ] - x0[ i ] ) / x0[ i ] + noise * runif(1)
+            }
+        } else stop( 'This function is not defined' )
+    }    
+    
+    return( sim )
+}
+
+
+#' @describeIn iKernelABC Function to restrict data in the size to accelerate the calculations 
+#' 
+#' @description \code{restricrt_data()} is based on rejection ABC method to restrict original dataset
+#'
+#' @param size Integer number of points to leave from original dataset
+#'
+#' @return \code{restricrt_data()} returns the list of: \cr
+#' par.sim - restricted parameters which are close to observation point \cr
+#' stat.sim - restricted stat.sim which are close to observation point
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
 restricrt_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
     l  =  nrow( par.sim )
     if ( l != nrow( stat.sim ) ) stop( "The parameters and statistics of simulations have different number of rows" )
@@ -12,32 +62,30 @@ restricrt_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
                   stat.sim  =  stat.sim[ rej_abc$region, ] ) )
 }
 
-# model to calculate one simulation:
-
-model  <-  function( name = c( 'Gauss', 'Linear' )[1], 
-                     parameter, x0, stat.obs, noise = 0 ){
-    
-    d = length( x0 )
-    sim = as.data.frame( matrix( data = 0, nrow = 1, ncol = d ) ) 
-    names( sim )  =  names( stat.obs )
-    
-    if ( name == 'Gauss' ){
-        for( i in 1:d ){
-            sim[ 1, i ]  = exp( x = - ( parameter[1 , i ] - x0[ i ] ) ** 2 / 2 )
-        }
-    } else {
-        if ( name == 'Linear' ){
-            for( i in 1:d ){
-                sim[ 1, i ]  =  1  +  ( parameter[1 , i ] - x0[ i ] ) / x0[ i ] + noise * runif(1)
-            }
-        } else stop( 'This function is not defined' )
-    }    
-    
-    
-    return( sim )
-}
 
 
+#' @describeIn iKernelABC Function to generate parameters and simulate a model based on MaxWiK algorithm 
+#'
+#' @param model is a function to get output of simulation during sampling 
+#' @param arg0 is a list with arguments for a model function, so that arg0 is NOT changed during sampling
+#' @param size Number of point to restrict original dataset
+#' @param nmax is maximal number of iterations
+#' @param include_top 
+#' @param slowly Logical for two algorithms: slow and fast seekers in sampling
+#' @param rate Rate value in the range \code{[0,1]} to define 
+#' the rate of changing in the original top of sampled points 
+#'
+#' @return \code{sampler_MaxWiK()} returns the list: \cr
+#' results - results of simulations; \cr 
+#' best - the best value of parameter; \cr
+#' MSE_min - minimum of MSE; \cr
+#' number_of_iterations - number of iterations; \cr
+#' time - time of sampling in seconds.
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
 sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model, 
                                              arg0 = list(),  size = 500, 
                                              psi_t, epsilon, nmax = 100, 
