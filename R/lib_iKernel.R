@@ -1164,7 +1164,7 @@ get_tracer_bullets  <-  function( DF , n_bullets = 20 ){
 #' - sim.tracers_all that is numeric vector of similarities of all the generated tacer points;
 #' - iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters}.
 #' 
-#' @export
+#' 
 #' 
 #' @examples
 #' NULL
@@ -1281,7 +1281,7 @@ spiderweb_old  <-  function( psi = 4, t = 35, param = param,
 #' - iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters};
 #' - spiderweb that is the list of all the networks during the meta-sampling.
 #' 
-#' @export
+#' 
 #' 
 #' @examples
 #' NULL
