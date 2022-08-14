@@ -131,7 +131,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
         # source( './lib_iKernel.R' )
         for ( j in 1:10 ){
             
-            web = spiderweb( param = par_sim, stat.sim = stat_sim, stat.obs = stat_obs, 
+            web = spiderweb_slow( param = par_sim, stat.sim = stat_sim, stat.obs = stat_obs, 
                              psi = psi_t$psi[ j ], t = psi_t$t[ j ], talkative = FALSE )
             
             res_1  =  web$par.best
@@ -220,7 +220,12 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
     #Stop progress BAR:
     close(pb)
     
-    return( list( results = results_ALL, best = best, MSE_min = err, number_of_iterations = i, time = end_time - start_time ) )
+    return( list( results = results_ALL, 
+                  best = best, 
+                  MSE_min = err, 
+                  number_of_iterations = i, 
+                  time = as.numeric( difftime( end_time, start_time, units = "secs")[[1]] )
+                ) )
 }
 
 
