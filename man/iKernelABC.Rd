@@ -2,7 +2,6 @@
 % Please edit documentation in R/Sampler_iKernel.R, R/lib_iKernel.R
 \name{restricrt_data}
 \alias{restricrt_data}
-\alias{sampler_method}
 \alias{sampler_MaxWiK}
 \alias{iKernelABC}
 \alias{Get_iKernel_estimation}
@@ -13,23 +12,6 @@
 \title{Function to get Approximate Bayesian Computation based on Maxima Weighted Isolation Kernel mapping}
 \usage{
 restricrt_data(par.sim, stat.sim, stat.obs, size = 300)
-
-sampler_method(
-  stat.obs,
-  stat.sim,
-  par.sim,
-  model,
-  method_name,
-  kernel_name,
-  arg0 = list(),
-  size = 500,
-  epsilon,
-  nmax = 30,
-  model_name,
-  dimension,
-  stochastic_term,
-  par.truth
-)
 
 sampler_MaxWiK(
   stat.obs,
@@ -131,13 +113,13 @@ spiderweb_slow(
 
 \item{arg0}{is a list with arguments for a model function, so that arg0 is NOT changed during sampling}
 
+\item{psi_t}{Initial data.frame of  \code{psi} and \code{t}, by default \cr
+\code{psi_t = data.frame( psi = as.numeric( sapply( X = c(2:8)*2, FUN = function( x ) rep(x, 8) ) ), t = rep( c(4,6,8,10,12,14,16,20), 7) )}}
+
 \item{epsilon}{Criterion to stop algorithm \code{spiderweb()} that isused to check: \cr
 \code{if ( abs( max( sim_tracers ) - sim_previous ) < epsilon ) break}}
 
 \item{nmax}{is maximal number of iterations}
-
-\item{psi_t}{Initial data.frame of  \code{psi} and \code{t}, by default \cr
-\code{psi_t = data.frame( psi = as.numeric( sapply( X = c(2:8)*2, FUN = function( x ) rep(x, 8) ) ), t = rep( c(4,6,8,10,12,14,16,20), 7) )}}
 
 \item{include_top}{Logical to include top points from \code{spider_web()} function to simulate or do not}
 
@@ -176,13 +158,6 @@ to consider them at the next algorithmic step}
 \code{restricrt_data()} returns the list of: \cr
 par.sim - restricted parameters which are close to observation point \cr
 stat.sim - restricted stat.sim which are close to observation point
-
-\code{sampler_method()} returns the list: \cr
-results - results of simulations; \cr
-best - the best value of parameter; \cr
-MSE_min - minimum of MSE; \cr
-number_of_iterations - number of iterations; \cr
-time - time of sampling in seconds.
 
 \code{sampler_MaxWiK()} returns the list: \cr
 results - results of simulations; \cr
@@ -291,8 +266,6 @@ from \code{sudoku()} algorithm, based on the simple procedure: \cr
 \itemize{
 \item \code{restricrt_data}: Function to restrict data in the size to accelerate the calculations
 
-\item \code{sampler_method}: Function to generate parameters and simulate a model based on MaxWiK algorithm
-
 \item \code{sampler_MaxWiK}: Function to generate parameters and simulate a model based on MaxWiK algorithm
 
 \item \code{Get_iKernel_estimation}: function to get parameter estimation based on isolation kernel
@@ -310,7 +283,6 @@ Maxima Weighted Isolation Kernel mapping which is related to an observation poin
 }}
 
 \examples{
-NULL
 NULL
 NULL
 NULL

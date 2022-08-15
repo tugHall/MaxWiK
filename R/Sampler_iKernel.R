@@ -190,7 +190,7 @@ Get_parameter  <-  function( method_name, kernel_name = '',
                   par.est = par.est ) )
 }
 
-#' @describeIn iKernelABC Function to generate parameters and simulate a model based on MaxWiK algorithm 
+#' @describeIn Get_call Function to generate parameters and simulate a model based on MaxWiK algorithm 
 #'
 #' @param model is a function to get output of simulation during sampling 
 #' @param arg0 is a list with arguments for a model function, so that arg0 is NOT changed during sampling
@@ -211,27 +211,36 @@ Get_parameter  <-  function( method_name, kernel_name = '',
 sampler_method  <-  function( stat.obs, stat.sim, par.sim, model, 
                               method_name, kernel_name, 
                               arg0 = list(),  size = 500, 
-                              epsilon, nmax = 30, 
-                              model_name, dimension, stochastic_term, par.truth ){ 
+                              nmax = 30, 
+                              model_name, dimension, stochastic_term, par.truth ){
     
+    stat.sim_itt =  stat.sim
+    par.sim_itt  =  par.sim
     
+    res = NULL
     for( itt in 1:nmax ){
-        
-        new_par = Get_parmeter( method_name = method_name, 
+
+        new_par = Get_parameter( method_name = method_name, 
                             kernel_name = kernel_name, 
-                            model_name  = model_name, 
-                            dimension   = dimension, 
-                            stochastic_term = stochastic_term, 
-                            iteration  =  itt, 
                             stat.obs   =  stat.obs, 
-                            stat.sim   =  stat.sim, 
-                            par.sim    =  par.sim, 
+                            stat.sim   =  stat.sim_itt, 
+                            par.sim    =  par.sim_itt, 
                             G = G, 
                             par.truth = par.truth )
+        new_par$stat$iteration = itt
+        res = rbind( res, new_par$stat )
         
+        par.est  =  data.frame( matrix( new_par$par.est, ncol = dimension ) )
+        new_sim  =  do.call( what = model, args = c( arg0, list( parameter =  par.est ) ) )
+        names( par.est )  =  names( par.sim_itt )
+        names( new_sim )  =  names( stat.sim_itt )
+        par.sim_itt  =  rbind( par.sim_itt, par.est )
+        stat.sim_itt =  rbind( stat.sim_itt, new_sim )
     }
     
-    
+    return( list( results = res, 
+                  par.sim_itt = par.sim_itt,
+                  stat.sim_itt = stat.sim_itt ) )
 }
 
 

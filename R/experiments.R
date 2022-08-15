@@ -353,6 +353,15 @@ experiment_samplers  <-  function( file_name = './output.txt',
                             check_pos_def = FALSE, 
                             n_best = 10, cores = 4 )
     
+    ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
+                          param = par.sim, 
+                          stat.sim = stat.sim, 
+                          stat.obs = stat.obs, 
+                          talkative = FALSE, 
+                          check_pos_def = FALSE )
+    
+    G = matrix( data = ikern$similarity, ncol = 1 )
+    
     # Define model function:
     if ( model_name == 'Gaussian' ) {
         model  =  model
