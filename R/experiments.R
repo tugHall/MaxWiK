@@ -307,6 +307,78 @@ experiment_models  <-  function( file_name = 'output.txt',
 }
 
 
+experiment_samplers  <-  function( file_name = './output.txt', 
+                                   model_name = 'Gaussian',
+                                   dimension = 6, 
+                                   stochastic_term  =  5,
+                                   rng  =  c( 0,10 ), 
+                                   restrict_points_number = 500 ){
+    ### Check installation of libraries:
+    check_packages()
+    
+    # delete old file
+    if ( file.exists( file_name) ) unlink( file_name )
+    
+    input  =  NULL
+    x0  =  round( runif( n = dimension, min = rng[1], max = rng[2] ), digits = 4 )
+    Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
+    
+    if ( model_name == 'Gaussian' ) {
+        input = Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
+                                n = Number_of_points, r = rng,
+                                noise = stochastic_term )
+    }
+    if ( model_name == 'Linear' ) {
+        input  =  linear_model( d = dimension, x0 = x0, probability = TRUE, 
+                                n = Number_of_points, r = rng,
+                                noise = stochastic_term )
+    }
+    
+    if ( is.null( input ) ) stop( 'Model name is incorrect' )
+    stat.sim_origin  =  input$stat.sim
+    stat.obs  =  input$stat.obs
+    par.sim_origin  =  input$par.sim
+    rm( input )
+    
+    # Apply restict number of points:
+    tol = restrict_points_number / nrow( stat.sim_origin )
+    rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
+                    method = 'rejection', tol = tol )
+    
+    stat.sim  =  stat.sim_origin[ rej$region, ]
+    par.sim   =   par.sim_origin[ rej$region, ] 
+    
+    psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
+                            stat.obs = stat.obs, talkative = FALSE, 
+                            check_pos_def = FALSE, 
+                            n_best = 10, cores = 4 )
+    
+    # Define model function:
+    if ( model_name == 'Gaussian' ) {
+        model  =  model
+        arg0 = list(  name = c( 'Gaussian', 'Linear' )[1],
+                      x0 = x0, 
+                      stat.obs = stat.obs, 
+                      noise = stochastic_term )
+    } else {
+        model  =  model
+        arg0 = list(  name = c( 'Gaussian', 'Linear' )[2],
+                      x0 = x0, 
+                      stat.obs = stat.obs, 
+                      noise = stochastic_term )
+    } 
+    
+    # Sampler simulation:
+    smpl_MaxWiK  =  sampler_MaxWiK( stat.obs = stat.obs, stat.sim = stat.sim, 
+                                    par.sim  = par.sim,  model = model, 
+                                              arg0 = arg0, 
+                                              size = 500, psi_t, epsilon = 1E-12, 
+                                              nmax = 30, include_top = FALSE,
+                                              slowly = TRUE, rate = 0.1 )
+    
+    return( smpl_MaxWiK = smpl_MaxWiK )
+}
+
 #' Function to get statistics from the results of experiments and find the best methods for each simulation case
 #'
 #' @param DF Data frame with results of experiments, output of \code{experiment_models()} function.

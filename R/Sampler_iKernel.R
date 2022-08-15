@@ -63,6 +63,179 @@ restricrt_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
 }
 
 
+#' Function to call a method to get parameter estimation and MSE for each used method
+#'
+#' @param method_name Name of a method
+#' @param kernel_name Name of kernel function
+#' @param stat.obs Data frame of statistics of observation point
+#' @param stat.sim Data frame of statistics of simulations
+#' @param par.sim Data frame of parameters
+#' @param G Matrix of similarities for K2-ABC based on isolation kernel
+#' @param par.truth Truth parameter value to check result of estimation
+#'
+#' @return \code{par.truth,()} returns the list: \cr
+#' method_name = method_name, \cr
+#' - kernel_name, \cr
+#' - model_name, \cr
+#' - stochastic_term, \cr
+#' - MSE, \cr
+#' - running_time, \cr
+#' - iteration.
+#' @export
+#' 
+#' @examples
+#' NULL
+Get_parameter  <-  function( method_name, kernel_name = '',  
+                        stat.obs, stat.sim, par.sim, G = NULL, par.truth ){
+    
+    n_min  =  100 
+    time_start  =  Sys.time( )
+    par.est  =  NA 
+    
+    if ( method_name == 'K2-ABC' & kernel_name != 'iKernel' ){
+        if ( kernel_name == 'Gaussian'){
+            kernel  =  rbfdot
+        } else {
+            kernel  =  laplacedot
+        }
+        par.est  =  adjust_K2_ABC( par.sim = par.sim, stat.sim = stat.sim, 
+                                   stat.obs = stat.obs, kernel = kernel )
+    }
+    
+    if ( method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
+        par.est  =  adjust_K2_ABC_iKernel( par.sim = par.sim, stat.sim = stat.sim, 
+                                           stat.obs = stat.obs, G = G )
+    }
+    
+    if ( method_name == 'Rejection' ){
+        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
+                                          stat.obs = stat.obs )
+        par.est  =  res$par.est
+    }
+    
+    if ( method_name == 'Loclinear' ){
+        
+        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
+                                          stat.obs = stat.obs )
+        tol   =   res$tolerance
+        if ( tol * nrow(stat.sim) < n_min ) tol = n_min / nrow( stat.sim )
+        
+        loclin   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
+                           tol = tol, method  =  'loclinear', hcorr   =  FALSE, 
+                           transf=c( "none" ) )
+        
+        lc = round( loclin$adj.values + runif( n= length(loclin$adj.values) )/1E6, digits = 9 )
+        
+        if (nrow( unique.data.frame(lc) ) > 1 ){
+            par.est  =  point_estimate( lc )$MAP
+        } else {
+            par.est  =  unique.data.frame(lc)
+        }
+    }
+    
+    if ( method_name == 'Neuralnet' ){
+        
+        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
+                                          stat.obs = stat.obs )
+        tol   =   res$tolerance
+        if ( tol * nrow(stat.sim) < n_min ) tol  =  n_min / nrow( stat.sim )
+        
+        nn   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
+                       tol = tol, method  =  'neuralnet', hcorr   =  TRUE, 
+                       transf=c("none","log"), lambda = 0.0001, trace = FALSE )
+        
+        nn_adj = round( nn$adj.values + runif( n= length( nn$adj.values ) ) / 1E6, digits = 9 )
+        par.est  =  point_estimate( nn_adj )$MAP
+    }
+    
+    if ( method_name == 'Ridge' ){
+        
+        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
+                                          stat.obs = stat.obs )
+        tol   =   res$tolerance
+        if ( tol * nrow(stat.sim) < n_min ) tol = n_min / nrow( stat.sim )
+        
+        rdg   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
+                        tol = tol, method  =  'ridge', hcorr   =  FALSE, 
+                        transf=c("none","log"), kernel = 'epanechnikov' )
+        
+        rdg_adj = round( rdg$adj.values + runif( n= length( rdg$adj.values ) )/1E6, digits = 9 )
+        
+        if ( nrow( unique.data.frame( rdg_adj ) ) > 1 ){
+            par.est  =  point_estimate( rdg_adj )$MAP
+        } else {
+            par.est  =  unique.data.frame(rdg_adj)
+        }
+    }
+    
+    if ( method_name == 'MaxWiK_MAP' ){
+        par.est  =  get_Spider_MAP( par.sim = par.sim, stat.sim = stat.sim, stat.obs = stat.obs )
+    }
+    
+    if ( method_name == 'MaxWiK' ){
+        par.est  =  get_Spider_MAP( par.sim = par.sim, stat.sim = stat.sim, 
+                                    stat.obs = stat.obs, n_best = 1 )
+    }
+    
+    ### Get MSE 
+    MSE = NULL
+    if ( !is.na( par.est )[1] ) MSE  =  sum( ( par.truth - par.est ) ** 2  )
+    
+    running_time  =  as.numeric( difftime(Sys.time(), time_start, units = "secs")[[1]] )
+    
+    return( list( stat = data.frame(    method_name = method_name,
+                                        kernel_name = kernel_name,
+                                        MSE = MSE, 
+                                        running_time = running_time), 
+                  par.est = par.est ) )
+}
+
+#' @describeIn iKernelABC Function to generate parameters and simulate a model based on MaxWiK algorithm 
+#'
+#' @param model is a function to get output of simulation during sampling 
+#' @param arg0 is a list with arguments for a model function, so that arg0 is NOT changed during sampling
+#' @param size Number of point to restrict original dataset
+#' @param nmax is maximal number of iterations
+#'
+#' @return \code{sampler_method()} returns the list: \cr
+#' results - results of simulations; \cr 
+#' best - the best value of parameter; \cr
+#' MSE_min - minimum of MSE; \cr
+#' number_of_iterations - number of iterations; \cr
+#' time - time of sampling in seconds.
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+sampler_method  <-  function( stat.obs, stat.sim, par.sim, model, 
+                              method_name, kernel_name, 
+                              arg0 = list(),  size = 500, 
+                              epsilon, nmax = 30, 
+                              model_name, dimension, stochastic_term, par.truth ){ 
+    
+    
+    for( itt in 1:nmax ){
+        
+        new_par = Get_parmeter( method_name = method_name, 
+                            kernel_name = kernel_name, 
+                            model_name  = model_name, 
+                            dimension   = dimension, 
+                            stochastic_term = stochastic_term, 
+                            iteration  =  itt, 
+                            stat.obs   =  stat.obs, 
+                            stat.sim   =  stat.sim, 
+                            par.sim    =  par.sim, 
+                            G = G, 
+                            par.truth = par.truth )
+        
+    }
+    
+    
+}
+
+
+
 
 #' @describeIn iKernelABC Function to generate parameters and simulate a model based on MaxWiK algorithm 
 #'
@@ -99,6 +272,8 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
     
     # model is a function to get output of simulation during sampling 
     # arg0 is a list with arguments for a model function, so that arg0 is NOT changed during sampling
+    
+    check_packages()
      
     start_time = Sys.time()
     # Redefine input:
@@ -135,45 +310,21 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                              psi = psi_t$psi[ j ], t = psi_t$t[ j ], talkative = FALSE )
             
             res_1  =  web$par.best
-            if ( include_top ){ 
-                res_1  =  rbind( res_1, web$par.top )
-            }
             
             new_best.sim  =  do.call( what = model, args = c( arg0, list( parameter =  web$par.best ) ) )
-            if ( include_top ){
-                new_top.sim  =  NULL
-                for( p in 1:nrow( web$par.top ) ){
-                    new_top_1.sim  =  do.call( what = model, 
-                                               args = c( arg0, list( parameter =  web$par.top[ p, ] ) ) )
-                    new_top.sim  =  rbind( new_top.sim, new_top_1.sim ) 
-                }
-                
-                res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_top.sim) ) ]  =  
-                    rbind( new_best.sim, new_top.sim )
-            } else {
-                res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  
-                    new_best.sim
-            }
+
+            res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim
             
             mse_1   =  MSE_sim( stat.obs = stat.obs, stat.sim = new_best.sim )
             mse_1   =  as.data.frame( mse_1 )
             names( mse_1)  = 'mse'
-            if ( include_top ){ 
-                mse_1[2:20, 1]  = MSE_sim( stat.obs = stat.obs, stat.sim = new_top.sim )
-            }
             
             res_1$mse    =  as.numeric( mse_1$mse )
-            
-            if ( include_top ){ 
-                res_1$comm     =  c( 'Best', rep('Top', 19 ) )
-            } else {
-                res_1$comm     =     'Best'
-            }
-            if ( include_top ){
-                res_1$sim      =  c( web$sim.best, web$sim.top )
-            } else{
-                res_1$sim      =     web$sim.best
-            }
+            res_1$comm     =     'Best'
+
+
+            res_1$sim      =     web$sim.best
+
             results  =  rbind( results, res_1 )
         }                
         
