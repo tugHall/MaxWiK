@@ -362,30 +362,28 @@ experiment_samplers  <-  function( file_name = './output.txt',
     
     G = matrix( data = ikern$similarity, ncol = 1 )
     
-    # Define model function:
-    if ( model_name == 'Gaussian' ) {
-        model  =  model
-        arg0 = list(  name = c( 'Gaussian', 'Linear' )[1],
-                      x0 = x0, 
-                      stat.obs = stat.obs, 
-                      noise = stochastic_term )
-    } else {
-        model  =  model
-        arg0 = list(  name = c( 'Gaussian', 'Linear' )[2],
-                      x0 = x0, 
-                      stat.obs = stat.obs, 
-                      noise = stochastic_term )
-    } 
-    
+    RES = sampler_all_methods(  model_name = model_name, 
+                                dimension = dimension, 
+                                stochastic_term = stochastic_term, 
+                                stat.obs = stat.obs, 
+                                stat.sim = stat.sim, 
+                                par.sim = par.sim, 
+                                par.truth = par.truth, 
+                                G = G,
+                                nmax = 30
+                            )
     # Sampler simulation:
-    smpl_MaxWiK  =  sampler_MaxWiK( stat.obs = stat.obs, stat.sim = stat.sim, 
+    if( FALSE ){
+        smpl_MaxWiK  =  sampler_MaxWiK( stat.obs = stat.obs, stat.sim = stat.sim, 
                                     par.sim  = par.sim,  model = model, 
                                               arg0 = arg0, 
                                               size = 500, psi_t, epsilon = 1E-12, 
                                               nmax = 30, include_top = FALSE,
                                               slowly = TRUE, rate = 0.1 )
+    }
     
-    return( smpl_MaxWiK = smpl_MaxWiK )
+    
+    return( RES )
 }
 
 #' Function to get statistics from the results of experiments and find the best methods for each simulation case

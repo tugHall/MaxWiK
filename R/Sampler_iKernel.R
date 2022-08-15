@@ -211,7 +211,7 @@ Get_parameter  <-  function( method_name, kernel_name = '',
 sampler_method  <-  function( stat.obs, stat.sim, par.sim, model, 
                               method_name, kernel_name, 
                               arg0 = list(),  size = 500, 
-                              nmax = 30, 
+                              nmax = 30, G,
                               model_name, dimension, stochastic_term, par.truth ){
     
     stat.sim_itt =  stat.sim
@@ -244,7 +244,88 @@ sampler_method  <-  function( stat.obs, stat.sim, par.sim, model,
 }
 
 
+#' @describeIn Get_call  Function to call all the methods to get estimation of parameter and MSE
+#'
+#' @return \code{Get_call_all_methods()} returns data.frame with MSE for all defined methods
+#' 
+#' @param cores Number of cores for parallel calculation with iterations
+#' 
+#' @export
+#'
+#' @examples
+#' NULL 
+sampler_all_methods  <-  function( model_name, dimension, stochastic_term, 
+                                    stat.obs, stat.sim, par.sim, G, par.truth,
+                                    cores = 4, nmax ){
+    
+    DF  =  NULL
+    Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 'Rejection', 
+                                         'Loclinear', 'Neuralnet', 'Ridge',
+                                         'MaxWiK_MAP', 'MaxWiK' ), 
+                              Kernel = c('Gaussian', 'Laplacian', 'iKernel', '',
+                                         '',          '',          'epanechnikov',
+                                         'iKernel', 'iKernel') 
+    )
+    
+    # Define model function:
+    if ( model_name == 'Gaussian' ) {
+        model  =  model
+        arg0 = list(  name = c( 'Gaussian', 'Linear' )[1],
+                      x0 = x0, 
+                      stat.obs = stat.obs, 
+                      noise = stochastic_term )
+    } else {
+        model  =  model
+        arg0 = list(  name = c( 'Gaussian', 'Linear' )[2],
+                      x0 = x0, 
+                      stat.obs = stat.obs, 
+                      noise = stochastic_term )
+    } 
+    
+    for( mk in 1:nrow(Meth_Kern) ){
+        DF_1  =  mclapply( 1 , FUN = function( x ){   
+                   sampler_method( method_name =  as.character( Meth_Kern$Method[mk] ), 
+                                   kernel_name =  as.character( Meth_Kern$Kernel[mk] ), 
+                                   model_name  =  model_name, 
+                                   dimension   =  dimension, 
+                                   stochastic_term  =  stochastic_term, 
+                                   nmax = nmax,
+                                   stat.obs   =  stat.obs, 
+                                   stat.sim   =  stat.sim, 
+                                   par.sim    =  par.sim, 
+                                   G          =  G, 
+                                   par.truth  =  par.truth, 
+                                   model      =  model, 
+                                   arg0       =  arg0,  
+                                   size       =  500  
+                    )
+                }, mc.cores  =  cores )    
 
+        # Check an error
+        bad   =  sapply( DF_1, inherits, what = "try-error" )
+        # If NO errors:
+        if ( any( !bad ) ){
+            DF_2  =  do.call( rbind, DF_1[ !bad ] )
+            DF    =  rbind( DF, DF_2 )
+        }
+        # If error in some core(s):
+        if ( any( bad ) ){
+            its = which( bad )
+            
+            DF_3  =   data.frame(   method_name = as.character( Meth_Kern$Method[mk] ),
+                                    kernel_name = as.character( Meth_Kern$Kernel[mk] ),
+                                    MSE = NA, 
+                                    running_time = NA ) 
+            # Add circle for its:
+            for( i in its ){
+                DF_3[ 1, 'iteration' ]  =  i
+                DF    =  rbind( DF, DF_3 )
+            }
+        }
+    }
+    
+    return( DF )
+}
 
 #' @describeIn iKernelABC Function to generate parameters and simulate a model based on MaxWiK algorithm 
 #'

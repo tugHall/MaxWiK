@@ -2,6 +2,7 @@
 % Please edit documentation in R/Sampler_iKernel.R, R/experiments.R
 \name{sampler_method}
 \alias{sampler_method}
+\alias{sampler_all_methods}
 \alias{Get_call}
 \alias{Get_call_all_methods}
 \title{Function to call a method to get MSE}
@@ -16,10 +17,24 @@ sampler_method(
   arg0 = list(),
   size = 500,
   nmax = 30,
+  G,
   model_name,
   dimension,
   stochastic_term,
   par.truth
+)
+
+sampler_all_methods(
+  model_name,
+  dimension,
+  stochastic_term,
+  stat.obs,
+  stat.sim,
+  par.sim,
+  G,
+  par.truth,
+  cores = 4,
+  nmax
 )
 
 Get_call(
@@ -68,6 +83,8 @@ Get_call_all_methods(
 
 \item{nmax}{is maximal number of iterations}
 
+\item{G}{Matrix of similarities for K2-ABC based on isolation kernel}
+
 \item{model_name}{Name of a model}
 
 \item{dimension}{Dimension of the model}
@@ -76,11 +93,9 @@ Get_call_all_methods(
 
 \item{par.truth}{Truth parameter value to check result of estimation}
 
-\item{iteration}{Iteration number of trial with the same model and other parameters}
-
-\item{G}{Matrix of similarities for K2-ABC based on isolation kernel}
-
 \item{cores}{Number of cores for parallel calculation with iterations}
+
+\item{iteration}{Iteration number of trial with the same model and other parameters}
 }
 \value{
 \code{sampler_method()} returns the list: \cr
@@ -89,6 +104,8 @@ best - the best value of parameter; \cr
 MSE_min - minimum of MSE; \cr
 number_of_iterations - number of iterations; \cr
 time - time of sampling in seconds.
+
+\code{Get_call_all_methods()} returns data.frame with MSE for all defined methods
 
 \code{Get_call()} returns the list: \cr
 method_name = method_name, \cr
@@ -110,11 +127,14 @@ Function to call a method to get MSE
 \itemize{
 \item \code{sampler_method}: Function to generate parameters and simulate a model based on MaxWiK algorithm
 
+\item \code{sampler_all_methods}: Function to call all the methods to get estimation of parameter and MSE
+
 \item \code{Get_call_all_methods}: Function to call all the methods to get estimation of parameter and MSE
 }}
 
 \examples{
 NULL
+NULL 
 NULL
 NULL 
 }
