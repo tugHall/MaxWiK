@@ -271,14 +271,17 @@ adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1
                         return ( sum( ( par.truth - par.est ) ** 2  ) )
                     }
     )
-    tolerance  =  tolerance[ which.min( dlt ) ][ 1 ]
+    tol      =  tolerance[ which.min( dlt ) ][ 1 ]
     
     rej      =  abc( target = stat.obs, param = par.sim, 
-                     sumstat = stat.sim, tol = tolerance, method = 'rejection' ) 
-    par.est  =  point_estimate( rej$unadj.values)$MAP
-    
+                     sumstat = stat.sim, tol = tol, method = 'rejection' ) 
+    if ( length( which(rej$region ) ) == 1 ){
+        par.est  =  rej$unadj.values
+    } else {
+        par.est  =  point_estimate( rej$unadj.values )$MAP
+    }
     return( list( par.est   =  par.est, 
-                  tolerance =  tolerance) )
+                  tolerance =  tol ) )
 }
 
 

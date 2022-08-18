@@ -307,6 +307,18 @@ experiment_models  <-  function( file_name = 'output.txt',
 }
 
 
+#' @describeIn Get_call Make experiments with sampling for all the methods and one case of toy model and dimension
+#'
+#' @param file_name File to save results
+#' @param rng Range of points for each dimension, by default \code{rng = range(0,10)}
+#' @param restrict_points_number Number of points which will be used in each method and that are close to observation point
+#'
+#' @return \code{experiment_samplers()} returns data frame with results of experiment for sampling using all the methods
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
 experiment_samplers  <-  function( file_name = './output.txt', 
                                    model_name = 'Gaussian',
                                    dimension = 6, 
@@ -340,14 +352,15 @@ experiment_samplers  <-  function( file_name = './output.txt',
     par.sim_origin  =  input$par.sim
     rm( input )
     
-    # Apply restict number of points:
+    # Apply restrict number of points:
     tol = restrict_points_number / nrow( stat.sim_origin )
     rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
                     method = 'rejection', tol = tol )
     
     stat.sim  =  stat.sim_origin[ rej$region, ]
-    par.sim   =   par.sim_origin[ rej$region, ] 
-    
+    par.sim   =  par.sim_origin[ rej$region, ] 
+    par.truth =  data.frame( matrix( x0, ncol = dimension ) )
+    rm(x0)
     psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
                             stat.obs = stat.obs, talkative = FALSE, 
                             check_pos_def = FALSE, 

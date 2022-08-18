@@ -57,9 +57,10 @@ restricrt_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
     rej_abc  =  abc( target = stat.obs, param = par.sim, sumstat = stat.sim, 
                      tol = size / l, method = 'rejection' )
     # rej_abc$region
-    
-    return( list( par.sim   =   par.sim[ rej_abc$region, ], 
-                  stat.sim  =  stat.sim[ rej_abc$region, ] ) )
+    new_par  =   par.sim[ rej_abc$region, ]
+    new_sim  =  stat.sim[ rej_abc$region, ]
+    return( list( par.sim   =  new_par, 
+                  stat.sim  =  new_sim ) )
 }
 
 
@@ -219,6 +220,13 @@ sampler_method  <-  function( stat.obs, stat.sim, par.sim, model,
     
     res = NULL
     for( itt in 1:nmax ){
+        
+        input  =  restricrt_data( par.sim = par.sim_itt, 
+                                  stat.sim = stat.sim_itt, 
+                                  stat.obs = stat.obs, 
+                                  size = size ) 
+        stat.sim_itt =  input$stat.sim
+        par.sim_itt  =  input$par.sim
 
         new_par = Get_parameter( method_name = method_name, 
                             kernel_name = kernel_name, 
@@ -230,9 +238,15 @@ sampler_method  <-  function( stat.obs, stat.sim, par.sim, model,
         new_par$stat$iteration = itt
         res = rbind( res, new_par$stat )
         
-        par.est  =  data.frame( matrix( new_par$par.est, ncol = dimension ) )
-        new_sim  =  do.call( what = model, args = c( arg0, list( parameter =  par.est ) ) )
+        par.est  =  new_par$par.est
         names( par.est )  =  names( par.sim_itt )
+        if ( is.data.frame(  new_par$par.est ) ){
+            add_arg  =  list( parameter =  as.data.frame( new_par$par.est ) )
+        } else {
+            add_arg  =  list( parameter =  data.frame( matrix( new_par$par.est, nrow = 1 ) ) )
+        }
+        new_sim  =  do.call( what = model, args = c( arg0, add_arg ) )
+
         names( new_sim )  =  names( stat.sim_itt )
         par.sim_itt  =  rbind( par.sim_itt, par.est )
         stat.sim_itt =  rbind( stat.sim_itt, new_sim )
@@ -246,7 +260,7 @@ sampler_method  <-  function( stat.obs, stat.sim, par.sim, model,
 
 #' @describeIn Get_call  Function to call all the methods to get estimation of parameter and MSE
 #'
-#' @return \code{Get_call_all_methods()} returns data.frame with MSE for all defined methods
+#' @return \code{sampler_all_methods()} returns data.frame with MSE for all defined methods
 #' 
 #' @param cores Number of cores for parallel calculation with iterations
 #' 
@@ -271,13 +285,13 @@ sampler_all_methods  <-  function( model_name, dimension, stochastic_term,
     if ( model_name == 'Gaussian' ) {
         model  =  model
         arg0 = list(  name = c( 'Gaussian', 'Linear' )[1],
-                      x0 = x0, 
+                      x0 = par.truth, 
                       stat.obs = stat.obs, 
                       noise = stochastic_term )
     } else {
         model  =  model
         arg0 = list(  name = c( 'Gaussian', 'Linear' )[2],
-                      x0 = x0, 
+                      x0 = par.truth, 
                       stat.obs = stat.obs, 
                       noise = stochastic_term )
     } 

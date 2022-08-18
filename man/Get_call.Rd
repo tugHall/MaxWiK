@@ -5,6 +5,7 @@
 \alias{sampler_all_methods}
 \alias{Get_call}
 \alias{Get_call_all_methods}
+\alias{experiment_samplers}
 \title{Function to call a method to get MSE}
 \usage{
 sampler_method(
@@ -63,6 +64,15 @@ Get_call_all_methods(
   par.truth,
   cores = 4
 )
+
+experiment_samplers(
+  file_name = "./output.txt",
+  model_name = "Gaussian",
+  dimension = 6,
+  stochastic_term = 5,
+  rng = c(0, 10),
+  restrict_points_number = 500
+)
 }
 \arguments{
 \item{stat.obs}{Data frame of statistics of observation point}
@@ -96,6 +106,12 @@ Get_call_all_methods(
 \item{cores}{Number of cores for parallel calculation with iterations}
 
 \item{iteration}{Iteration number of trial with the same model and other parameters}
+
+\item{file_name}{File to save results}
+
+\item{rng}{Range of points for each dimension, by default \code{rng = range(0,10)}}
+
+\item{restrict_points_number}{Number of points which will be used in each method and that are close to observation point}
 }
 \value{
 \code{sampler_method()} returns the list: \cr
@@ -105,7 +121,7 @@ MSE_min - minimum of MSE; \cr
 number_of_iterations - number of iterations; \cr
 time - time of sampling in seconds.
 
-\code{Get_call_all_methods()} returns data.frame with MSE for all defined methods
+\code{sampler_all_methods()} returns data.frame with MSE for all defined methods
 
 \code{Get_call()} returns the list: \cr
 method_name = method_name, \cr
@@ -119,6 +135,8 @@ method_name = method_name, \cr
 }
 
 \code{Get_call_all_methods()} returns data.frame with MSE for all defined methods
+
+\code{experiment_samplers()} returns data frame with results of experiment for sampling using all the methods
 }
 \description{
 Function to call a method to get MSE
@@ -130,6 +148,8 @@ Function to call a method to get MSE
 \item \code{sampler_all_methods}: Function to call all the methods to get estimation of parameter and MSE
 
 \item \code{Get_call_all_methods}: Function to call all the methods to get estimation of parameter and MSE
+
+\item \code{experiment_samplers}: Make experiments with sampling for all the methods and one case of toy model and dimension
 }}
 
 \examples{
@@ -137,4 +157,5 @@ NULL
 NULL 
 NULL
 NULL 
+NULL
 }
