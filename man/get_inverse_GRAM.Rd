@@ -34,9 +34,9 @@ Function \code{check_positive_definite()} returns logical value about n trials o
 }
 \section{Functions}{
 \itemize{
-\item \code{check_positive_definite}: The function to check the positive definite property of Gram matrix
-}}
+\item \code{check_positive_definite()}: The function to check the positive definite property of Gram matrix
 
+}}
 \examples{
 NULL
 NULL

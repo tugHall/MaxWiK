@@ -143,15 +143,15 @@ Function to call a method to get MSE
 }
 \section{Functions}{
 \itemize{
-\item \code{sampler_method}: Function to generate parameters and simulate a model based on MaxWiK algorithm
+\item \code{sampler_method()}: Function to generate parameters and simulate a model based on MaxWiK algorithm
 
-\item \code{sampler_all_methods}: Function to call all the methods to get estimation of parameter and MSE
+\item \code{sampler_all_methods()}: Function to call all the methods to get estimation of parameter and MSE
 
-\item \code{Get_call_all_methods}: Function to call all the methods to get estimation of parameter and MSE
+\item \code{Get_call_all_methods()}: Function to call all the methods to get estimation of parameter and MSE
 
-\item \code{experiment_samplers}: Make experiments with sampling for all the methods and one case of toy model and dimension
+\item \code{experiment_samplers()}: Make experiments with sampling for all the methods and one case of toy model and dimension
+
 }}
-
 \examples{
 NULL
 NULL 

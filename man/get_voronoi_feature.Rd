@@ -45,10 +45,10 @@ The function to get feature representation in RKHS based on Voronoi diagram for 
 }
 \section{Functions}{
 \itemize{
-\item \code{add_new_point_iKernel}: The function to get RKHS mapping based on Isolation Kernel for a new point
-}}
+\item \code{add_new_point_iKernel()}: The function to get RKHS mapping based on Isolation Kernel for a new point
 
+}}
 \examples{
 NULL
-
+NULL
 }

@@ -80,13 +80,13 @@ generated between all the pairs of the most distant points
 }
 \section{Functions}{
 \itemize{
-\item \code{get_pairs_of_data_frame}: The function to get pairs from Data Frame
+\item \code{get_pairs_of_data_frame()}: The function to get pairs from Data Frame
 
-\item \code{generate_points_between_two_points}: The function to generate points between the pair of given points
+\item \code{generate_points_between_two_points()}: The function to generate points between the pair of given points
 
-\item \code{get_tracer_bullets}: The function to get 'tracer bullets' or tracer points
+\item \code{get_tracer_bullets()}: The function to get 'tracer bullets' or tracer points
+
 }}
-
 \examples{
 NULL
 

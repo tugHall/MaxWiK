@@ -63,9 +63,9 @@ parameters and statistics of simulations that are based on linear function for e
 }
 \section{Functions}{
 \itemize{
-\item \code{linear_model}: The model of simulations that is based on linear functions for each dimension
-}}
+\item \code{linear_model()}: The model of simulations that is based on linear functions for each dimension
 
+}}
 \examples{
 NULL
 NULL

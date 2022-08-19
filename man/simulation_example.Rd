@@ -112,17 +112,17 @@ Example of simulation for lazy start
 }
 \section{Functions}{
 \itemize{
-\item \code{simulation_example_many_psi_t}: Example of simulation for lazy start and different psi / t hyperparameters
+\item \code{simulation_example_many_psi_t()}: Example of simulation for lazy start and different psi / t hyperparameters
 
-\item \code{get_Spider_MAP}: Function to get MAP of SpiderWeb algorithm based on different psi / t hyperparameters
+\item \code{get_Spider_MAP()}: Function to get MAP of SpiderWeb algorithm based on different psi / t hyperparameters
 
-\item \code{plot_3d_similarities}: Function to plot whole space of parameters
+\item \code{plot_3d_similarities()}: Function to plot whole space of parameters
 related to similarity of the observation point:
 
-\item \code{plot_3d_net_similarities}: Function to plot whole space of parameters
+\item \code{plot_3d_net_similarities()}: Function to plot whole space of parameters
 related to similarity of the observation point for each set of hyperparameters psi and t
-}}
 
+}}
 \examples{
 NULL
 # it takes a time for a simulation and then it will demonstrates results, \cr

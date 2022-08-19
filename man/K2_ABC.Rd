@@ -82,13 +82,13 @@ using numeric vector of tolerance, find parameter estimation for each tolerance 
 }
 \section{Functions}{
 \itemize{
-\item \code{adjust_K2_ABC}: Function to adjust epsilon parameter for K2-ABC method
+\item \code{adjust_K2_ABC()}: Function to adjust epsilon parameter for K2-ABC method
 
-\item \code{adjust_K2_ABC_iKernel}: Function to adjust epsilon parameter for K2-ABC method
+\item \code{adjust_K2_ABC_iKernel()}: Function to adjust epsilon parameter for K2-ABC method
 
-\item \code{adjust_ABC_tolerance}: Function to adjust tolerance parameter for rejection ABC method
+\item \code{adjust_ABC_tolerance()}: Function to adjust tolerance parameter for rejection ABC method
+
 }}
-
 \examples{
 NULL
 NULL

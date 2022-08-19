@@ -22,9 +22,9 @@ The norm function for vector
 }
 \section{Functions}{
 \itemize{
-\item \code{norm_vec_sq}: The squared norm or the sum of squared elements of the vector x
-}}
+\item \code{norm_vec_sq()}: The squared norm or the sum of squared elements of the vector x
 
+}}
 \examples{
 norm_vec(c(3,4)) # that returns 5
 norm_vec(c(12,5)) # that returns 13

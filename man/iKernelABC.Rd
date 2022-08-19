@@ -264,24 +264,24 @@ from \code{sudoku()} algorithm, based on the simple procedure: \cr
 }
 \section{Functions}{
 \itemize{
-\item \code{restricrt_data}: Function to restrict data in the size to accelerate the calculations
+\item \code{restricrt_data()}: Function to restrict data in the size to accelerate the calculations
 
-\item \code{sampler_MaxWiK}: Function to generate parameters and simulate a model based on MaxWiK algorithm
+\item \code{sampler_MaxWiK()}: Function to generate parameters and simulate a model based on MaxWiK algorithm
 
-\item \code{Get_iKernel_estimation}: function to get parameter estimation based on isolation kernel
+\item \code{Get_iKernel_estimation()}: function to get parameter estimation based on isolation kernel
 
-\item \code{adjust_psi_t}: Function to adjust hyper parameters \code{psi} and \code{t} for isolation kernel ABC
+\item \code{adjust_psi_t()}: Function to adjust hyper parameters \code{psi} and \code{t} for isolation kernel ABC
 
-\item \code{spiderweb_old}: The function to get the best value of parameter corresponding to
+\item \code{spiderweb_old()}: The function to get the best value of parameter corresponding to
 Maxima Weighted Isolation Kernel mapping which is related to an observation point
 
-\item \code{spiderweb}: The function to get the best value of parameter corresponding to
+\item \code{spiderweb()}: The function to get the best value of parameter corresponding to
 Maxima Weighted Isolation Kernel mapping which is related to an observation point
 
-\item \code{spiderweb_slow}: The function to get the best value of parameter corresponding to
+\item \code{spiderweb_slow()}: The function to get the best value of parameter corresponding to
 Maxima Weighted Isolation Kernel mapping which is related to an observation point
+
 }}
-
 \examples{
 NULL
 NULL

@@ -94,9 +94,9 @@ The function \code{plot_web_2D()} draws all the results of the function \code{sp
 }
 \section{Functions}{
 \itemize{
-\item \code{plot_web_2D}: The function to plot all the results of the function \code{spiderweb()}
-}}
+\item \code{plot_web_2D()}: The function to plot all the results of the function \code{spiderweb()}
 
+}}
 \examples{
 NULL
 NULL

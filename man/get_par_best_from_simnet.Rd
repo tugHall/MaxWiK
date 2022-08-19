@@ -31,13 +31,13 @@ Function to extract all the best parameters estimation from results of the funct
 }
 \section{Functions}{
 \itemize{
-\item \code{get_spiderweb_from_simnet}: Function to extract all the spiderwebs from results of the function
+\item \code{get_spiderweb_from_simnet()}: Function to extract all the spiderwebs from results of the function
 \code{simulation_example_many_psi_t()}
 
-\item \code{get_network_from_simnet}: Function to extract all the networks from results of the function
+\item \code{get_network_from_simnet()}: Function to extract all the networks from results of the function
 \code{simulation_example_many_psi_t()}
+
 }}
-
 \examples{
 NULL
 NULL

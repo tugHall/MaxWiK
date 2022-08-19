@@ -29,7 +29,7 @@ experiment_models(
 \code{rng  =  c( 0,10 ) }}
 }
 \value{
-
+\code{experiment_models()} returns list of results of experiments
 }
 \description{
 Function to prepare toy experiments

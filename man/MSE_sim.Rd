@@ -38,10 +38,10 @@ The function \code{MSE_parameters()} allows to get MSE for parameters if the tru
 }
 \section{Functions}{
 \itemize{
-\item \code{MSE_parameters}: The function calculates mean square error (MSE) value
+\item \code{MSE_parameters()}: The function calculates mean square error (MSE) value
 for parameters as differences between them and already the known truth parameter
-}}
 
+}}
 \examples{
 NULL
 NULL 

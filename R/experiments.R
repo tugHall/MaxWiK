@@ -215,7 +215,7 @@ Get_call_all_methods  <-  function( model_name, dimension, stochastic_term, iter
 #' @param rng Range for each variable, by default
 #' \code{rng  =  c( 0,10 ) }
 #'
-#' @return
+#' @return \code{experiment_models()} returns list of results of experiments
 #' @export
 #'
 #' @examples

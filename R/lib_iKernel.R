@@ -378,7 +378,7 @@ get_voronoi_feature  <-  function( psi = 40, t = 350, data, talkative = FALSE,
 #' @export
 #'
 #' @examples
-#' 
+#' NULL
 add_new_point_iKernel  <-  function( data, d1, Matrix_Voronoi, dissim, t, psi, nr ){
     ### Input data:
     ### d1 is a data point - usually it is an observation data point

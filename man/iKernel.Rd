@@ -57,13 +57,13 @@ corresponding observation point
 }
 \section{Functions}{
 \itemize{
-\item \code{iKernel_point_dataset}: The function to get Isolation Kernel between a new point and dataset
+\item \code{iKernel_point_dataset()}: The function to get Isolation Kernel between a new point and dataset
 
-\item \code{get_weights_iKernel}: The function to get weights from Feature mapping
+\item \code{get_weights_iKernel()}: The function to get weights from Feature mapping
 
-\item \code{GRAM_iKernel}: The function to calculate Gram matrix for Isolation Kernel method
+\item \code{GRAM_iKernel()}: The function to calculate Gram matrix for Isolation Kernel method
+
 }}
-
 \examples{
 NULL
 NULL
