@@ -300,32 +300,35 @@ sampler_all_methods  <-  function( model_name, dimension, stochastic_term,
                       stat.obs = stat.obs, 
                       noise = stochastic_term )
     } 
-    
-    for( mk in 1:nrow(Meth_Kern) ){
-        DF_1  =  mclapply( 1 , FUN = function( x ){   
-                   sampler_method( method_name =  as.character( Meth_Kern$Method[mk] ), 
-                                   kernel_name =  as.character( Meth_Kern$Kernel[mk] ), 
-                                   model_name  =  model_name, 
-                                   dimension   =  dimension, 
-                                   stochastic_term  =  stochastic_term, 
-                                   nmax = nmax,
-                                   stat.obs   =  stat.obs, 
-                                   stat.sim   =  stat.sim, 
-                                   par.sim    =  par.sim, 
-                                   G          =  G, 
-                                   par.truth  =  par.truth, 
-                                   model      =  model, 
-                                   arg0       =  arg0,  
-                                   size       =  500  
+
+    DF_1_S  =  mclapply( 1:nrow(Meth_Kern) , FUN = function( mk ){   
+                        sampler_method( method_name =  as.character( Meth_Kern$Method[mk] ), 
+                                        kernel_name =  as.character( Meth_Kern$Kernel[mk] ), 
+                                        model_name  =  model_name, 
+                                        dimension   =  dimension, 
+                                        stochastic_term  =  stochastic_term, 
+                                        nmax = nmax,
+                                        stat.obs   =  stat.obs, 
+                                        stat.sim   =  stat.sim, 
+                                        par.sim    =  par.sim, 
+                                        G          =  G, 
+                                        par.truth  =  par.truth, 
+                                        model      =  model, 
+                                        arg0       =  arg0,  
+                                        size       =  500  
                     )
-                }, mc.cores  =  cores )    
+                }, mc.cores  =  cores )
 
         # Check an error
-        bad   =  sapply( DF_1, inherits, what = "try-error" )
+        bad   =  sapply( DF_1_S, inherits, what = "try-error" )
         # If NO errors:
         if ( any( !bad ) ){
-            DF_2  =  do.call( rbind, DF_1[ !bad ] )
-            DF    =  rbind( DF, DF_2 )
+            for( mk in ( 1:nrow(Meth_Kern) )[ !bad ] ){
+                DF_1  =  DF_1_S[[ mk ]]$results
+                DF    =  rbind( DF, DF_1 )
+            }
+            # DF_2  =  do.call( rbind, DF_1_S[ !bad ]$results )
+            # DF    =  rbind( DF, DF_2 )
         }
         # If error in some core(s):
         if ( any( bad ) ){
@@ -341,8 +344,7 @@ sampler_all_methods  <-  function( model_name, dimension, stochastic_term,
                 DF    =  rbind( DF, DF_3 )
             }
         }
-    }
-    
+
     return( DF )
 }
 
