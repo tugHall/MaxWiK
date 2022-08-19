@@ -267,7 +267,12 @@ adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1
                     FUN = function( tlr ) {
                         rej      =  abc( target = y, param = par.sim[-id, ], 
                                          sumstat = x, tol = tlr, method = 'rejection' ) 
-                        par.est  =  point_estimate( rej$unadj.values)$MAP
+                        l = as.data.frame( rej$unadj.values )
+                        if (nrow( unique.data.frame( l ) ) > 1 ){
+                            par.est  =  point_estimate( l )$MAP
+                        } else {
+                            par.est  =  unique.data.frame( l )
+                        }
                         return ( sum( ( par.truth - par.est ) ** 2  ) )
                     }
     )
@@ -275,10 +280,11 @@ adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1
     
     rej      =  abc( target = stat.obs, param = par.sim, 
                      sumstat = stat.sim, tol = tol, method = 'rejection' ) 
-    if ( length( which(rej$region ) ) == 1 ){
-        par.est  =  rej$unadj.values
+    l = as.data.frame( rej$unadj.values )
+    if (nrow( unique.data.frame( l ) ) > 1 ){
+        par.est  =  point_estimate( l )$MAP
     } else {
-        par.est  =  point_estimate( rej$unadj.values )$MAP
+        par.est  =  unique.data.frame( l )
     }
     return( list( par.est   =  par.est, 
                   tolerance =  tol ) )
