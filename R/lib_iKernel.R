@@ -267,12 +267,13 @@ adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1
                     FUN = function( tlr ) {
                         rej      =  abc( target = y, param = par.sim[-id, ], 
                                          sumstat = x, tol = tlr, method = 'rejection' ) 
-                        l = as.data.frame( rej$unadj.values )
-                        if (nrow( unique.data.frame( l ) ) > 1 ){
-                            par.est  =  point_estimate( l )$MAP
-                        } else {
-                            par.est  =  unique.data.frame( l )
-                        }
+                        par.est  =  Get_MAP( as.data.frame( rej$unadj.values ) )
+                        
+                        # if (nrow( unique.data.frame( l ) ) > 1 ){
+                        #    par.est  =  point_estimate( l )$MAP
+                        # } else {
+                        #     par.est  =  unique.data.frame( l )
+                        # }
                         return ( sum( ( par.truth - par.est ) ** 2  ) )
                     }
     )
@@ -280,12 +281,15 @@ adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1
     
     rej      =  abc( target = stat.obs, param = par.sim, 
                      sumstat = stat.sim, tol = tol, method = 'rejection' ) 
-    l = as.data.frame( rej$unadj.values )
-    if (nrow( unique.data.frame( l ) ) > 1 ){
-        par.est  =  point_estimate( l )$MAP
-    } else {
-        par.est  =  unique.data.frame( l )
-    }
+    par.est  =  Get_MAP( as.data.frame( rej$unadj.values ) )
+    
+    # l = as.data.frame( rej$unadj.values )
+    # if (nrow( unique.data.frame( l ) ) > 1 ){
+    #     par.est  =  point_estimate( l )$MAP
+    # } else {
+    #     par.est  =  unique.data.frame( l )
+    # }
+    
     return( list( par.est   =  par.est, 
                   tolerance =  tol ) )
 }
@@ -1634,7 +1638,7 @@ get_Spider_MAP  <-  function( stat.sim, par.sim, stat.obs,
     
     simnet$networks  =  get_network_from_simnet( simnet = simnet )
     
-    MAP  =  point_estimate( simnet$networks )$MAP
+    MAP  =  Get_MAP( as.data.frame( simnet$networks ) )  # point_estimate( simnet$networks )$MAP
     
     return( MAP )
 }
@@ -1714,29 +1718,61 @@ MSE_parameters   <-   function( par.truth, par.top = NULL, par.best ){
 }
 
 
-
-# DRAFT_FUCTIONS -----------------------------------------------------------
-
-
-
-### To check correctness:
-
-#' The function to get mode of the input vector
+#' The function to get Maximum A Posteriori from numeric data frame
 #' 
-#' @description The function \code{Get_Mode} returns the mode of vector. \cr 
-#' The mode is the value that appears most often in a dataset. 
+#' @description The function \code{Get_MAP} returns the Maximum A Posteriori (MAP) of data frame.
 #' 
-#' @param v Input vector of the integer, numeric numbers or characters 
+#' @param DF Data frame of the integer or numeric numbers or characters 
 #'
-#' @return The function \code{Get_Mode} returns the mode of vector
+#' @return The function \code{Get_MAP} returns the MAP for each dimension in data frame DF of vector
 #' 
-#' 
-#'
 #' @examples
 #' NULL 
-Get_Mode <- function(v) {
-    uniqv <- unique(v)
-    return( uniqv[ which.max(tabulate(match(v, uniqv))) ] )
+Get_MAP <- function( DF ) {
+    
+    # Check Data frame:
+    if ( !is.data.frame( DF ) ) {
+        print('Input is ')
+        print( DF )
+        print('str of input:')
+        print( str(DF) )
+        stop( 'The input of Get_MAP function is NOT a data frame' )
+    }
+    if ( nrow( DF ) == 0 ){
+        print( DF )
+        stop(' Data frame is empty ')
+    }
+    if ( any( is.na.data.frame( DF ) ) ){
+        print( DF )
+        stop( 'Data frame has NA value')
+    }
+    
+    # Define the dimension and format of result with data frame:
+    d = ncol( DF )
+    res = data.frame( matrix( data = NA, ncol = d ) )
+    names( res )  =  names( DF )
+    
+    if ( nrow( DF ) > 1 ){
+        for( i in 1:d ){
+            # Get vector from data frame:
+            v  =  DF[ , i ]
+            # Check that is numeric vector:
+            if ( !is.numeric( v ) ){
+                print( v )
+                print( DF )
+                stop( paste( 'Column ', i, 'in data frame is NOT numeric '))
+            }
+            if ( length( unique( v ) ) < 2 ){
+                res[ 1, i ] = unique( v )
+            } else {
+                res[ 1, i ] =  point_estimate( v + runif( n = length( v ) ) * 1E-20 )$MAP
+            }
+    }
+    } else {
+        res  =  DF
+    }
+    
+    return(  res )
 }
 
 
@@ -1748,10 +1784,9 @@ Get_Mode <- function(v) {
 #' 
 #' @param param Data frame of parameters
 #' @param sm Numeric vector of weights gotten from \code{iKernelABC()} function
-#'
+#' 
 #' @return The function \code{Mean_iKernel_parameters()} returns the weighted mean of the parameter 
 #' 
-#'
 #' @examples 
 #' NULL 
 Mean_iKernel_parameters  <- function( param, sm ){

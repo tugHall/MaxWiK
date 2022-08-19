@@ -170,7 +170,7 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
     
     simnet$networks  =  get_network_from_simnet( simnet = simnet )
     
-    simnet$MAP  =  point_estimate( simnet$networks )$MAP
+    simnet$MAP  =  Get_MAP( simnet$networks )  # point_estimate( simnet$networks )$MAP
     
     return( simnet )
 }

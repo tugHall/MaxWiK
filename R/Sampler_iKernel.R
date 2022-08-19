@@ -127,11 +127,13 @@ Get_parameter  <-  function( method_name, kernel_name = '',
         
         lc = round( loclin$adj.values + runif( n= length(loclin$adj.values) )/1E6, digits = 9 )
         
-        if (nrow( unique.data.frame(lc) ) > 1 ){
-            par.est  =  point_estimate( lc )$MAP
-        } else {
-            par.est  =  unique.data.frame(lc)
-        }
+        par.est  =  Get_MAP( as.data.frame( lc ) )
+        
+        #if (nrow( unique.data.frame(lc) ) > 1 ){
+        #    par.est  =  point_estimate( lc )$MAP
+        #} else {
+        #    par.est  =  unique.data.frame(lc)
+        #}
     }
     
     if ( method_name == 'Neuralnet' ){
@@ -145,8 +147,9 @@ Get_parameter  <-  function( method_name, kernel_name = '',
                        tol = tol, method  =  'neuralnet', hcorr   =  TRUE, 
                        transf=c("none","log"), lambda = 0.0001, trace = FALSE )
         
-        nn_adj = round( nn$adj.values + runif( n= length( nn$adj.values ) ) / 1E6, digits = 9 )
-        par.est  =  point_estimate( nn_adj )$MAP
+        # nn_adj = round( nn$adj.values + runif( n= length( nn$adj.values ) ) / 1E6, digits = 9 )
+        # par.est  =  point_estimate( nn_adj )$MAP
+        par.est  =  Get_MAP( as.data.frame( nn$adj.values ) )
     }
     
     if ( method_name == 'Ridge' ){
@@ -160,13 +163,15 @@ Get_parameter  <-  function( method_name, kernel_name = '',
                         tol = tol, method  =  'ridge', hcorr   =  FALSE, 
                         transf=c("none","log"), kernel = 'epanechnikov' )
         
-        rdg_adj = round( rdg$adj.values + runif( n= length( rdg$adj.values ) )/1E6, digits = 9 )
+        # rdg_adj = round( rdg$adj.values + runif( n= length( rdg$adj.values ) )/1E6, digits = 9 )
         
-        if ( nrow( unique.data.frame( rdg_adj ) ) > 1 ){
-            par.est  =  point_estimate( rdg_adj )$MAP
-        } else {
-            par.est  =  unique.data.frame(rdg_adj)
-        }
+        # if ( nrow( unique.data.frame( rdg_adj ) ) > 1 ){
+        #     par.est  =  point_estimate( rdg_adj )$MAP
+        # } else {
+        #     par.est  =  unique.data.frame(rdg_adj)
+        # }
+        
+        par.est  =  Get_MAP( as.data.frame( rdg$adj.values ) )
     }
     
     if ( method_name == 'MaxWiK_MAP' ){
