@@ -328,7 +328,8 @@ experiment_samplers  <-  function( file_name = './output.txt',
                                    dimension = 6, 
                                    stochastic_term  =  5,
                                    rng  =  c( 0,10 ), 
-                                   restrict_points_number = 500 ){
+                                   restrict_points_number = 500, 
+                                   nmax = 30 ){
     ### Check installation of libraries:
     check_packages()
     
@@ -387,7 +388,7 @@ experiment_samplers  <-  function( file_name = './output.txt',
                                 par.sim = par.sim, 
                                 par.truth = par.truth, 
                                 G = G,
-                                nmax = 30
+                                nmax = nmax
                             )
     # Sampler simulation:
     if( FALSE ){
