@@ -39,11 +39,11 @@ model  <-  function( name = c( 'Gaussian', 'Linear' )[1],
 
 #' @describeIn iKernelABC Function to restrict data in the size to accelerate the calculations 
 #' 
-#' @description \code{restricrt_data()} is based on rejection ABC method to restrict original dataset
+#' @description \code{restrict_data()} is based on rejection ABC method to restrict original dataset
 #'
 #' @param size Integer number of points to leave from original dataset
 #'
-#' @return \code{restricrt_data()} returns the list of: \cr
+#' @return \code{restrict_data()} returns the list of: \cr
 #' par.sim - restricted parameters which are close to observation point \cr
 #' stat.sim - restricted stat.sim which are close to observation point
 #' 
@@ -51,7 +51,7 @@ model  <-  function( name = c( 'Gaussian', 'Linear' )[1],
 #'
 #' @examples
 #' NULL
-restricrt_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
+restrict_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
     l  =  nrow( par.sim )
     if ( l != nrow( stat.sim ) ) stop( "The parameters and statistics of simulations have different number of rows" )
     rej_abc  =  abc( target = stat.obs, param = par.sim, sumstat = stat.sim, 
@@ -226,7 +226,7 @@ sampler_method  <-  function( stat.obs, stat.sim, par.sim, model,
     res = NULL
     for( itt in 1:nmax ){
         
-        input  =  restricrt_data( par.sim = par.sim_itt, 
+        input  =  restrict_data( par.sim = par.sim_itt, 
                                   stat.sim = stat.sim_itt, 
                                   stat.obs = stat.obs, 
                                   size = size ) 

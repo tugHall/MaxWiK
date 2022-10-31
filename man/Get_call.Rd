@@ -71,7 +71,8 @@ experiment_samplers(
   dimension = 6,
   stochastic_term = 5,
   rng = c(0, 10),
-  restrict_points_number = 500
+  restrict_points_number = 500,
+  nmax = 30
 )
 }
 \arguments{
