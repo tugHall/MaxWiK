@@ -4,6 +4,7 @@
 ## usethis namespace: start
 #' @importFrom abc abc
 #' @importFrom bayestestR point_estimate
+#' @importFrom ggplot2 aes
 #' @importFrom ggplot2 geom_line
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 ggtitle
