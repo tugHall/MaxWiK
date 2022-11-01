@@ -104,7 +104,7 @@ check_packages  <-  function( pkgs = NULL ){
     if ( is.null( pkgs ) ) {
         pkgs  =  list(  abc = 'abc',
                         bayestestR    =  'point_estimate',
-                        ggplot2       =  c( 'ggplot', 'geom_line', 'scale_color_manual', 'ggtitle', 'ylab', 'xlab' ),
+                        ggplot2       =  c( 'ggplot', 'geom_line', 'scale_color_manual', 'ggtitle', 'ylab', 'xlab', 'aes' ),
                         graphics      =  c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title', 'points' ),
                         grDevices     =  c('dev.off', 'pdf', 'rgb'),
                         kernlab       =  c( 'kernelMatrix', 'laplacedot', 'rbfdot' ),
