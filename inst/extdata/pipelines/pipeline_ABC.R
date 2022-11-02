@@ -2,8 +2,10 @@ library('MaxWiK')
 
 # Please, pay attention running of pipeline will take 4-6 hours for 4 cores. 
 
+# DEfine the working folder:
 wd  =  '../Simulation'
 
+# And create it:
 if ( dir.exists( wd ) ) {
     setwd( wd )
 } else {
@@ -27,6 +29,12 @@ if ( FALSE ){
                               restrict_points_number = 300 )
 }
 
+### In order to understand procedure of execution all the method, please, see
+### the functions:
+###             *   Get_call_all_methods   - to call all the methods, and
+###             *   Get_call               - to call particular method with 
+###                                 fitting hyper parameters for each method
+
 ### This pipeline is the content of the experiment_models() function,
 ###      here you can change hyper parameters as well as the models' data like
 ###      dimension and stochastic term.
@@ -35,14 +43,18 @@ file_name   =  'output.txt'
 models      =  c( 'Gaussian', 'Linear' )
 dimensions  =  (1:20)*2
 stochastic_terms   =   c( 0, 0.1, 0.3, 0.7, 1, 1.5 )
-rng  =  c( 0, 10 )
+rng  =  c( 0, 10 )   # range of parameters
 restrict_points_number  =  300
 
+#  By default number of processors in parallel calculations
+#             cores = 4 in the function Get_call_all_methods
+#   YOU can change this parameter to accelerate calculations ( see the code below )
+cores = 4
 
 # delete old file
 if ( file.exists( file_name) ) unlink( file_name )
 
-DF = NULL
+DF = NULL   # Data frame to collect results of all the simulations
 for( model in models ){
     for( dimension in dimensions ){
         for( stochastic_term in stochastic_terms ){
@@ -98,7 +110,8 @@ for( model in models ){
                 stat.sim = stat.sim, 
                 par.sim  = par.sim, 
                 G        = G, 
-                par.truth  =  x0 )
+                par.truth  =  x0, 
+                cores = cores )
             DF  =  rbind( DF, DF_new )
             
             if ( file.exists( file_name ) ){
