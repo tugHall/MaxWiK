@@ -2,10 +2,10 @@
 % Please edit documentation in R/Sampler_iKernel.R, R/experiments.R
 \name{sampler_method}
 \alias{sampler_method}
+\alias{experiment_samplers}
 \alias{sampler_all_methods}
 \alias{Get_call}
 \alias{Get_call_all_methods}
-\alias{experiment_samplers}
 \title{Function to call a method to get MSE}
 \usage{
 sampler_method(
@@ -23,6 +23,16 @@ sampler_method(
   dimension,
   stochastic_term,
   par.truth
+)
+
+experiment_samplers(
+  file_name = "./output.txt",
+  model_name = "Gaussian",
+  dimension = 6,
+  stochastic_term = 5,
+  rng = c(0, 10),
+  restrict_points_number = 500,
+  nmax = 30
 )
 
 sampler_all_methods(
@@ -64,16 +74,6 @@ Get_call_all_methods(
   par.truth,
   cores = 4
 )
-
-experiment_samplers(
-  file_name = "./output.txt",
-  model_name = "Gaussian",
-  dimension = 6,
-  stochastic_term = 5,
-  rng = c(0, 10),
-  restrict_points_number = 500,
-  nmax = 30
-)
 }
 \arguments{
 \item{stat.obs}{Data frame of statistics of observation point}
@@ -104,15 +104,15 @@ experiment_samplers(
 
 \item{par.truth}{Truth parameter value to check result of estimation}
 
-\item{cores}{Number of cores for parallel calculation with iterations}
-
-\item{iteration}{Iteration number of trial with the same model and other parameters}
-
 \item{file_name}{File to save results}
 
 \item{rng}{Range of points for each dimension, by default \code{rng = range(0,10)}}
 
 \item{restrict_points_number}{Number of points which will be used in each method and that are close to observation point}
+
+\item{cores}{Number of cores for parallel calculation with iterations}
+
+\item{iteration}{Iteration number of trial with the same model and other parameters}
 }
 \value{
 \code{sampler_method()} returns the list: \cr
@@ -121,6 +121,8 @@ best - the best value of parameter; \cr
 MSE_min - minimum of MSE; \cr
 number_of_iterations - number of iterations; \cr
 time - time of sampling in seconds.
+
+\code{experiment_samplers()} returns data frame with results of experiment for sampling using all the methods
 
 \code{sampler_all_methods()} returns data.frame with MSE for all defined methods
 
@@ -136,8 +138,6 @@ method_name = method_name, \cr
 }
 
 \code{Get_call_all_methods()} returns data.frame with MSE for all defined methods
-
-\code{experiment_samplers()} returns data frame with results of experiment for sampling using all the methods
 }
 \description{
 Function to call a method to get MSE
@@ -146,17 +146,17 @@ Function to call a method to get MSE
 \itemize{
 \item \code{sampler_method()}: Function to generate parameters and simulate a model based on MaxWiK algorithm
 
+\item \code{experiment_samplers()}: Make experiments with sampling for all the methods and one case of toy model and dimension
+
 \item \code{sampler_all_methods()}: Function to call all the methods to get estimation of parameter and MSE
 
 \item \code{Get_call_all_methods()}: Function to call all the methods to get estimation of parameter and MSE
 
-\item \code{experiment_samplers()}: Make experiments with sampling for all the methods and one case of toy model and dimension
-
 }}
 \examples{
 NULL
-NULL 
 NULL
 NULL 
 NULL
+NULL 
 }
