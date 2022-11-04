@@ -521,7 +521,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
 
 
 if ( FALSE ){
-    smpl_1  =  sampler_MaximaWeightediKernel( stat.obs, stat.sim, par.sim,  model = model, 
+    smpl_1  =  sampler_MaxWiK( stat.obs, stat.sim, par.sim,  model = model, 
                                          arg0 = list(  name = c( 'Gauss', 'Linear' )[1],
                                                        x0 = x0, 
                                                        stat.obs = stat.obs, 
