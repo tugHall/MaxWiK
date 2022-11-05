@@ -363,8 +363,8 @@ sampler_all_methods  <-  function( model_name, dimension, stochastic_term,
         if ( any( bad ) ){
             its = which( bad )
             
-            DF_3  =   data.frame(   method_name = as.character( Meth_Kern$Method[mk] ),
-                                    kernel_name = as.character( Meth_Kern$Kernel[mk] ),
+            DF_3  =   data.frame(   method_name = as.character( Meth_Kern$Method[ its ] ),
+                                    kernel_name = as.character( Meth_Kern$Kernel[ its ] ),
                                     MSE = NA, 
                                     running_time = NA ) 
             # Add circle for its:
