@@ -54,7 +54,7 @@ dimension = 2
 stochastic_term  =  1
 rng  =  c( 0,10 )
 restrict_points_number = 100
-nmax = 30 
+nmax = 300 
 
 
 # delete the file from the previous simulation

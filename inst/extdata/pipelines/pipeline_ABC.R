@@ -80,7 +80,7 @@ for( model in models ){
             par.sim_origin  =  input$par.sim
             rm( input )
             
-            # Apply restict number of points:
+            # Apply restrict number of points:
             tol = restrict_points_number / nrow( stat.sim_origin )
             rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
                             method = 'rejection', tol = tol )
