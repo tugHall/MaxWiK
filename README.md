@@ -22,7 +22,12 @@ Short description
 **Method:** An approximate Bayesian computation method based on Isolation Kernel is developed. The method involves the transformation of row data to a Hilbert space (mapping) and the measurement of the similarity between simulated points and maxima weighted Isolation Kernel mapping related to the observation point. We also design a meta-sampling algorithm for parameter estimation that requires no gradient calculation and is dimension independent. The advantages of the proposed machine learning method are more clearly can be illustrated using multidimensional data as well as a specific branching processes model like cancer cell evolution.
  
 **Package:** This software is a package named **MaxWiK** contains Approximate Bayesian Computation methods to choose a single parameter for a single observation point. 
-To see how it works, please, be kind use pipelines. To get pipelines, please, use command:
+
+To install, please, use the archive file 'MaxWiK_1.0.0.tar.gz':
+
+    utils::install.packages("./MaxWiK_1.0.0.tar.gz", repos = NULL, type = "source")
+
+To see how it works, please, be kind use the pipelines. To get pipelines, please, use command:
 
     copy_pipelines( dir = './' )   
     # dir can be any working folder where pipeline will be copied
