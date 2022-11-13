@@ -11,7 +11,8 @@ Gaussian_model(
   probability = TRUE,
   n = 1000,
   r = range(0, 10),
-  noise = 0
+  noise = 0,
+  A = 1
 )
 
 linear_model(
@@ -36,6 +37,8 @@ that contents the truth value of parameter. Each number in the vector should be 
 \item{r}{Range \code{r = c(min, max)}, by default  \code{r = range(0,10)}}
 
 \item{noise}{Noise factor, implemented as coefficient in \code{f(x) = ... + noise * runif(1)}}
+
+\item{A}{Exponent multiplication factor}
 }
 \value{
 The function \code{Gaussian_model()} returns list of two objects: \cr

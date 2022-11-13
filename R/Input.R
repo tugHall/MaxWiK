@@ -16,6 +16,7 @@
 #' @param probability Logical, if TRUE then apply uneven distribution for parameters generation
 #' @param n Integer number of points in data frames
 #' @param r Range \code{r = c(min, max)}, by default  \code{r = range(0,10)}
+#' @param A Exponent multiplication factor
 #'
 #' @return The function \code{Gaussian_model()} returns list of two objects: \cr
 #' - stat.sim - data frame of simulations statistics,
@@ -32,7 +33,7 @@ Gaussian_model  <-  function( d = 1, x0 = 3, probability = TRUE,
     # x0 is a vector of truth observation and max position of exp function
     # n is a number of simulations
     # r is a range for all x
-    # A is coefficient of exponential function
+    # A is an exponent multiplication factor
     
     # Define and generate the parameters:
     par.sim  =  data.frame( matrix( NA, nrow = n, ncol = d ) )
