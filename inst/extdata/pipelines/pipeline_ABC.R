@@ -69,7 +69,7 @@ f <- function( A, x, x0, sigma ){
 
 y = sapply( 1:length( x ), FUN = function( i ) f( A = A, x = x[ i ], x0 = x0, sigma = sigma ) )
 
-plot( x, y, type = 'l' )
+plot( x, y, type = 'l', xlim = c( 0, 200 ) )
 
 #### ___________________________________________________________________
 
