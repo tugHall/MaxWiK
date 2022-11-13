@@ -57,7 +57,7 @@ Gaussian_model  <-  function( d = 1, x0 = 3, probability = TRUE,
     
     stat.obs  =  data.frame( NULL )
     for ( i in 1:d ){
-        stat.obs[ 1, paste0( 'Y', i ) ]  =  1
+        stat.obs[ A, paste0( 'Y', i ) ]  =  1
     }
     
     return( list( stat.sim = stat.sim, par.sim = par.sim, stat.obs = stat.obs )  )
