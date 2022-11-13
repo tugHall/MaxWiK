@@ -27,11 +27,12 @@
 #' @examples
 #' NULL
 Gaussian_model  <-  function( d = 1, x0 = 3, probability = TRUE,
-                                    n = 1000, r = range(0,10), noise = 0 ) {
+                                    n = 1000, r = range(0,10), noise = 0, A = 1 ) {
     # d is dimension of the parameter space x as well as output space y
     # x0 is a vector of truth observation and max position of exp function
     # n is a number of simulations
     # r is a range for all x
+    # A is coefficient of exponential function
     
     # Define and generate the parameters:
     par.sim  =  data.frame( matrix( NA, nrow = n, ncol = d ) )
@@ -50,7 +51,7 @@ Gaussian_model  <-  function( d = 1, x0 = 3, probability = TRUE,
     stat.sim  =  data.frame( matrix( NA, nrow = n, ncol = d ) )
     names( stat.sim )  =  paste0( 'Y', 1:d )
     for( i in 1:d ){
-        stat.sim[ , i ]  = exp( x = - ( par.sim[ , i ] - x0[ i ] ) ** 2 / 2 ) + 
+        stat.sim[ , i ]  = A * exp( x = - ( par.sim[ , i ] - x0[ i ] ) ** 2 / 2 ) + 
             runif( n = n, min = -0.5, max = 0.5 ) * noise
     }
     
