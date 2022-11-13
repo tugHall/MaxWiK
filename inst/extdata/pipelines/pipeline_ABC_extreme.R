@@ -44,7 +44,7 @@ file_name   =  'output.txt'
 dimension  =  20
 stochastic_term   =   0 
 rng  =  c( 0, 2000 )   # range of parameters
-restrict_points_number  =  300
+restrict_points_number  =  1000
 
 #  By default number of processors in parallel calculations
 #             cores = 4 in the function Get_call_all_methods
@@ -56,7 +56,7 @@ if ( file.exists( file_name) ) unlink( file_name )
 
 
 x0     =  c(10, 50, 90, 130, 180, 280, 390, 430, 520, 630, 1010, 1050, 1090, 1130, 1180, 1280, 1390, 1430, 1520, 1630)
-sigma  =  rep( 100, length( x0 ) )
+sigma  =  rep( 500, length( x0 ) )
 A = 250
 
 if ( FALSE ){
@@ -80,7 +80,7 @@ DF = NULL   # Data frame to collect results of all the simulations
 
 input  =  NULL
 
-Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
+Number_of_points  =  max( c( 150 * dimension, restrict_points_number ) )
 
 
 input = Gaussian_model( d = dimension, x0 = x0, probability = FALSE, 
@@ -94,9 +94,16 @@ stat.obs  =  input$stat.obs
 par.sim_origin  =  input$par.sim
 rm( input )
 
-# Apply restrict number of points:
-tol = restrict_points_number / nrow( stat.sim_origin )
-rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
+# PLEASE, define distance to observation point to get posterior distribution:
+# d_threshold  =  1090
+
+# dstncs  =  as.matrix( dist( x = rbind( stat.sim_origin, stat.obs ) )  )
+# dstncs  =  dstncs[ Number_of_points + 1, ]
+
+### CHOOSE ONE OF tol:
+# tol  =  length( which( dstncs < d_threshold ) ) / nrow( stat.sim_origin )      # restrict_points_number / nrow( stat.sim_origin )
+tol  =  restrict_points_number / nrow( stat.sim_origin )
+rej  =  abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
                 method = 'rejection', tol = tol )
 
 stat.sim  =  stat.sim_origin[ rej$region, ]
@@ -116,7 +123,7 @@ ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1],
 
 G = matrix( data = ikern$similarity, ncol = 1 )
 DF_new  =  Get_call_all_methods(    
-    model_name = model, 
+    model_name = 'Gaussian', 
     dimension  = dimension,
     stochastic_term = stochastic_term, 
     iterations  =  1:12,
