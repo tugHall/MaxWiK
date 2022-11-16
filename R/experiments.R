@@ -188,8 +188,8 @@ Get_call_all_methods  <-  function( model_name, dimension, stochastic_term, iter
         # If error in some core(s):
         if ( any( bad ) ){
             its = which( bad )
-            DF_3  =   data.frame(   method_name = as.character( Meth_Kern$Method[mk] ),
-                                    kernel_name = as.character( Meth_Kern$Kernel[mk] ),
+            DF_3  =   data.frame(   method_name = NA, # as.character( Meth_Kern$Method[mk] ),
+                                    kernel_name = NA, # as.character( Meth_Kern$Kernel[mk] ),
                                     model_name  = model_name,
                                     dimension   = dimension, 
                                     stochastic_term = stochastic_term,
