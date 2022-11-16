@@ -14,6 +14,7 @@
 #' @param par.sim Data frame of parameters
 #' @param G Matrix of similarities for K2-ABC based on isolation kernel
 #' @param par.truth Truth parameter value to check result of estimation
+#' @param sigma Vector of sigmas in Gauss function for each dimension
 #'
 #' @return \code{Get_call()} returns the list: \cr
 #' method_name = method_name, \cr
@@ -28,7 +29,7 @@
 #' @examples
 #' NULL
 Get_call  <-  function( method_name, kernel_name = '', model_name, dimension, stochastic_term, iteration, 
-                        stat.obs, stat.sim, par.sim, G = NULL, par.truth ){
+                        stat.obs, stat.sim, par.sim, G = NULL, par.truth, sigma = 1 ){
     
     n_min  =  100 
     time_start  =  Sys.time( )
@@ -125,7 +126,12 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, dimension, st
     
     ### Get MSE 
     MSE = NULL
-    if ( !is.na( par.est )[1] ) MSE  =  sum( ( par.truth - par.est ) ** 2  )
+    if ( !is.na( par.est )[1] ){
+        sim_est  =  model( name = model_name, parameter = par.est, 
+                           x0 = par.truth, stat.obs = stat.obs, 
+                           noise = stochastic_term, sigma = sigma )
+        MSE  =  MSE_sim(stat.obs = stat.obs, stat.sim = sim_est )  # sum( ( par.truth - par.est ) ** 2  )
+    }
     
     running_time  =  as.numeric( difftime(Sys.time(), time_start, units = "secs")[[1]] )
     
@@ -152,7 +158,7 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, dimension, st
 #' NULL 
 Get_call_all_methods  <-  function( model_name, dimension, stochastic_term, iterations, 
                                     stat.obs, stat.sim, par.sim, G, par.truth,
-                                    cores = 4 ){
+                                    cores = 4, sigma = 1 ){
     
     DF  =  NULL
     Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 'Rejection', 
@@ -175,7 +181,8 @@ Get_call_all_methods  <-  function( model_name, dimension, stochastic_term, iter
                                    stat.sim   =  stat.sim, 
                                    par.sim    =  par.sim, 
                                    G          =  G, 
-                                   par.truth  =  par.truth 
+                                   par.truth  =  par.truth,
+                                   sigma = sigma
                                 )
         }, mc.cores  =  cores )
         # Check an error
