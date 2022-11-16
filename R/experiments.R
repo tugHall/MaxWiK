@@ -163,14 +163,14 @@ Get_call_all_methods  <-  function( model_name, dimension, stochastic_term, iter
                                          'iKernel', 'iKernel') 
                               )
     
-    for( mk in 1:nrow(Meth_Kern) ){
-         DF_1  =  mclapply( iterations , FUN = function( x ){     
+    for( it in iterations ){
+         DF_1  =  mclapply( 1:nrow(Meth_Kern) , FUN = function( mk ){     
                         Get_call(  method_name =  as.character( Meth_Kern$Method[mk] ), 
                                    kernel_name =  as.character( Meth_Kern$Kernel[mk] ), 
                                    model_name  =  model_name, 
                                    dimension   =  dimension, 
                                    stochastic_term  =  stochastic_term, 
-                                   iteration  =  x,
+                                   iteration  =  it,
                                    stat.obs   =  stat.obs, 
                                    stat.sim   =  stat.sim, 
                                    par.sim    =  par.sim, 
