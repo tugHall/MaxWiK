@@ -16,7 +16,8 @@ Get_call(
   stat.sim,
   par.sim,
   G = NULL,
-  par.truth
+  par.truth,
+  sigma = 1
 )
 
 Get_call_all_methods(
@@ -29,7 +30,8 @@ Get_call_all_methods(
   par.sim,
   G,
   par.truth,
-  cores = 4
+  cores = 4,
+  sigma = 1
 )
 }
 \arguments{
@@ -54,6 +56,8 @@ Get_call_all_methods(
 \item{G}{Matrix of similarities for K2-ABC based on isolation kernel}
 
 \item{par.truth}{Truth parameter value to check result of estimation}
+
+\item{sigma}{Vector of sigmas in Gauss function for each dimension}
 
 \item{cores}{Number of cores for parallel calculation with iterations}
 }

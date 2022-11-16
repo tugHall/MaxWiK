@@ -4,7 +4,14 @@
 \alias{model}
 \title{Model definition for sampler to calculate one simulation}
 \usage{
-model(name = c("Gaussian", "Linear")[1], parameter, x0, stat.obs, noise = 0)
+model(
+  name = c("Gaussian", "Linear")[1],
+  parameter,
+  x0,
+  stat.obs,
+  noise = 0,
+  sigma = 1
+)
 }
 \arguments{
 \item{name}{Name of a model, can be either \code{ 'Gaussian' or 'Linear' }}
