@@ -80,60 +80,62 @@ DF = NULL   # Data frame to collect results of all the simulations
 
 input  =  NULL
 
-Number_of_points  =  max( c( 150 * dimension, restrict_points_number ) )
+Number_of_points  =  max( c( 500 * dimension, restrict_points_number ) )
 
-
-input = Gaussian_model( d = dimension, x0 = x0, probability = FALSE, 
-                        n = Number_of_points, r = rng, A = A,
-                        noise = stochastic_term )
-
-
-if ( is.null( input ) ) stop( 'Model name is incorrect' )
-stat.sim_origin  =  input$stat.sim
-stat.obs  =  input$stat.obs
-par.sim_origin  =  input$par.sim
-rm( input )
-
-# PLEASE, define distance to observation point to get posterior distribution:
-# d_threshold  =  1090
-
-# dstncs  =  as.matrix( dist( x = rbind( stat.sim_origin, stat.obs ) )  )
-# dstncs  =  dstncs[ Number_of_points + 1, ]
-
-### CHOOSE ONE OF tol:
-# tol  =  length( which( dstncs < d_threshold ) ) / nrow( stat.sim_origin )      # restrict_points_number / nrow( stat.sim_origin )
-tol  =  restrict_points_number / nrow( stat.sim_origin )
-rej  =  abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
-                method = 'rejection', tol = tol )
-
-stat.sim  =  stat.sim_origin[ rej$region, ]
-par.sim   =   par.sim_origin[ rej$region, ] 
-
-psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
-                        stat.obs = stat.obs, talkative = FALSE, 
-                        check_pos_def = FALSE, 
-                        n_best = 8, cores = 4 )
-
-ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
-                      param = par.sim, 
-                      stat.sim = stat.sim, 
-                      stat.obs = stat.obs, 
-                      talkative = FALSE, 
-                      check_pos_def = FALSE )
-
-G = matrix( data = ikern$similarity, ncol = 1 )
-DF_new  =  Get_call_all_methods(    
-    model_name = 'Gaussian', 
-    dimension  = dimension,
-    stochastic_term = stochastic_term, 
-    iterations  =  1:12,
-    stat.obs = stat.obs, 
-    stat.sim = stat.sim, 
-    par.sim  = par.sim, 
-    G        = G, 
-    par.truth  =  x0, 
-    cores = cores )
-DF  =  rbind( DF, DF_new )
+for( itt in 1:20 ){
+    input = Gaussian_model( d = dimension, x0 = x0, probability = FALSE, 
+                            n = Number_of_points, r = rng, A = A,
+                            noise = stochastic_term )
+    
+    
+    if ( is.null( input ) ) stop( 'Model name is incorrect' )
+    stat.sim_origin  =  input$stat.sim
+    stat.obs  =  input$stat.obs
+    par.sim_origin  =  input$par.sim
+    rm( input )
+    
+    # PLEASE, define distance to observation point to get posterior distribution:
+    # d_threshold  =  1090
+    
+    # dstncs  =  as.matrix( dist( x = rbind( stat.sim_origin, stat.obs ) )  )
+    # dstncs  =  dstncs[ Number_of_points + 1, ]
+    
+    ### CHOOSE ONE OF tol:
+    # tol  =  length( which( dstncs < d_threshold ) ) / nrow( stat.sim_origin )      # restrict_points_number / nrow( stat.sim_origin )
+    tol  =  restrict_points_number / nrow( stat.sim_origin )
+    rej  =  abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
+                    method = 'rejection', tol = tol )
+    
+    stat.sim  =  stat.sim_origin[ rej$region, ]
+    par.sim   =   par.sim_origin[ rej$region, ] 
+    
+    psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
+                            stat.obs = stat.obs, talkative = FALSE, 
+                            check_pos_def = FALSE, 
+                            n_best = 8, cores = 4 )
+    
+    ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
+                          param = par.sim, 
+                          stat.sim = stat.sim, 
+                          stat.obs = stat.obs, 
+                          talkative = FALSE, 
+                          check_pos_def = FALSE )
+    
+    G = matrix( data = ikern$similarity, ncol = 1 )
+    DF_new  =  Get_call_all_methods(    
+        model_name = 'Gaussian', 
+        dimension  = dimension,
+        stochastic_term = stochastic_term, 
+        iterations  =  itt,
+        stat.obs = stat.obs, 
+        stat.sim = stat.sim, 
+        par.sim  = par.sim, 
+        G        = G, 
+        par.truth  =  x0, 
+        cores = cores, 
+        sigma = sigma )
+    DF  =  rbind( DF, DF_new )
+}
 
 if ( file.exists( file_name ) ){
     write.table(file = file_name, x = DF_new , append = TRUE, sep = '\t', 
