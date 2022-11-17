@@ -56,6 +56,8 @@ if ( file.exists( file_name) ) unlink( file_name )
 
 
 x0     =  c(10, 50, 90, 130, 180, 280, 390, 430, 520, 630, 1010, 1050, 1090, 1130, 1180, 1280, 1390, 1430, 1520, 1630)
+par.truth  =  as.data.frame( matrix( data = x0, nrow = 1 )  )
+names( par.truth )  =  paste0( 'x', 1:length( x0 ) )
 sigma  =  rep( 500, length( x0 ) )
 A = 250
 
@@ -82,7 +84,9 @@ input  =  NULL
 
 Number_of_points  =  max( c( 500 * dimension, restrict_points_number ) )
 
-for( itt in 1:20 ){
+itts  =  2 
+
+for( itt in 1:itts ){
     input = Gaussian_model( d = dimension, x0 = x0, probability = FALSE, 
                             n = Number_of_points, r = rng, A = A,
                             noise = stochastic_term )
@@ -131,7 +135,7 @@ for( itt in 1:20 ){
         stat.sim = stat.sim, 
         par.sim  = par.sim, 
         G        = G, 
-        par.truth  =  x0, 
+        par.truth  =  par.truth, 
         cores = cores, 
         sigma = sigma )
     DF  =  rbind( DF, DF_new )
@@ -147,6 +151,17 @@ if ( file.exists( file_name ) ){
 
 ###  Results of simulation is collected in dataset DF
 print( 'Results of simulation is collected in dataset DF' )
+
+### Get average data:
+DF = na.omit( DF )
+DF$meth_kernel  =  paste0( DF$method_name, '_', DF$kernel_name )
+
+mt_krs  =  unique( DF$meth_kernel )
+
+for( mk in mt_krs ){
+    
+    
+}
 
 
 
