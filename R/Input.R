@@ -153,7 +153,7 @@ model  <-  function( name = c( 'Gaussian', 'Linear' )[1],
     
     if ( name == 'Gaussian' ){
         for( i in 1:d ){
-            sim[ 1, i ]  = exp( x = - ( parameter[1 , i ] - x0[ i ] ) ** 2 / 2 / sigma[d] ) + noise * runif(1)
+            sim[ 1, i ]  = exp( x = - ( parameter[1 , i ] - x0[ i ] ) ** 2 / 2 / sigma[i] ) + noise * runif(1)
         }
     } else {
         if ( name == 'Linear' ){
