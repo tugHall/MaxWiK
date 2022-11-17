@@ -10,7 +10,8 @@ model(
   x0,
   stat.obs,
   noise = 0,
-  sigma = 1
+  sigma = 1,
+  A = 1
 )
 }
 \arguments{
