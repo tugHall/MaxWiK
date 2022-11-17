@@ -8,16 +8,13 @@
 Get_call(
   method_name,
   kernel_name = "",
-  model_name,
   dimension,
-  stochastic_term,
   iteration,
   stat.obs,
   stat.sim,
   par.sim,
   G = NULL,
-  par.truth,
-  sigma = 1
+  model_par = list(name = "Gaussian", noise = 0, sigma = 1, A = 1)
 )
 
 Get_call_all_methods(
@@ -39,11 +36,7 @@ Get_call_all_methods(
 
 \item{kernel_name}{Name of kernel function}
 
-\item{model_name}{Name of a model}
-
 \item{dimension}{Dimension of the model}
-
-\item{stochastic_term}{A number (usually in the range \code{[0,1]}) of stochastic term in the dataset \code{stat.sim}}
 
 \item{iteration}{Iteration number of trial with the same model and other parameters}
 
@@ -55,9 +48,13 @@ Get_call_all_methods(
 
 \item{G}{Matrix of similarities for K2-ABC based on isolation kernel}
 
-\item{par.truth}{Truth parameter value to check result of estimation}
+\item{model_par}{List of parameters for a model function}
 
-\item{sigma}{Vector of sigmas in Gauss function for each dimension}
+\item{model_name}{Name of a model}
+
+\item{stochastic_term}{A number (usually in the range \code{[0,1]}) of stochastic term in the dataset \code{stat.sim}}
+
+\item{par.truth}{Truth parameter value to check result of estimation}
 
 \item{cores}{Number of cores for parallel calculation with iterations}
 }
