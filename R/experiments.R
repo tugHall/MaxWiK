@@ -129,8 +129,8 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
     ### Get MSE 
     MSE = NULL
     if ( !is.na( par.est )[1] ){
-        model_par_all  =  list( model_par, parameter = par.est, 
-                                x0 = par.truth, stat.obs = stat.obs )
+        model_par_all  =  c( model_par, list( parameter = par.est, 
+                                x0 = par.truth, stat.obs = stat.obs ) )
         sim_est  =  do.call( model, model_par_all )
         MSE  =  MSE_sim(stat.obs = stat.obs, stat.sim = sim_est )  # sum( ( par.truth - par.est ) ** 2  )
     }
