@@ -31,7 +31,7 @@
 Get_call  <-  function( method_name, kernel_name = '', dimension, iteration, 
                         stat.obs, stat.sim, par.sim, G = NULL, 
                         model_par = list(name = 'Gaussian', 
-                                         noise = 0, parameter = 1, sigma = 1, A = 1 ) ){
+                                         noise = 0, sigma = 1, A = 1 ) ){
     
     n_min  =  100 
     time_start  =  Sys.time( )
