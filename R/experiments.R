@@ -169,14 +169,14 @@ Get_call_all_methods  <-  function( model_name, dimension, stochastic_term, iter
                                          'iKernel', 'iKernel') 
                               )
     
-    for( it in iterations ){
-         DF_1  =  mclapply( 1:nrow(Meth_Kern) , FUN = function( mk ){     
+    for( mk in 1:nrow(Meth_Kern) ){
+         DF_1  =  mclapply( iterations, FUN = function( x ){     
                         Get_call(  method_name =  as.character( Meth_Kern$Method[mk] ), 
                                    kernel_name =  as.character( Meth_Kern$Kernel[mk] ), 
                                    model_name  =  model_name, 
                                    dimension   =  dimension, 
                                    stochastic_term  =  stochastic_term, 
-                                   iteration  =  it,
+                                   iteration  =  x,
                                    stat.obs   =  stat.obs, 
                                    stat.sim   =  stat.sim, 
                                    par.sim    =  par.sim, 
@@ -195,8 +195,8 @@ Get_call_all_methods  <-  function( model_name, dimension, stochastic_term, iter
         # If error in some core(s):
         if ( any( bad ) ){
             its = which( bad )
-            DF_3  =   data.frame(   method_name = NA, # as.character( Meth_Kern$Method[mk] ),
-                                    kernel_name = NA, # as.character( Meth_Kern$Kernel[mk] ),
+            DF_3  =   data.frame(   method_name = as.character( Meth_Kern$Method[mk] ),
+                                    kernel_name = as.character( Meth_Kern$Kernel[mk] ),
                                     model_name  = model_name,
                                     dimension   = dimension, 
                                     stochastic_term = stochastic_term,
