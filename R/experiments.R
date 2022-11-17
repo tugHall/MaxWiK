@@ -196,9 +196,9 @@ Get_call_all_methods  <-  function( dimension, iterations, stat.obs, stat.sim,
             its = which( bad )
             DF_3  =   data.frame(   method_name = as.character( Meth_Kern$Method[mk] ),
                                     kernel_name = as.character( Meth_Kern$Kernel[mk] ),
-                                    model_name  = model_name,
+                                    model_name  = model_par$name,
                                     dimension   = dimension, 
-                                    stochastic_term = stochastic_term,
+                                    stochastic_term = model_par$noise,
                                     MSE = NA, 
                                     running_time = NA, 
                                     iteration = NA ) 

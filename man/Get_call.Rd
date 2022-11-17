@@ -14,13 +14,12 @@ Get_call(
   stat.sim,
   par.sim,
   G = NULL,
+  par.truth,
   model_par = list(name = "Gaussian", noise = 0, sigma = 1, A = 1)
 )
 
 Get_call_all_methods(
-  model_name,
   dimension,
-  stochastic_term,
   iterations,
   stat.obs,
   stat.sim,
@@ -28,7 +27,7 @@ Get_call_all_methods(
   G,
   par.truth,
   cores = 4,
-  sigma = 1
+  model_par = list(name = "Gaussian", noise = 0, sigma = 1, A = 1)
 )
 }
 \arguments{
@@ -48,13 +47,9 @@ Get_call_all_methods(
 
 \item{G}{Matrix of similarities for K2-ABC based on isolation kernel}
 
-\item{model_par}{List of parameters for a model function}
-
-\item{model_name}{Name of a model}
-
-\item{stochastic_term}{A number (usually in the range \code{[0,1]}) of stochastic term in the dataset \code{stat.sim}}
-
 \item{par.truth}{Truth parameter value to check result of estimation}
+
+\item{model_par}{List of parameters for a model function}
 
 \item{cores}{Number of cores for parallel calculation with iterations}
 }
