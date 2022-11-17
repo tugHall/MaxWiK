@@ -144,7 +144,7 @@ linear_model  <-  function( d = 1, x0 = 3, probability = TRUE, noise = 0.2,
 #' @examples
 #' NULL
 model  <-  function( name = c( 'Gaussian', 'Linear' )[1], 
-                     parameter, x0, stat.obs, noise = 0, sigma = 1 ){
+                     parameter, x0, stat.obs, noise = 0, sigma = 1, A = 1 ){
 
     d = length( x0 )
     if ( length( sigma ) < d )  sigma = rep( sigma, d )
@@ -153,7 +153,7 @@ model  <-  function( name = c( 'Gaussian', 'Linear' )[1],
     
     if ( name == 'Gaussian' ){
         for( i in 1:d ){
-            sim[ 1, i ]  = exp( x = - ( parameter[1 , i ] - x0[ i ] ) ** 2 / 2 / sigma[i] ) + noise * runif(1)
+            sim[ 1, i ]  = A * exp( x = - ( parameter[1 , i ] - x0[ i ] ) ** 2 / 2 / sigma[i] ) + noise * runif(1)
         }
     } else {
         if ( name == 'Linear' ){
