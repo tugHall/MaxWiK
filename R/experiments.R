@@ -14,7 +14,7 @@
 #' @param par.sim Data frame of parameters
 #' @param G Matrix of similarities for K2-ABC based on isolation kernel
 #' @param par.truth Truth parameter value to check result of estimation
-#' @param sigma Vector of sigmas in Gauss function for each dimension
+#' @param model_par List of parameters for a model function
 #'
 #' @return \code{Get_call()} returns the list: \cr
 #' method_name = method_name, \cr
@@ -28,8 +28,10 @@
 #' 
 #' @examples
 #' NULL
-Get_call  <-  function( method_name, kernel_name = '', model_name, dimension, stochastic_term, iteration, 
-                        stat.obs, stat.sim, par.sim, G = NULL, par.truth, sigma = 1 ){
+Get_call  <-  function( method_name, kernel_name = '', dimension, iteration, 
+                        stat.obs, stat.sim, par.sim, G = NULL, 
+                        model_par = list(name = 'Gaussian', 
+                                         noise = 0, parameter = 1, sigma = 1, A = 1 ) ){
     
     n_min  =  100 
     time_start  =  Sys.time( )
@@ -127,9 +129,9 @@ Get_call  <-  function( method_name, kernel_name = '', model_name, dimension, st
     ### Get MSE 
     MSE = NULL
     if ( !is.na( par.est )[1] ){
-        sim_est  =  model( name = model_name, parameter = par.est, 
-                           x0 = par.truth, stat.obs = stat.obs, 
-                           noise = stochastic_term, sigma = sigma )
+        model_par_all  =  list( model_par, parameter = par.est, 
+                                x0 = par.truth, stat.obs = stat.obs )
+        sim_est  =  do.call( model, model_par_all )
         MSE  =  MSE_sim(stat.obs = stat.obs, stat.sim = sim_est )  # sum( ( par.truth - par.est ) ** 2  )
     }
     
