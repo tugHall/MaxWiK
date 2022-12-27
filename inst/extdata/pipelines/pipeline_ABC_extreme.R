@@ -126,18 +126,17 @@ for( itt in 1:itts ){
                           check_pos_def = FALSE )
     
     G = matrix( data = ikern$similarity, ncol = 1 )
-    DF_new  =  Get_call_all_methods(    
-        model_name = 'Gaussian', 
-        dimension  = dimension,
-        stochastic_term = stochastic_term, 
-        iterations  =  itt,
-        stat.obs = stat.obs, 
-        stat.sim = stat.sim, 
-        par.sim  = par.sim, 
-        G        = G, 
-        par.truth  =  par.truth, 
-        cores = cores, 
-        sigma = sigma )
+    DF_new  =  Get_call_all_methods(
+                                    dimension  = dimension,
+                                    iterations  =  itt,
+                                    stat.obs = stat.obs, 
+                                    stat.sim = stat.sim, 
+                                    par.sim  = par.sim, 
+                                    G        = G, 
+                                    par.truth  =  par.truth, 
+                                    cores = cores, 
+                                    model_par = list(name = 'Gaussian', 
+                                                     noise = 0, sigma = sigma, A = A ))
     DF  =  rbind( DF, DF_new )
 }
 
