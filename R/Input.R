@@ -5,7 +5,7 @@
 
 #' The model of simulations that is based on Gaussian functions for each dimension 
 #'
-#' @description The function \code{Gaussian_model()} allows to generate 
+#' @description The function \code{get_dataset_of_Gaussian_model()} allows to generate 
 #' parameters and statistics of simulations that are based on Gaussian function for each dimension: \cr
 #' \code{f( x ) = { exp( - (x1-x01)^2 / 2 ), ..., exp( - (xn-x0n)^2 / 2 )  } = { y1, y2, ..., yn } } is a vector of output data
 #' 
@@ -14,11 +14,12 @@
 #' @param x0 Numeric vector with length of dimensionality of data frame, 
 #' that contents the truth value of parameter. Each number in the vector should be within the range r
 #' @param probability Logical, if TRUE then apply uneven distribution for parameters generation
-#' @param n Integer number of points in data frames
-#' @param r Range \code{r = c(min, max)}, by default  \code{r = range(0,10)}
-#' @param A Exponent multiplication factor
+#' @param n Integer number of points in data frame
+#' @param r Range \code{r = c(min, max)}, by default  \code{r = range(0,10)} for each dimension
+#' @param A Vecctor of exponent multiplication factors
+#' @param sigma Vector of sigmas in Gaussian function
 #'
-#' @return The function \code{Gaussian_model()} returns list of two objects: \cr
+#' @return The function \code{get_dataset_of_Gaussian_model()} returns list of two objects: \cr
 #' - stat.sim - data frame of simulations statistics,
 #' - par.sim - data frame of parameters,
 #' - stat.obs - data frame of an observation point.
@@ -27,8 +28,9 @@
 #' 
 #' @examples
 #' NULL
-Gaussian_model  <-  function( d = 1, x0 = 3, probability = TRUE,
-                                    n = 1000, r = range(0,10), noise = 0, A = 1 ) {
+get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0, 
+                              A = 1, sigma = 1, par.sim,
+                              probability = TRUE, n = 1000 ) {
     # d is dimension of the parameter space x as well as output space y
     # x0 is a vector of truth observation and max position of exp function
     # n is a number of simulations
@@ -65,11 +67,13 @@ Gaussian_model  <-  function( d = 1, x0 = 3, probability = TRUE,
 }
 
 
-#' @describeIn Gaussian_model  Function to get output of Gaussian function for d dimension case
+#' @describeIn get_dataset_of_Gaussian_model  Function to get output of Gaussian function for d dimension case
 #'
-#' @param sigma Vector of sigmas in Gaussian function
-#'
+#' @description The function \code{Gauss_function()} is used as 
+#' a model based on Gaussian function for multidimensional case.
+#' 
 #' @return \code{Gauss_function()} returns output of Gaussian function for d dimensions 
+#' 
 #' @export
 #'
 #' @examples
@@ -91,7 +95,7 @@ Gauss_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0,
 
 
 
-#' @describeIn Gaussian_model The model of simulations that is based on linear functions for each dimension 
+#' @describeIn get_dataset_of_Gaussian_model The model of simulations that is based on linear functions for each dimension 
 #'
 #' @description The function \code{linear_model()} allows to generate 
 #' parameters and statistics of simulations that are based on linear function for each dimension: \cr

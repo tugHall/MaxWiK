@@ -38,7 +38,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
     check_packages()
 
     if ( model == 'Gaussian' ) {
-        input = Gaussian_model( d = d, x0 = x0, probability = probability, 
+        input = get_dataset_of_Gaussian_model( d = d, x0 = x0, probability = probability, 
                                 n = n, r = r)
     } else {
         input  =  linear_model( d = d, x0 = x0, probability = probability, 
@@ -125,7 +125,7 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
     check_packages()
 
     if ( model == 'Gaussian' ) {
-        input = Gaussian_model( d = d, x0 = x0, probability = probability, 
+        input = get_dataset_of_Gaussian_model( d = d, x0 = x0, probability = probability, 
                                 n = n, r = r)
     } else {
         input  =  linear_model( d = d, x0 = x0, probability = probability, 

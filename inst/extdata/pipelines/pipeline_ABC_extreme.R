@@ -87,7 +87,7 @@ Number_of_points  =  max( c( 500 * dimension, restrict_points_number ) )
 itts  =  2 
 
 for( itt in 1:itts ){
-    input = Gaussian_model( d = dimension, x0 = x0, probability = FALSE, 
+    input = get_dataset_of_Gaussian_model( d = dimension, x0 = x0, probability = FALSE, 
                             n = Number_of_points, r = rng, A = A,
                             noise = stochastic_term )
     

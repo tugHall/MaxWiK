@@ -253,7 +253,7 @@ experiment_models  <-  function( file_name = 'output.txt',
                 Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
                 
                 if ( model == 'Gaussian' ) {
-                    input = Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
+                    input = get_dataset_of_Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
                                             n = Number_of_points, r = rng,
                                             noise = stochastic_term )
                 }
