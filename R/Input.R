@@ -65,6 +65,32 @@ Gaussian_model  <-  function( d = 1, x0 = 3, probability = TRUE,
 }
 
 
+#' @describeIn Gaussian_model  Function to get output of Gaussian function for d dimension case
+#'
+#' @param sigma Vector of sigmas in Gaussian function
+#'
+#' @return \code{Gauss_function()} returns output of Gaussian function for d dimensions 
+#' @export
+#'
+#' @examples
+#' NULL
+Gauss_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0, 
+                              A = 1, sigma = 1, par.sim1 ){
+    
+    par.sim  =   unlist( as.vector( par.sim1 ) )
+    sim1  =  data.frame( matrix( NA, nrow = 1, ncol = d ) )
+    names( sim1 )  =  paste0( 'Y', 1:d )
+    for( i in 1:d ){
+        sim1[ 1, i ]  = A[ i ] * exp( x = - ( par.sim[ i ] - x0[ i ] ) ** 2 / 2 / sigma[ i ] ) + 
+            runif( n = 1, min = -0.5, max = 0.5 ) * noise
+    }
+    
+    return( sim1 )
+}
+
+
+
+
 #' @describeIn Gaussian_model The model of simulations that is based on linear functions for each dimension 
 #'
 #' @description The function \code{linear_model()} allows to generate 
