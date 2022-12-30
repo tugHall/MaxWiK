@@ -57,7 +57,7 @@ if ( file.exists( file_name) ) unlink( file_name )
 
 x0     =  c(10, 50, 90, 130, 180, 280, 390, 430, 520, 630, 1010, 1050, 1090, 1130, 1180, 1280, 1390, 1430, 1520, 1630)
 par.truth  =  as.data.frame( matrix( data = x0, nrow = 1 )  )
-names( par.truth )  =  paste0( 'x', 1:length( x0 ) )
+names( par.truth )  =  paste0( 'X', 1:length( x0 ) )
 sigma  =  rep( 500, length( x0 ) )
 A = 250
 
