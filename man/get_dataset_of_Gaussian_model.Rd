@@ -13,7 +13,6 @@ get_dataset_of_Gaussian_model(
   noise = 0,
   A = 1,
   sigma = 1,
-  par.sim,
   probability = TRUE,
   n = 1000
 )
@@ -47,9 +46,9 @@ that contents the truth value of parameter. Each number in the vector should be 
 
 \item{noise}{Noise factor, implemented as coefficient in \code{f(x) = ... + noise * runif(1)}}
 
-\item{A}{Vecctor of exponent multiplication factors}
+\item{A}{Vector of exponent multiplication factors}
 
-\item{sigma}{Vector of sigmas in Gaussian function}
+\item{sigma}{Vector of sigmas in Gaussian function. Length of vector should be equal d.}
 
 \item{probability}{Logical, if TRUE then apply uneven distribution for parameters generation}
 
