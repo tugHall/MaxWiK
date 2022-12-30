@@ -16,8 +16,8 @@
 #' @param probability Logical, if TRUE then apply uneven distribution for parameters generation
 #' @param n Integer number of points in data frame
 #' @param r Range \code{r = c(min, max)}, by default  \code{r = range(0,10)} for each dimension
-#' @param A Vecctor of exponent multiplication factors
-#' @param sigma Vector of sigmas in Gaussian function
+#' @param A Vector of exponent multiplication factors
+#' @param sigma Vector of sigmas in Gaussian function. Length of vector should be equal d.
 #'
 #' @return The function \code{get_dataset_of_Gaussian_model()} returns list of two objects: \cr
 #' - stat.sim - data frame of simulations statistics,
@@ -28,9 +28,9 @@
 #' 
 #' @examples
 #' NULL
-get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0, 
-                              A = 1, sigma = 1, par.sim,
-                              probability = TRUE, n = 1000 ) {
+get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10), 
+                                             noise = 0, A = 1, sigma = 1, 
+                                             probability = TRUE, n = 1000 ) {
     # d is dimension of the parameter space x as well as output space y
     # x0 is a vector of truth observation and max position of exp function
     # n is a number of simulations
@@ -39,11 +39,16 @@ get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10), noi
     
     # Define and generate the parameters:
     par.sim  =  data.frame( matrix( NA, nrow = n, ncol = d ) )
-    names( par.sim )  =  paste0( 'x', 1:d )
+    names( par.sim )  =  paste0( 'X', 1:d )
     for( i in 1:d ){
         rnd  =  runif( 10 * n , min = r[1], max = r[2] )
         if ( probability ) { 
-            prob  =  1 - exp( x = - ( rnd - x0[ i ] ) ** 2 / 2 )
+            prob  =  lapply( rnd, FUN = function( x ){ 
+                ( A[ i ] - Gauss_function( d = 1, x0 = x0[ i ], 
+                                           r = r, noise = noise, A = A[ i ], sigma = sigma[ i ], 
+                                           par.sim1 = as.data.frame(x) ) ) / A[ i ]
+                            } )
+            prob  =  unlist( prob )
         } else {
             prob  =  rep( 1, length( rnd ))
         }
@@ -54,8 +59,13 @@ get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10), noi
     stat.sim  =  data.frame( matrix( NA, nrow = n, ncol = d ) )
     names( stat.sim )  =  paste0( 'Y', 1:d )
     for( i in 1:d ){
-        stat.sim[ , i ]  = A * exp( x = - ( par.sim[ , i ] - x0[ i ] ) ** 2 / 2 ) + 
-            runif( n = n, min = -0.5, max = 0.5 ) * noise
+        stat.sim[ , i ]  = unlist( lapply( X = par.sim[ , i ], FUN = function( x ){ 
+            Gauss_function( d = 1, x0 = x0[ i ], 
+                                       r = r, noise = noise, A = A[ i ], sigma = sigma[ i ], 
+                                       par.sim1 = x )
+                            } )   )
+            # A * exp( x = - ( par.sim[ , i ] - x0[ i ] ) ** 2 / 2 ) + 
+            # runif( n = n, min = -0.5, max = 0.5 ) * noise
     }
     
     stat.obs  =  data.frame( NULL )
@@ -85,7 +95,7 @@ Gauss_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0,
     sim1  =  data.frame( matrix( NA, nrow = 1, ncol = d ) )
     names( sim1 )  =  paste0( 'Y', 1:d )
     for( i in 1:d ){
-        sim1[ 1, i ]  = A[ i ] * exp( x = - ( par.sim[ i ] - x0[ i ] ) ** 2 / 2 / sigma[ i ] ) + 
+        sim1[ 1, i ]  = A[ i ] * exp( x = - ( par.sim[ i ] - x0[ i ] ) ** 2 / 2 / sigma[ i ] / sigma[ i ] ) + 
             runif( n = 1, min = -0.5, max = 0.5 ) * noise
     }
     
@@ -121,7 +131,7 @@ linear_model  <-  function( d = 1, x0 = 3, probability = TRUE, noise = 0.2,
     
     # Define and generate the parameters:
     par.sim  =  data.frame( matrix( NA, nrow = n, ncol = d ) )
-    names( par.sim )  =  paste0( 'x', 1:d )
+    names( par.sim )  =  paste0( 'X', 1:d )
     for( i in 1:d ){
         rnd  =  runif( 10 * n , min = r[1], max = r[2] )
         if ( probability ) { 
