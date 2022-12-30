@@ -253,9 +253,11 @@ experiment_models  <-  function( file_name = 'output.txt',
                 Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
                 
                 if ( model == 'Gaussian' ) {
-                    input = get_dataset_of_Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
-                                            n = Number_of_points, r = rng,
-                                            noise = stochastic_term )
+                    model_par  =  list( d = dimension, x0 = x0, probability = TRUE, 
+                                        n = Number_of_points, r = rng,
+                                        noise = stochastic_term )
+
+                    input = do.call( what = get_dataset_of_Gaussian_model, args = model_par )
                 }
                 if ( model == 'Linear' ) {
                     input  =  linear_model( d = dimension, x0 = x0, probability = TRUE, 
@@ -290,16 +292,18 @@ experiment_models  <-  function( file_name = 'output.txt',
                                       check_pos_def = FALSE )
                 
                 G = matrix( data = ikern$similarity, ncol = 1 )
+
                 DF_new  =  Get_call_all_methods(    
-                                    model_name = model, 
+                                    # model_name = model, Moved to par.model
                                     dimension  = dimension,
-                                    stochastic_term = stochastic_term, 
+                                    # stochastic_term = stochastic_term, 
                                     iterations  =  1:12,
                                     stat.obs = stat.obs, 
                                     stat.sim = stat.sim, 
                                     par.sim  = par.sim, 
                                     G        = G, 
-                                    par.truth  =  x0 )
+                                    par.truth  =  x0, cores = 4, 
+                                    model_par = model_par )
                 DF  =  rbind( DF, DF_new )
                 
                 if ( file.exists( file_name ) ){
