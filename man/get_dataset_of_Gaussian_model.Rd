@@ -42,7 +42,7 @@ linear_model(
 \item{x0}{Numeric vector with length of dimensionality of data frame,
 that contents the truth value of parameter. Each number in the vector should be within the range r}
 
-\item{r}{Range \code{r = c(min, max)}, by default  \code{r = range(0,10)} for each dimension}
+\item{r}{Range \code{r = c(min, max)}, by default  \code{r = range(0,10)} for all the dimensions}
 
 \item{noise}{Noise factor, implemented as coefficient in \code{f(x) = ... + noise * runif(1)}}
 
