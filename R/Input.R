@@ -15,7 +15,7 @@
 #' that contents the truth value of parameter. Each number in the vector should be within the range r
 #' @param probability Logical, if TRUE then apply uneven distribution for parameters generation
 #' @param n Integer number of points in data frame
-#' @param r Range \code{r = c(min, max)}, by default  \code{r = range(0,10)} for each dimension
+#' @param r Range \code{r = c(min, max)}, by default  \code{r = range(0,10)} for all the dimensions
 #' @param A Vector of exponent multiplication factors
 #' @param sigma Vector of sigmas in Gaussian function. Length of vector should be equal d.
 #'
@@ -31,12 +31,7 @@
 get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10), 
                                              noise = 0, A = 1, sigma = 1, 
                                              probability = TRUE, n = 1000 ) {
-    # d is dimension of the parameter space x as well as output space y
-    # x0 is a vector of truth observation and max position of exp function
-    # n is a number of simulations
-    # r is a range for all x
-    # A is an exponent multiplication factor
-    
+
     # Define and generate the parameters:
     par.sim  =  data.frame( matrix( NA, nrow = n, ncol = d ) )
     names( par.sim )  =  paste0( 'X', 1:d )
@@ -70,14 +65,14 @@ get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10),
     
     stat.obs  =  data.frame( NULL )
     for ( i in 1:d ){
-        stat.obs[ 1, paste0( 'Y', i ) ]  =  A
+        stat.obs[ 1, paste0( 'Y', i ) ]  =  A[ i ]
     }
     
     return( list( stat.sim = stat.sim, par.sim = par.sim, stat.obs = stat.obs )  )
 }
 
 
-#' @describeIn get_dataset_of_Gaussian_model  Function to get output of Gaussian function for d dimension case
+#' @describeIn get_dataset_of_Gaussian_model Function to get output of Gaussian function for d dimension case
 #'
 #' @description The function \code{Gauss_function()} is used as 
 #' a model based on Gaussian function for multidimensional case.
@@ -103,6 +98,31 @@ Gauss_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0,
 }
 
 
+
+
+#' @describeIn get_dataset_of_Linear_model Function to get output of Linear function for d dimension case
+#'
+#' @description The function \code{Linear_function()} is used as 
+#' a model based on Linear function for multidimensional case.
+#' 
+#' @return \code{Linear_function()} returns output of Linear function for d dimensions 
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+Linear_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0, 
+                              A = 1, par.sim1 ){
+    if ( any(x0 == 0 ) )  stop( 'X0 parameters should be non-zeros for Linear model')
+    par.sim  =   unlist( as.vector( par.sim1 ) )
+    sim1  =  data.frame( matrix( NA, nrow = 1, ncol = d ) )
+    names( sim1 )  =  paste0( 'Y', 1:d )
+    for( i in 1:d ){
+        sim1[ 1, i ]  = A[ i ] * par.sim[ i ] / x0[ i ]  +
+                                  runif( n = 1, min = -0.5, max = 0.5 ) * noise
+    }
+    return( sim1 )
+}
 
 
 #' @describeIn get_dataset_of_Gaussian_model The model of simulations that is based on linear functions for each dimension 
@@ -160,51 +180,6 @@ linear_model  <-  function( d = 1, x0 = 3, probability = TRUE, noise = 0.2,
     return( list( stat.sim = stat.sim, par.sim = par.sim, stat.obs = stat.obs )  )
 }
 
-
-
-
-
-
-
-# Simple models -----------------------------------------------------------
-
-
-#' Model definition for sampler to calculate one simulation
-#'
-#' @param name Name of a model, can be either \code{ 'Gaussian' or 'Linear' }
-#' @param parameter Value of a parameter
-#' @param x0 True value of parameter
-#' @param stat.obs Data frame of statistics of observation point
-#' @param noise Value of stochastic term 
-#'
-#' @return \code{model()} returns data frame with a result of a simulation based on the model
-#' 
-#' @export
-#'
-#' @examples
-#' NULL
-model  <-  function( name = c( 'Gaussian', 'Linear' )[1], 
-                     parameter, x0, stat.obs, noise = 0, sigma = 1, A = 1 ){
-
-    d = length( x0 )
-    if ( length( sigma ) < d )  sigma = rep( sigma, d )
-    sim = as.data.frame( matrix( data = 0, nrow = 1, ncol = d ) ) 
-    names( sim )  =  names( stat.obs )
-    
-    if ( name == 'Gaussian' ){
-        for( i in 1:d ){
-            sim[ 1, i ]  = A * exp( x = - ( parameter[1 , i ] - x0[ i ] ) ** 2 / 2 / sigma[i] ) + noise * runif(1)
-        }
-    } else {
-        if ( name == 'Linear' ){
-            for( i in 1:d ){
-                sim[ 1, i ]  =  1  +  ( parameter[1 , i ] - x0[ i ] ) / x0[ i ] + noise * runif(1)
-            }
-        } else stop( 'This function is not defined' )
-    }    
-    
-    return( sim )
-}
 
 
 #' @describeIn iKernelABC Function to restrict data in the size to accelerate the calculations 
