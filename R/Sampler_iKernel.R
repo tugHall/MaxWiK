@@ -320,8 +320,8 @@ experiment_samplers  <-  function( file_name = './output.txt',
                                 noise = stochastic_term )
     }
     if ( model_name == 'Linear' ) {
-        input  =  linear_model( d = dimension, x0 = x0, probability = TRUE, 
-                                n = Number_of_points, r = rng,
+        input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
+                                n = Number_of_points, r = rng, A = 100, 
                                 noise = stochastic_term )
     }
     

@@ -188,62 +188,6 @@ Linear_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0,
 }
 
 
-#' @describeIn get_dataset_of_Gaussian_model The model of simulations that is based on linear functions for each dimension 
-#'
-#' @description The function \code{linear_model()} allows to generate 
-#' parameters and statistics of simulations that are based on linear function for each dimension: \cr
-#' \code{f( x ) = { 1  +  ( x1 - x01 ) / x01 + noise_1, ..., 1  +  ( xn - x0n ) / x0n + noise_n  } = { y1, y2, ..., yn } } is a vector of output data
-#' 
-#' @param noise Noise factor, implemented as coefficient in \code{f(x) = ... + noise * runif(1)}
-#'
-#' @return The function \code{linear_model()} returns list of two objects: \cr
-#' - stat.sim - data frame of simulations statistics,
-#' - par.sim - data frame of parameters,
-#' - stat.obs - data frame of an observation point.
-#' 
-#' @export 
-#'
-#' @examples
-#' NULL
-linear_model  <-  function( d = 1, x0 = 3, probability = TRUE, noise = 0.2,
-                            n = 1000, r = range(0,10) ) {
-    # d is dimension of the parameter space x as well as output space y
-    # x0 is a vector of truth observation and max position of exp function
-    # n is a number of simulations
-    # r is a range for all x
-    
-    # Define and generate the parameters:
-    par.sim  =  data.frame( matrix( NA, nrow = n, ncol = d ) )
-    names( par.sim )  =  paste0( 'X', 1:d )
-    for( i in 1:d ){
-        rnd  =  runif( 10 * n , min = r[1], max = r[2] )
-        if ( probability ) { 
-            prob  =  1 - exp( x = - ( rnd - x0[ i ] ) ** 2 / 2 )
-        } else {
-            prob  =  rep( 1, length( rnd ))
-        }
-        par.sim[ , i ]  =  sample( x = rnd, size = n, 
-                                   replace = FALSE, prob = prob )
-    }
-    
-    if ( min( x0 ) <= 0 ) stop( 'Each element of x0 vector should be positive. ')
-    stat.sim  =  data.frame( matrix( NA, nrow = n, ncol = d ) )
-    names( stat.sim )  =  paste0( 'Y', 1:d )
-    for( i in 1:d ){
-        stat.sim[ , i ]  = 1 + ( par.sim[ , i ] - x0[ i ] ) / x0[ i ] + 
-            runif( n = n, min = -0.5, max = 0.5 ) * noise
-    }
-    
-    
-    stat.obs  =  data.frame( NULL )
-    for ( i in 1:d ){
-        stat.obs[ 1, paste0( 'Y', i ) ]  =  1
-    }
-    
-    return( list( stat.sim = stat.sim, par.sim = par.sim, stat.obs = stat.obs )  )
-}
-
-
 
 #' @describeIn iKernelABC Function to restrict data in the size to accelerate the calculations 
 #' 

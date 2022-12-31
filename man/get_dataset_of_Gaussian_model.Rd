@@ -3,7 +3,6 @@
 \name{get_dataset_of_Gaussian_model}
 \alias{get_dataset_of_Gaussian_model}
 \alias{Gauss_function}
-\alias{linear_model}
 \title{Function to get dataset of simulations that is based on Gaussian functions for each dimension}
 \usage{
 get_dataset_of_Gaussian_model(
@@ -26,15 +25,6 @@ Gauss_function(
   sigma = 1,
   par.sim1
 )
-
-linear_model(
-  d = 1,
-  x0 = 3,
-  probability = TRUE,
-  noise = 0.2,
-  n = 1000,
-  r = range(0, 10)
-)
 }
 \arguments{
 \item{d}{Dimension of the parameter and model space}
@@ -43,8 +33,6 @@ linear_model(
 that contents the truth value of parameter. Each number in the vector should be within the range r}
 
 \item{r}{Range \code{r = c(min, max)}, by default  \code{r = range(0,10)} for all the dimensions}
-
-\item{noise}{Noise factor, implemented as coefficient in \code{f(x) = ... + noise * runif(1)}}
 
 \item{A}{Vector of exponent multiplication factors}
 
@@ -63,13 +51,6 @@ The function \code{get_dataset_of_Gaussian_model()} returns list of three object
 }
 
 \code{Gauss_function()} returns output of Gaussian function for d dimensions
-
-The function \code{linear_model()} returns list of two objects: \cr
-\itemize{
-\item stat.sim - data frame of simulations statistics,
-\item par.sim - data frame of parameters,
-\item stat.obs - data frame of an observation point.
-}
 }
 \description{
 The function \code{get_dataset_of_Gaussian_model()} allows to generate
@@ -78,20 +59,13 @@ parameters and statistics of simulations that are based on Gaussian function for
 
 The function \code{Gauss_function()} is used as
 a model based on Gaussian function for multidimensional case.
-
-The function \code{linear_model()} allows to generate
-parameters and statistics of simulations that are based on linear function for each dimension: \cr
-\code{f( x ) = { 1  +  ( x1 - x01 ) / x01 + noise_1, ..., 1  +  ( xn - x0n ) / x0n + noise_n  } = { y1, y2, ..., yn } } is a vector of output data
 }
 \section{Functions}{
 \itemize{
 \item \code{Gauss_function()}: Function to get output of Gaussian function for d dimension case
 
-\item \code{linear_model()}: The model of simulations that is based on linear functions for each dimension
-
 }}
 \examples{
-NULL
 NULL
 NULL
 }

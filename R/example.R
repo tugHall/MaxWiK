@@ -41,7 +41,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
         input = get_dataset_of_Gaussian_model( d = d, x0 = x0, probability = probability, 
                                 n = n, r = r)
     } else {
-        input  =  linear_model( d = d, x0 = x0, probability = probability, 
+        input  =  get_dataset_of_Linear_model( d = d, x0 = x0, probability = probability, 
                                  n = n, r = r)
     }
     stat.sim_origin  =  input$stat.sim
@@ -128,7 +128,7 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
         input = get_dataset_of_Gaussian_model( d = d, x0 = x0, probability = probability, 
                                 n = n, r = r)
     } else {
-        input  =  linear_model( d = d, x0 = x0, probability = probability, 
+        input  =  get_dataset_of_Linear_model( d = d, x0 = x0, probability = probability, 
                                 n = n, r = r)
     }
     stat.sim_origin  =  input$stat.sim

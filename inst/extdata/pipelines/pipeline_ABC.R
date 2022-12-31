@@ -88,7 +88,7 @@ for( model in models ){
                                         noise = stochastic_term )
             }
             if ( model == 'Linear' ) {
-                input  =  linear_model( d = dimension, x0 = x0, probability = TRUE, 
+                input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
                                         n = Number_of_points, r = rng,
                                         noise = stochastic_term )
             }
