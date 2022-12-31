@@ -378,7 +378,7 @@ experiment_samplers  <-  function( file_name = './output.txt',
     return( RES )
 }
 
-#' @describeIn Function to generate parameters and simulate a model based on MaxWiK algorithm 
+#' Function to generate parameters and simulate a model based on MaxWiK algorithm 
 #'
 #' @param model is a function to get output of simulation during sampling 
 #' @param arg0 is a list with arguments for a model function, so that arg0 is NOT changed during sampling
