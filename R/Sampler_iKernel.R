@@ -314,14 +314,17 @@ experiment_samplers  <-  function( file_name = './output.txt',
     x0  =  round( runif( n = dimension, min = rng[1], max = rng[2] ), digits = 4 )
     Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
     
+    A  =  ( ( 1:dimension ) + 5 ) * 100
+    sigma  =  rep( ( rng[2] - rng[1] ) / 10, dimension )
     if ( model_name == 'Gaussian' ) {
+        
         input = get_dataset_of_Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
-                                n = Number_of_points, r = rng,
+                                n = Number_of_points, r = rng, A = A, sigma = sigma, 
                                 noise = stochastic_term )
     }
     if ( model_name == 'Linear' ) {
         input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
-                                n = Number_of_points, r = rng, A = 100, 
+                                n = Number_of_points, r = rng, A = A, 
                                 noise = stochastic_term )
     }
     

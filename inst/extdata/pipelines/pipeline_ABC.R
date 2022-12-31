@@ -54,11 +54,11 @@ cores = 4
 # delete old file
 if ( file.exists( file_name) ) unlink( file_name )
 
-
 x0     =  c(10, 50, 90, 130, 180, 280, 390, 430, 520, 630, 1010, 1050, 1090, 1130, 1180, 1280, 1390, 1430, 1520, 1630)
-sigma  =  x0 / 5
+A  =  ( ( 1:length( dimensions ) ) + 5 ) * 100
+sigma  =  rep( ( rng[2] - rng[1] ) / 10, length( dimensions ) )
 x = 1:20000 / 10 
-A = 250
+
 f <- function( A, x, x0, sigma ){
     Gaus  =  function( A, x, x0, sigma ) A * exp( -( x - x0 ) ** 2 / sigma )
     y = sum( unlist( lapply( 1:length( x0 ), FUN = function( i ) Gaus( A = A, x = x,

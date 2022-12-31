@@ -37,12 +37,15 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
     # Attach packages from import list
     check_packages()
 
+    A  =  ( ( 1:d ) + 5 ) * 100
+    sigma  =  rep( ( r[2] - r[1] ) / 10, d )
+    
     if ( model == 'Gaussian' ) {
         input = get_dataset_of_Gaussian_model( d = d, x0 = x0, probability = probability, 
-                                n = n, r = r)
+                                n = n, r = r, noise = 0, A = A, sigma = sigma )
     } else {
         input  =  get_dataset_of_Linear_model( d = d, x0 = x0, probability = probability, 
-                                 n = n, r = r)
+                                 n = n, r = r, noise = 0, A = A )
     }
     stat.sim_origin  =  input$stat.sim
     stat.obs  =  input$stat.obs
@@ -124,13 +127,17 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
     # Attach packages from import list
     check_packages()
 
+    A  =  ( ( 1:d ) + 5 ) * 100
+    sigma  =  rep( ( r[2] - r[1] ) / 10, d )
+    
     if ( model == 'Gaussian' ) {
         input = get_dataset_of_Gaussian_model( d = d, x0 = x0, probability = probability, 
-                                n = n, r = r)
+                                               n = n, r = r, noise = 0, A = A, sigma = sigma )
     } else {
         input  =  get_dataset_of_Linear_model( d = d, x0 = x0, probability = probability, 
-                                n = n, r = r)
+                                               n = n, r = r, noise = 0, A = A )
     }
+    
     stat.sim_origin  =  input$stat.sim
     stat.obs  =  input$stat.obs
     par.sim_origin  =  input$par.sim

@@ -252,16 +252,19 @@ experiment_models  <-  function( file_name = 'output.txt',
                 x0  =  runif( n = dimension, min = rng[1], max = rng[2] )
                 Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
                 
+                A  =  ( ( 1:dimension ) + 5 ) * 100
+                sigma  =  rep( ( rng[2] - rng[1] ) / 10, dimension )
+                
                 if ( model == 'Gaussian' ) {
                     model_par  =  list( d = dimension, x0 = x0, probability = TRUE, 
-                                        n = Number_of_points, r = rng,
+                                        n = Number_of_points, r = rng, A = A, sigma = sigma, 
                                         noise = stochastic_term )
 
                     input = do.call( what = get_dataset_of_Gaussian_model, args = model_par )
                 }
                 if ( model == 'Linear' ) {
                     input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
-                                            n = Number_of_points, r = rng,
+                                            n = Number_of_points, r = rng, A = A,
                                             noise = stochastic_term )
                 }
                 
