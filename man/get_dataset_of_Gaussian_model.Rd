@@ -4,7 +4,7 @@
 \alias{get_dataset_of_Gaussian_model}
 \alias{Gauss_function}
 \alias{linear_model}
-\title{The model of simulations that is based on Gaussian functions for each dimension}
+\title{Function to get dataset of simulations that is based on Gaussian functions for each dimension}
 \usage{
 get_dataset_of_Gaussian_model(
   d = 1,
@@ -55,7 +55,7 @@ that contents the truth value of parameter. Each number in the vector should be 
 \item{n}{Integer number of points in data frame}
 }
 \value{
-The function \code{get_dataset_of_Gaussian_model()} returns list of two objects: \cr
+The function \code{get_dataset_of_Gaussian_model()} returns list of three objects: \cr
 \itemize{
 \item stat.sim - data frame of simulations statistics,
 \item par.sim - data frame of parameters,
