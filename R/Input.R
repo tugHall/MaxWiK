@@ -36,7 +36,7 @@ get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10),
         if ( probability ) { 
             prob  =  lapply( rnd, FUN = function( x ){ 
                 ( A[ i ] - Gauss_function( d = 1, x0 = x0[ i ], 
-                                           r = r, noise = noise, A = A[ i ], sigma = sigma[ i ], 
+                                           r = r, noise = 0, A = A[ i ], sigma = sigma[ i ], 
                                            par.sim1 = as.data.frame(x) ) ) / A[ i ]
                             } )
             prob  =  unlist( prob )
@@ -131,7 +131,7 @@ get_dataset_of_Linear_model  <-  function( d = 1, x0 = 3, r = range(0,10),
         if ( probability ) { 
             prob  =  lapply( rnd, FUN = function( x ){ 
                 ( A[ i ] - Gauss_function( d = 1, x0 = x0[ i ], 
-                                           r = r, noise = noise, A = A[ i ], sigma = (r[2]-r[1])/5, 
+                                           r = r, noise = 0, A = A[ i ], sigma = (r[2]-r[1])/5, 
                                            par.sim1 = as.data.frame(x) ) ) / A[ i ]
             } )
             prob  =  unlist( prob )
