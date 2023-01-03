@@ -34,6 +34,9 @@ that contents the truth value of parameter. Each number in the vector should be 
 
 \item{r}{Range \code{r = c(min, max)}, by default  \code{r = range(0,10)} for all the dimensions}
 
+\item{noise}{Number corresponding to noise level in the dataset. 0 means the absent of noise,
+1 means noise level is the same as amplitude, more than 1 means that a noise is greater than 'signal'.}
+
 \item{A}{Vector of exponent multiplication factors}
 
 \item{sigma}{Vector of sigmas in Gaussian function. Length of vector should be equal d.}
