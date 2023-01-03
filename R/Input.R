@@ -12,6 +12,8 @@
 #' @param probability Logical, if TRUE then apply uneven distribution for parameters generation
 #' @param n Integer number of points in data frame
 #' @param r Range \code{r = c(min, max)}, by default  \code{r = range(0,10)} for all the dimensions
+#' @param noise Number corresponding to noise level in the dataset. 0 means the absent of noise, 
+#' 1 means noise level is the same as amplitude, more than 1 means that a noise is greater than 'signal'. 
 #' @param A Vector of exponent multiplication factors
 #' @param sigma Vector of sigmas in Gaussian function. Length of vector should be equal d.
 #'
@@ -86,8 +88,8 @@ Gauss_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0,
     sim1  =  data.frame( matrix( NA, nrow = 1, ncol = d ) )
     names( sim1 )  =  paste0( 'Y', 1:d )
     for( i in 1:d ){
-        sim1[ 1, i ]  = A[ i ] * exp( x = - ( par.sim[ i ] - x0[ i ] ) ** 2 / 2 / sigma[ i ] / sigma[ i ] ) + 
-            runif( n = 1, min = -0.5, max = 0.5 ) * noise
+        sim1[ 1, i ]  = A[ i ] * ( exp( x = - ( par.sim[ i ] - x0[ i ] ) ** 2 / 2 / sigma[ i ] / sigma[ i ] ) + 
+            runif( n = 1, min = -0.5, max = 0.5 ) * noise )
     }
     
     return( sim1 )
@@ -181,8 +183,8 @@ Linear_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0,
     sim1  =  data.frame( matrix( NA, nrow = 1, ncol = d ) )
     names( sim1 )  =  paste0( 'Y', 1:d )
     for( i in 1:d ){
-        sim1[ 1, i ]  = A[ i ] * par.sim[ i ] / x0[ i ]  +
-                                  runif( n = 1, min = -0.5, max = 0.5 ) * noise
+        sim1[ 1, i ]  = A[ i ] * ( par.sim[ i ] / x0[ i ]  +
+                                  runif( n = 1, min = -0.5, max = 0.5 ) * noise )
     }
     return( sim1 )
 }
