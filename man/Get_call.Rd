@@ -15,7 +15,8 @@ Get_call(
   par.sim,
   G = NULL,
   par.truth,
-  model_par = list(name = "Gaussian", noise = 0, sigma = 1, A = 1)
+  model_function = Gauss_function,
+  model_par = list(d = 1, x0 = 3, r = range(0, 10), noise = 0, A = 1, sigma = 1)
 )
 
 Get_call_all_methods(
@@ -27,7 +28,8 @@ Get_call_all_methods(
   G,
   par.truth,
   cores = 4,
-  model_par = list(name = "Gaussian", noise = 0, sigma = 1, A = 1)
+  model_function = Gauss_function,
+  model_par = list(d = 1, x0 = 3, r = range(0, 10), noise = 0, A = 1, sigma = 1)
 )
 }
 \arguments{
@@ -48,6 +50,8 @@ Get_call_all_methods(
 \item{G}{Matrix of similarities for K2-ABC based on isolation kernel}
 
 \item{par.truth}{Truth parameter value to check result of estimation}
+
+\item{model_function}{Function that is used as function to calculate output for an estimated parameter}
 
 \item{model_par}{List of parameters for a model function}
 

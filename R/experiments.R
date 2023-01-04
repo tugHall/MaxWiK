@@ -12,6 +12,7 @@
 #' @param par.sim Data frame of parameters
 #' @param G Matrix of similarities for K2-ABC based on isolation kernel
 #' @param par.truth Truth parameter value to check result of estimation
+#' @param model_function Function that is used as function to calculate output for an estimated parameter
 #' @param model_par List of parameters for a model function
 #'
 #' @return \code{Get_call()} returns the list: \cr
@@ -28,8 +29,9 @@
 #' NULL
 Get_call  <-  function( method_name, kernel_name = '', dimension, iteration, 
                         stat.obs, stat.sim, par.sim, G = NULL, par.truth, 
-                        model_par = list(name = 'Gaussian', 
-                                         noise = 0, sigma = 1, A = 1 ) ){
+                        model_function  =  Gauss_function,
+                        model_par = list(d = 1, x0 = 3, r = range(0,10), noise = 0, 
+                                         A = 1, sigma = 1 ) ){
     
     n_min  =  100 
     time_start  =  Sys.time( )
@@ -127,9 +129,8 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
     ### Get MSE 
     MSE = NULL
     if ( !is.na( par.est )[1] ){
-        model_par_all  =  c( model_par, list( parameter = par.est, 
-                                x0 = par.truth, stat.obs = stat.obs ) )
-        sim_est  =  do.call( model, model_par_all )
+        model_par_all  =  c( model_par, list( par.sim1 = par.est ) )
+        sim_est  =  do.call( model_function, model_par_all )
         MSE  =  MSE_sim(stat.obs = stat.obs, stat.sim = sim_est )  # sum( ( par.truth - par.est ) ** 2  )
     }
     
@@ -158,8 +159,9 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
 #' NULL 
 Get_call_all_methods  <-  function( dimension, iterations, stat.obs, stat.sim, 
                                     par.sim, G, par.truth, cores = 4,
-                                    model_par = list(name = 'Gaussian', 
-                                                     noise = 0, sigma = 1, A = 1 ) ){
+                                    model_function  =  Gauss_function,
+                                    model_par = list(d = 1, x0 = 3, r = range(0,10), noise = 0, 
+                                                     A = 1, sigma = 1 ) ){
     
     DF  =  NULL
     Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 'Rejection', 
@@ -181,6 +183,7 @@ Get_call_all_methods  <-  function( dimension, iterations, stat.obs, stat.sim,
                                    par.sim    =  par.sim, 
                                    G          =  G, 
                                    par.truth  =  par.truth,
+                                   model_function  =  model_function,
                                    model_par  =  model_par
                                 )
         }, mc.cores  =  cores )
