@@ -130,6 +130,7 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
     MSE = NULL
     if ( !is.na( par.est )[1] ){
         model_par_all  =  c( model_par, list( par.sim1 = par.est ) )
+        model_par_all$noise  =  0 
         sim_est  =  do.call( model_function, model_par_all )
         MSE  =  MSE_sim(stat.obs = stat.obs, stat.sim = sim_est )  # sum( ( par.truth - par.est ) ** 2  )
     }
