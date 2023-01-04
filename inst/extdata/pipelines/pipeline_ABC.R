@@ -2,7 +2,7 @@ library('MaxWiK')
 
 # Please, pay attention running of pipeline will take 4-6 hours for 4 cores. 
 
-# DEfine the working folder:
+# Define the working folder:
 wd  =  '../Simulation'
 
 # And create it:
@@ -41,10 +41,13 @@ if ( FALSE ){
 
 file_name   =  'output.txt'
 models      =  c( 'Gaussian', 'Linear' )
-dimensions  =  (1:20)*2
-stochastic_terms   =   c( 0, 0.1, 0.3, 0.7, 1, 1.5 )
-rng  =  c( 0, 10 )   # range of parameters
-restrict_points_number  =  300
+dimensions  =  2  #  (1:20)*2
+stochastic_terms   =   c( 0, 0.5, 1, 2 )
+rng  =  c( 0, 1000 )   # range of parameters
+restrict_points_number  =  500
+d = max( dimensions )
+A      =  ( ( 1:d ) + 12 ) * 100  # Amplitude for Gauss function 
+sigma  =  rep( rng[2]/ 5, d )     # Sigma for Gauss function 
 
 #  By default number of processors in parallel calculations
 #             cores = 4 in the function Get_call_all_methods
@@ -54,24 +57,6 @@ cores = 4
 # delete old file
 if ( file.exists( file_name) ) unlink( file_name )
 
-x0     =  c(10, 50, 90, 130, 180, 280, 390, 430, 520, 630, 1010, 1050, 1090, 1130, 1180, 1280, 1390, 1430, 1520, 1630)
-A  =  ( ( 1:length( dimensions ) ) + 5 ) * 100
-sigma  =  rep( ( rng[2] - rng[1] ) / 10, length( dimensions ) )
-x = 1:20000 / 10 
-
-f <- function( A, x, x0, sigma ){
-    Gaus  =  function( A, x, x0, sigma ) A * exp( -( x - x0 ) ** 2 / sigma )
-    y = sum( unlist( lapply( 1:length( x0 ), FUN = function( i ) Gaus( A = A, x = x,
-                                        x0 = x0[ i ], sigma  =  sigma[ i ]  )  )  )  )
-    return( y )
-}
-
-
-y = sapply( 1:length( x ), FUN = function( i ) f( A = A, x = x[ i ], x0 = x0, sigma = sigma ) )
-
-plot( x, y, type = 'l', xlim = c( 0, 200 ) )
-
-#### ___________________________________________________________________
 
 DF = NULL   # Data frame to collect results of all the simulations
 for( model in models ){
@@ -84,13 +69,21 @@ for( model in models ){
             
             if ( model == 'Gaussian' ) {
                 input = get_dataset_of_Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
-                                        n = Number_of_points, r = rng,
+                                        n = Number_of_points, r = rng, 
+                                        A = A[1:dimension], sigma = sigma[1:dimension], 
                                         noise = stochastic_term )
+                model_par = list(noise = stochastic_term, 
+                                 sigma = sigma[1:dimension], 
+                                 A = A[1:dimension] ) 
+                model_function  =  Gauss_function
             }
             if ( model == 'Linear' ) {
                 input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
-                                        n = Number_of_points, r = rng,
+                                        n = Number_of_points, r = rng, A = A[1:dimension],
                                         noise = stochastic_term )
+                model_par = list( noise = stochastic_term, 
+                                  A = A[1:dimension] ) 
+                model_function  =  Linear_function
             }
             
             if ( is.null( input ) ) stop( 'Model name is incorrect' )
@@ -121,16 +114,19 @@ for( model in models ){
             
             G = matrix( data = ikern$similarity, ncol = 1 )
             DF_new  =  Get_call_all_methods(    
-                model_name = model, 
+                # model_name = model, 
                 dimension  = dimension,
-                stochastic_term = stochastic_term, 
-                iterations  =  1:12,
+                # stochastic_term = stochastic_term, 
+                iterations  =  1,
                 stat.obs = stat.obs, 
                 stat.sim = stat.sim, 
                 par.sim  = par.sim, 
                 G        = G, 
                 par.truth  =  x0, 
-                cores = cores )
+                cores = cores,
+                model_function = model_function, 
+                model_par = model_par )
+            
             DF  =  rbind( DF, DF_new )
             
             if ( file.exists( file_name ) ){
