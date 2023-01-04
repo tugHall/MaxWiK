@@ -5,7 +5,7 @@ RES  =  RES[ , 3:9]
 
 RES[ which( RES$method_kernel  ==  'Loclinear_' ), 'method_kernel' ]  =  'Loclinear'
 RES[ which( RES$method_kernel  ==  'Rejection_' ), 'method_kernel' ]  =  'Rejection'
-
+RES[ which( RES$method_kernel  ==  'Neuralnet_' ), 'method_kernel' ]  =  'Neuralnet'
 
 
 # Guassian model:
@@ -35,6 +35,7 @@ for( d in x ){
     }
 }
 
+library('ggplot2')
 
 # colors <- c( 'green', 'yellow', "red", 'black')
 # colors  =  colorRampPalette(c("red","orange","blue"),method="linear")
