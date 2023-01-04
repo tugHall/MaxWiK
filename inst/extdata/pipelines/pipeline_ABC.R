@@ -128,6 +128,7 @@ for( model in models ){
                 cores = cores,
                 model_function = model_function, 
                 model_par = model_par )
+            DF_new$model_name  =  model
             
             DF  =  rbind( DF, DF_new )
             
