@@ -41,12 +41,12 @@ if ( FALSE ){
 
 file_name   =  'output.txt'
 models      =  c( 'Gaussian', 'Linear' )
-dimensions  =  2  #  (1:20)*2
-stochastic_terms   =   c( 0, 0.5, 1, 2 )
+dimensions  =  (1:20)*2
+stochastic_terms   =   c( 0, 0.1, 0.5, 1, 2 )
 rng  =  c( 0, 1000 )   # range of parameters
 restrict_points_number  =  500
 d = max( dimensions )
-A      =  ( ( 1:d ) + 12 ) * 100  # Amplitude for Gauss function 
+A      =  ( ( 1:d ) + 12 ) * 100  # Amplitude for Gauss function / Linear function
 sigma  =  rep( rng[2]/ 5, d )     # Sigma for Gauss function 
 
 #  By default number of processors in parallel calculations
@@ -119,7 +119,7 @@ for( model in models ){
                 # model_name = model, 
                 dimension  = dimension,
                 # stochastic_term = stochastic_term, 
-                iterations  =  1,
+                iterations  =  1:12,
                 stat.obs = stat.obs, 
                 stat.sim = stat.sim, 
                 par.sim  = par.sim, 
