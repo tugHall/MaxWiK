@@ -72,17 +72,19 @@ for( model in models ){
                                         n = Number_of_points, r = rng, 
                                         A = A[1:dimension], sigma = sigma[1:dimension], 
                                         noise = stochastic_term )
-                model_par = list(noise = stochastic_term, 
-                                 sigma = sigma[1:dimension], 
-                                 A = A[1:dimension] ) 
+
+                model_par = list(d = dimension, x0 = x0, r = rng, 
+                                 A = A[1:dimension], sigma = sigma[1:dimension], 
+                                 noise = stochastic_term  ) 
                 model_function  =  Gauss_function
             }
             if ( model == 'Linear' ) {
                 input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
                                         n = Number_of_points, r = rng, A = A[1:dimension],
                                         noise = stochastic_term )
-                model_par = list( noise = stochastic_term, 
-                                  A = A[1:dimension] ) 
+                model_par = list( d = dimension, x0 = x0, r = rng, 
+                                  A = A[1:dimension],
+                                  noise = stochastic_term  ) 
                 model_function  =  Linear_function
             }
             
