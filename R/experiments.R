@@ -1,5 +1,5 @@
 
-### File to organize toy experiments
+### File to organize toy experiments which code is presented in pipeline_ABC.R 
 
 #' Function to call a method to get MSE
 #'
@@ -211,116 +211,6 @@ Get_call_all_methods  <-  function( dimension, iterations, stat.obs, stat.sim,
                 DF_3[ 1, 'iteration' ]  =  i
                 DF    =  rbind( DF, DF_3 )
             }
-        }
-    }
-    
-    return( DF )
-}
-
-#' Function to prepare toy experiments
-#' 
-#' @param file_name Name of file to output results
-#' @param models Names of models for simulation, by default
-#' \code{models = c( 'Gaussian', 'Linear' )}
-#' @param dimensions Dimensions of models, by default
-#' \code{ dimensions = (1:20)*2 }
-#' @param stochastic_terms Stochastic terms for each model, by default
-#' \code{ stochastic_terms  =  c( 0, 0.1, 0.3, 0.7, 1 ) }
-#' @param rng Range for each variable, by default
-#' \code{rng  =  c( 0,10 ) }
-#'
-#' @return \code{experiment_models()} returns list of results of experiments
-#' @export
-#'
-#' @examples
-#' NULL
-experiment_models  <-  function( file_name = 'output.txt', 
-                                 models = c( 'Gaussian', 'Linear' ),
-                                 dimensions = (1:20)*2, 
-                                 stochastic_terms  =  c( 0, 0.1, 0.3, 0.7, 1, 1.5 ),
-                                 rng  =  c( 0,10 ), 
-                                 restrict_points_number = 300 ){
-    
-    ### Check installation of libraries:
-    check_packages()
-    
-    # delete old file
-    if ( file.exists( file_name) ) unlink( file_name )
-    
-    DF = NULL
-    for( model in models ){
-        for( dimension in dimensions ){
-            for( stochastic_term in stochastic_terms ){
-                
-                input  =  NULL
-                x0  =  runif( n = dimension, min = rng[1], max = rng[2] )
-                Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
-                
-                A  =  ( ( 1:dimension ) + 5 ) * 100
-                sigma  =  rep( ( rng[2] - rng[1] ) / 10, dimension )
-                
-                if ( model == 'Gaussian' ) {
-                    model_par  =  list( d = dimension, x0 = x0, probability = TRUE, 
-                                        n = Number_of_points, r = rng, A = A, sigma = sigma, 
-                                        noise = stochastic_term )
-
-                    input = do.call( what = get_dataset_of_Gaussian_model, args = model_par )
-                }
-                if ( model == 'Linear' ) {
-                    input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
-                                            n = Number_of_points, r = rng, A = A,
-                                            noise = stochastic_term )
-                }
-                
-                if ( is.null( input ) ) stop( 'Model name is incorrect' )
-                stat.sim_origin  =  input$stat.sim
-                stat.obs  =  input$stat.obs
-                par.sim_origin  =  input$par.sim
-                rm( input )
-                
-                # Apply restict number of points:
-                tol = restrict_points_number / nrow( stat.sim_origin )
-                rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
-                                method = 'rejection', tol = tol )
-                
-                stat.sim  =  stat.sim_origin[ rej$region, ]
-                par.sim   =   par.sim_origin[ rej$region, ] 
-                
-                psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
-                                        stat.obs = stat.obs, talkative = FALSE, 
-                                        check_pos_def = FALSE, 
-                                        n_best = 8, cores = 4 )
-                
-                ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
-                                      param = par.sim, 
-                                      stat.sim = stat.sim, 
-                                      stat.obs = stat.obs, 
-                                      talkative = FALSE, 
-                                      check_pos_def = FALSE )
-                
-                G = matrix( data = ikern$similarity, ncol = 1 )
-
-                DF_new  =  Get_call_all_methods(    
-                                    # model_name = model, Moved to par.model
-                                    dimension  = dimension,
-                                    # stochastic_term = stochastic_term, 
-                                    iterations  =  1:12,
-                                    stat.obs = stat.obs, 
-                                    stat.sim = stat.sim, 
-                                    par.sim  = par.sim, 
-                                    G        = G, 
-                                    par.truth  =  x0, cores = 4, 
-                                    model_par = model_par )
-                DF  =  rbind( DF, DF_new )
-                
-                if ( file.exists( file_name ) ){
-                    write.table(file = file_name, x = DF_new , append = TRUE, sep = '\t', 
-                                row.names = FALSE, col.names = FALSE )
-                } else {
-                    write.table(file = file_name, x = DF_new , append = TRUE, sep = '\t', 
-                                row.names = FALSE, col.names = TRUE )
-                }
-        }
         }
     }
     
