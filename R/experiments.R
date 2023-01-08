@@ -49,7 +49,7 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
     
     if ( method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
         par.est  =  adjust_K2_ABC_iKernel( par.sim = par.sim, stat.sim = stat.sim, 
-                                           stat.obs = stat.obs, G = G )
+                                           stat.obs = stat.obs, G = G )[[ 'par.est' ]]
     }
     
     if ( method_name == 'Rejection' ){

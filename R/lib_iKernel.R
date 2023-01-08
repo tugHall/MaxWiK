@@ -640,7 +640,8 @@ Get_iKernel_estimation  <-  function( iKernelABC, par.sim, stat.sim, stat.obs ){
     ### K2-ABC based on iKernel:
     G = matrix( iKernelABC$similarity, ncol = 1 )
     
-    K2_ABC_iKernel  =  adjust_K2_ABC_iKernel(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ), par.sim, stat.sim, stat.obs, G )
+    K2_ABC_iKernel  =  adjust_K2_ABC_iKernel(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ), 
+                                             par.sim, stat.sim, stat.obs, G )[[ 'par.est' ]]
     
     return( list (K2_ABC_iKernel  =  K2_ABC_iKernel, 
                   iKernel_ABC     =  par.est ) )

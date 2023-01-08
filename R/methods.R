@@ -109,7 +109,7 @@ adjust_K2_ABC  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ),
 
 
 
-#' @describeIn K2_ABC Function to adjust epsilon parameter for K2-ABC method
+#' @describeIn K2_ABC Function to adjust epsilon parameter for K2-ABC method based on isolation kernel
 #' 
 #' @description \code{adjust_K2_ABC_iKernel()} allows to adjust epsilon parameter for K2-ABC method
 #' using numeric vector of epsilon, find parameter estimation for each epsilon and choose the best one
@@ -117,13 +117,16 @@ adjust_K2_ABC  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ),
 #'
 #' @param G Kernel matrix \code{G} containers similarities between simulation points and observation point based on isolation kernel
 #'
-#' @return \code{adjust_K2_ABC_iKernel()} returns the best parameter estimation using K2-ABC method varying epsilon and based on isolation kernel
+#' @return \code{adjust_K2_ABC_iKernel()} returns list of \cr
+#' - the best parameter estimation using K2-ABC method varying epsilon and based on isolation kernel; \cr
+#' - the adjusted epsilon value.
 #' 
 #' @export 
 #'
 #' @examples
 #' NULL
-adjust_K2_ABC_iKernel  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ), par.sim, stat.sim, stat.obs, G ){
+adjust_K2_ABC_iKernel  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ), 
+                                    par.sim, stat.sim, stat.obs, G ){
     
     ### Get the nearest point to stat.obs
     dst  =  as.matrix(dist( x = rbind( stat.sim, stat.obs ) ) )
@@ -141,13 +144,14 @@ adjust_K2_ABC_iKernel  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 
     dlt  =  sapply( epsilon, 
                     FUN = function( eps ) sum( ( par.truth - K2_ABC( G_xy, epsilon = eps, par.sim = par.sim[-id, ] )$par.est   ) ** 2  )
     )
-    epsilon  =  epsilon[ which.min( dlt ) ]
+    epsilon  =  epsilon[ which.min( dlt ) ][ 1 ]
     
     # G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, x = as.matrix( stat.sim ), y = as.matrix( stat.obs ) )
     
     K2  =  K2_ABC( G, epsilon = epsilon, par.sim )
     
-    return( K2$par.est )
+    return( list( par.est  =  K2$par.est,
+                  epsilon  =  epsilon ) )
 }
 
 

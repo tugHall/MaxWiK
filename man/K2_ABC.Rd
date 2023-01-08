@@ -63,7 +63,11 @@ by default \code{tolerance = c(0.001, 0.002, 0.005, (0.01 * 1:20)}}
 \item adjusted sigma for the used kernel.
 }
 
-\code{adjust_K2_ABC_iKernel()} returns the best parameter estimation using K2-ABC method varying epsilon and based on isolation kernel
+\code{adjust_K2_ABC_iKernel()} returns list of \cr
+\itemize{
+\item the best parameter estimation using K2-ABC method varying epsilon and based on isolation kernel; \cr
+\item the adjusted epsilon value.
+}
 
 \code{adjust_ABC_tolerance()} returns the best parameter estimation using rejection ABC method varying tolerance and tolerance value
 }
@@ -89,7 +93,7 @@ using numeric vector of tolerance, find parameter estimation for each tolerance 
 \itemize{
 \item \code{adjust_K2_ABC()}: Function to adjust epsilon parameter for K2-ABC method
 
-\item \code{adjust_K2_ABC_iKernel()}: Function to adjust epsilon parameter for K2-ABC method
+\item \code{adjust_K2_ABC_iKernel()}: Function to adjust epsilon parameter for K2-ABC method based on isolation kernel
 
 \item \code{adjust_ABC_tolerance()}: Function to adjust tolerance parameter for rejection ABC method
 
