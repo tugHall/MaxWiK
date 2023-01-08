@@ -56,7 +56,12 @@ by default \code{tolerance = c(0.001, 0.002, 0.005, (0.01 * 1:20)}}
 \item parameter estimation par.est
 }
 
-\code{adjust_K2_ABC()} returns the best parameter estimation using K2-ABC method varying epsilon
+\code{adjust_K2_ABC()} returns list of  \cr
+\itemize{
+\item the best parameter estimation using K2-ABC method varying epsilon; \cr
+\item adjusted epsilon for the used kernel;
+\item adjusted sigma for the used kernel.
+}
 
 \code{adjust_K2_ABC_iKernel()} returns the best parameter estimation using K2-ABC method varying epsilon and based on isolation kernel
 
