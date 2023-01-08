@@ -16,19 +16,6 @@ if ( dir.exists( wd ) ) {
 ### Check installation of libraries:
 check_packages()
 
-### This is the function to execute the pipeline automatically, 
-###    so, if you need just to repeat the results of the dataset, 
-###    please, use this short cut 
-
-if ( FALSE ){
-    DF  =  experiment_models( file_name = '../Results_ALL.txt', 
-                              models = c( 'Gaussian', 'Linear' ),
-                              dimensions = (1:10)*2, 
-                              stochastic_terms  =  c( 0, 1, 5, 10, 20, 30 ),
-                              rng  =  c( 0,10 ), 
-                              restrict_points_number = 300 )
-}
-
 ### In order to understand procedure of execution all the method, please, see
 ### the functions:
 ###             *   Get_call_all_methods   - to call all the methods, and
