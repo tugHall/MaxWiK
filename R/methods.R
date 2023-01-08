@@ -64,7 +64,10 @@ K2_ABC  <-  function( G, epsilon = 0.5, par.sim ){
 #' @param stat.obs Matrix of statistics of an observation
 #' @param kernel Kernel function of class kernel from kernlab package
 #'
-#' @return \code{adjust_K2_ABC()} returns the best parameter estimation using K2-ABC method varying epsilon
+#' @return \code{adjust_K2_ABC()} returns list of  \cr 
+#' - the best parameter estimation using K2-ABC method varying epsilon; \cr 
+#' - adjusted epsilon for the used kernel;
+#' - adjusted sigma for the used kernel.
 #' 
 #' @export 
 #'
@@ -82,21 +85,26 @@ adjust_K2_ABC  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ),
     par.truth  =  as.matrix( par.sim[ id, ] )
     
     ### Get adjusted Gram matrix for x and y
-    G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, x, y )[[ 'G' ]]
+    
+    GS = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, x, y )
+    G  =  GS[[ 'G' ]]
+    sigma  =  GS[[ 'sigma' ]]
     
     ### Get the best epsilon for K2_ABC method based on par.truth
     dlt  =  sapply( epsilon, 
                     FUN = function( eps ) sum( ( par.truth - K2_ABC( G, epsilon = eps, par.sim = par.sim[-id, ] )$par.est   ) ** 2  )
     )
-    epsilon  =  epsilon[ which.min( dlt ) ]
+    epsilon  =  epsilon[ which.min( dlt ) ][ 1 ]
     
-    G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, 
+    G = adjust_Gram( kernel, sigma = sigma,  # ( 2**(1:20) ) * 1E-3, 
                      x = as.matrix( stat.sim ), 
                      y = as.matrix( stat.obs ) )[[ 'G' ]]
     
     K2  =  K2_ABC( G, epsilon = epsilon, par.sim )
     
-    return( K2$par.est )
+    return( list ( par.est  =  K2$par.est,
+                   sigma    =  sigma,
+                   epsilon  =  epsilon  ) )
 }
 
 

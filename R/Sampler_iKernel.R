@@ -36,7 +36,7 @@ Get_parameter  <-  function( method_name, kernel_name = '',
             kernel  =  laplacedot
         }
         par.est  =  adjust_K2_ABC( par.sim = par.sim, stat.sim = stat.sim, 
-                                   stat.obs = stat.obs, kernel = kernel )
+                                   stat.obs = stat.obs, kernel = kernel )[[ 'par.est' ]]
     }
     
     if ( method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
