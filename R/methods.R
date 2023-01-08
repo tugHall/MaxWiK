@@ -82,7 +82,7 @@ adjust_K2_ABC  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ),
     par.truth  =  as.matrix( par.sim[ id, ] )
     
     ### Get adjusted Gram matrix for x and y
-    G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, x, y )
+    G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, x, y )[[ 'G' ]]
     
     ### Get the best epsilon for K2_ABC method based on par.truth
     dlt  =  sapply( epsilon, 
@@ -90,7 +90,9 @@ adjust_K2_ABC  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 1:20) ),
     )
     epsilon  =  epsilon[ which.min( dlt ) ]
     
-    G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, x = as.matrix( stat.sim ), y = as.matrix( stat.obs ) )
+    G = adjust_Gram( kernel, sigma = ( 2**(1:20) ) * 1E-3, 
+                     x = as.matrix( stat.sim ), 
+                     y = as.matrix( stat.obs ) )[[ 'G' ]]
     
     K2  =  K2_ABC( G, epsilon = epsilon, par.sim )
     
@@ -150,7 +152,9 @@ adjust_K2_ABC_iKernel  <-  function(epsilon = c(0.01, 0.02, 0.03, 0.04, (0.05 * 
 #' @param x Matrix of stat.sim
 #' @param y Matrix of stat.obs
 #'
-#' @return \code{adjust_Gram} function returns Gram matrix after adjusting of sigma
+#' @return \code{adjust_Gram} function returns list of \cr 
+#' - Gram matrix after adjusting of sigma; \cr
+#' - adjusted sigma value.
 #' 
 #' @export
 #'
@@ -167,11 +171,11 @@ adjust_Gram  <-  function( kernel, sigma = ( 2**(1:20) ) * 1E-3, x, y ){
     
     dlt  =  sapply( sigma, FUN = function(sgm ) get_dlt(kernel = kernel, sigma = sgm, x, y ) )
     
-    sigma  =  sigma[ which.max( dlt ) ]
+    sigma  =  sigma[ which.max( dlt ) ][ 1 ]
     krnl  =  kernel( sigma )
     G = kernelMatrix( kernel = krnl, x, y)
     
-    return( G )
+    return( list(G = G, sigma = sigma ) )
 }
 
 
@@ -236,5 +240,14 @@ adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1
     
     return( list( par.est   =  par.est, 
                   tolerance =  tol ) )
+}
+
+
+
+# Get hyperparameters -----------------------------------------------------
+
+Get_hyperparameters  <-  function( par.sim, stat.sim, stat.obs ){
+    
+    
 }
 
