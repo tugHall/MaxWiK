@@ -62,7 +62,6 @@ Get_data  =  function( dimension, rng, restrict_points_number,
         model_par = list(d = dimension, x0 = x0, r = rng, 
                          A = A[1:dimension], sigma = sigma[1:dimension], 
                          noise = stochastic_term  ) 
-        model_function  =  Gauss_function
     }
     if ( model == 'Linear' ) {
         input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
@@ -71,7 +70,6 @@ Get_data  =  function( dimension, rng, restrict_points_number,
         model_par = list( d = dimension, x0 = x0, r = rng, 
                           A = A[1:dimension],
                           noise = stochastic_term  ) 
-        model_function  =  Linear_function
     }
     
     if ( is.null( input ) ) stop( 'Model name is incorrect' )
@@ -116,12 +114,20 @@ for( model in models ){
             
             input  =  Get_data( dimension = dimension, rng = rng, 
                                 restrict_points_number = restrict_points_number, 
-                                   Number_of_points = Number_of_points, 
-                                   A = A, sigma = sigma, stochastic_term = stochastic_term )
+                                Number_of_points = Number_of_points, 
+                                model = model,
+                                A = A, sigma = sigma, stochastic_term = stochastic_term )
             par.sim   =  input$par.sim 
             stat.sim  =  input$stat.sim
             stat.obs  =  input$stat.obs
             model_par =  input$model_par
+            
+            if ( model == 'Gaussian' ) {
+                model_function  =  Gauss_function
+            }
+            if ( model == 'Linear' ) {
+                model_function  =  Linear_function
+            }
             
             psi_t  =  hyper$iKernel$psi_t  
                       # adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
@@ -164,6 +170,8 @@ for( model in models ){
         }
     }
 }
+
+utils::capture.output( hyper, file = 'HyperParameters.txt', append = FALSE )
 
 ###  Results of simulation is collected in dataset DF
 print( 'Results of simulation is collected in dataset DF' )
