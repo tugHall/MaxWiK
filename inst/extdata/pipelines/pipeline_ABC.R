@@ -46,7 +46,7 @@ if ( file.exists( file_name) ) unlink( file_name )
 
 
 Get_data  =  function( dimension, rng, restrict_points_number, 
-                       Number_of_points, 
+                       Number_of_points, model,
                        A, sigma, stochastic_term ){
     
     input  =  NULL
@@ -95,15 +95,18 @@ Get_data  =  function( dimension, rng, restrict_points_number,
 }
 
 
-input  =  Get_data( dimension = dimension, rng = rng, 
+input  =  Get_data( dimension = dimensions[5], rng = rng, 
                     restrict_points_number = restrict_points_number, 
-                    Number_of_points = Number_of_points, 
-                    A = A, sigma = sigma, stochastic_term = stochastic_term )
+                    Number_of_points = Number_of_points,
+                    model = 'Gaussian',
+                    A = A, sigma = sigma, stochastic_term = 0 )
 par.sim   =  input$par.sim 
 stat.sim  =  input$stat.sim
 stat.obs  =  input$stat.obs
+par.truth =  input$model_par$x0
 
-hyper  =  Get_hyperparameters()
+hyper  =  Get_hyperparameters(stat.obs = stat.obs, stat.sim = stat.sim, 
+                              par.sim = par.sim, par.truth = par.truth )
 
 
 DF = NULL   # Data frame to collect results of all the simulations
@@ -120,10 +123,11 @@ for( model in models ){
             stat.obs  =  input$stat.obs
             model_par =  input$model_par
             
-            psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
-                                    stat.obs = stat.obs, talkative = FALSE, 
-                                    check_pos_def = FALSE, 
-                                    n_best = 8, cores = 4 )
+            psi_t  =  hyper$iKernel$psi_t  
+                      # adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
+                      #                stat.obs = stat.obs, talkative = FALSE, 
+                      #               check_pos_def = FALSE, 
+                      #                n_best = 8, cores = 4 )
             
             ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
                                   param = par.sim, 
@@ -142,7 +146,7 @@ for( model in models ){
                 stat.sim = stat.sim, 
                 par.sim  = par.sim, 
                 G        = G, 
-                par.truth  =  x0, 
+                par.truth  =  model_par$x0, 
                 cores = cores,
                 model_function = model_function, 
                 model_par = model_par )
