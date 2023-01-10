@@ -1,7 +1,7 @@
 
 ### File to organize toy experiments which code is presented in pipeline_ABC.R 
 
-#' Function to call a method to get MSE
+#' Function to call a method to get a parameter estimation and MSE
 #'
 #' @param method_name Name of a method
 #' @param kernel_name Name of kernel function

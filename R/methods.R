@@ -258,8 +258,69 @@ adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1
 
 # Get hyperparameters -----------------------------------------------------
 
-Get_hyperparameters  <-  function( par.sim, stat.sim, stat.obs ){
+#' @describeIn Get_call Function to get hyperparameters for a certain set of data
+#'
+#' @return \code{Get_hyperparameters()} returns the list: \cr
+#' - list of epsilon and sigma for each kernel, \cr
+#' - tolerance.
+#' 
+#' @export
+#' 
+#' @examples
+#' NULL
+Get_hyperparameters  <-  function( stat.obs, stat.sim, par.sim, G = NULL, par.truth ){
     
+    kernel_names = c( 'Gaussian', 'Laplacian', 'iKernel' )
     
+    hyper  =  list(  )
+    
+    for ( kernel_name in kernel_names ){
+        hyper[[ kernel_name ]]  =  list()
+        
+        if ( kernel_name != 'iKernel' ){
+            if ( kernel_name == 'Gaussian'){
+                kernel  =  rbfdot
+            } else {
+                kernel  =  laplacedot
+            }
+            K2  =  adjust_K2_ABC( par.sim = par.sim, stat.sim = stat.sim, 
+                                       stat.obs = stat.obs, kernel = kernel )
+            hyper[[ kernel_name ]][[ 'epsilon' ]]  =  K2[[ 'epsilon' ]]
+            hyper[[ kernel_name ]][[ 'sigma'   ]]  =  K2[[ 'sigma' ]]
+        }
+        
+        if ( kernel_name == 'iKernel' ){
+            
+            psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
+                                    stat.obs = stat.obs, talkative = FALSE, 
+                                    check_pos_def = FALSE, 
+                                    n_best = 12, cores = 4 )
+            
+            ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
+                                  param = par.sim, 
+                                  stat.sim = stat.sim, 
+                                  stat.obs = stat.obs, 
+                                  talkative = FALSE, 
+                                  check_pos_def = FALSE )
+            
+            G = matrix( data = ikern$similarity, ncol = 1 )
+            
+            K2  =  adjust_K2_ABC_iKernel( par.sim = par.sim, stat.sim = stat.sim, 
+                                               stat.obs = stat.obs, G = G )
+            
+            hyper[[ kernel_name ]][[ 'epsilon' ]]  =  K2[[ 'epsilon' ]]
+            hyper[[ kernel_name ]][[ 'psi_t'   ]]  =  psi_t
+        }
+    
+    }
+    
+
+    res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
+                                          stat.obs = stat.obs )
+    hyper[[ 'tolerance' ]]  =  res$tolerance
+    
+    return( hyper )
 }
+
+
 
