@@ -45,49 +45,80 @@ cores = 4
 if ( file.exists( file_name) ) unlink( file_name )
 
 
+Get_data  =  function( dimension, rng, restrict_points_number, 
+                       Number_of_points, 
+                       A, sigma, stochastic_term ){
+    
+    input  =  NULL
+    x0  =  runif( n = dimension, min = rng[1], max = rng[2] )
+    Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
+    
+    if ( model == 'Gaussian' ) {
+        input = get_dataset_of_Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
+                                               n = Number_of_points, r = rng, 
+                                               A = A[1:dimension], sigma = sigma[1:dimension], 
+                                               noise = stochastic_term )
+        
+        model_par = list(d = dimension, x0 = x0, r = rng, 
+                         A = A[1:dimension], sigma = sigma[1:dimension], 
+                         noise = stochastic_term  ) 
+        model_function  =  Gauss_function
+    }
+    if ( model == 'Linear' ) {
+        input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
+                                               n = Number_of_points, r = rng, A = A[1:dimension],
+                                               noise = stochastic_term )
+        model_par = list( d = dimension, x0 = x0, r = rng, 
+                          A = A[1:dimension],
+                          noise = stochastic_term  ) 
+        model_function  =  Linear_function
+    }
+    
+    if ( is.null( input ) ) stop( 'Model name is incorrect' )
+    stat.sim_origin  =  input$stat.sim
+    stat.obs  =  input$stat.obs
+    par.sim_origin  =  input$par.sim
+    rm( input )
+    
+    # Apply restrict number of points:
+    tol = restrict_points_number / nrow( stat.sim_origin )
+    rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
+                    method = 'rejection', tol = tol )
+    
+    stat.sim  =  stat.sim_origin[ rej$region, ]
+    par.sim   =   par.sim_origin[ rej$region, ] 
+    
+    return( list( stat.obs  =  stat.obs,
+                  stat.sim  =  stat.sim, 
+                  par.sim   =  par.sim,
+                  model_par =  model_par ) )
+}
+
+
+input  =  Get_data( dimension = dimension, rng = rng, 
+                    restrict_points_number = restrict_points_number, 
+                    Number_of_points = Number_of_points, 
+                    A = A, sigma = sigma, stochastic_term = stochastic_term )
+par.sim   =  input$par.sim 
+stat.sim  =  input$stat.sim
+stat.obs  =  input$stat.obs
+
+hyper  =  Get_hyperparameters()
+
+
 DF = NULL   # Data frame to collect results of all the simulations
 for( model in models ){
     for( dimension in dimensions ){
         for( stochastic_term in stochastic_terms ){
             
-            input  =  NULL
-            x0  =  runif( n = dimension, min = rng[1], max = rng[2] )
-            Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
-            
-            if ( model == 'Gaussian' ) {
-                input = get_dataset_of_Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
-                                        n = Number_of_points, r = rng, 
-                                        A = A[1:dimension], sigma = sigma[1:dimension], 
-                                        noise = stochastic_term )
-
-                model_par = list(d = dimension, x0 = x0, r = rng, 
-                                 A = A[1:dimension], sigma = sigma[1:dimension], 
-                                 noise = stochastic_term  ) 
-                model_function  =  Gauss_function
-            }
-            if ( model == 'Linear' ) {
-                input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
-                                        n = Number_of_points, r = rng, A = A[1:dimension],
-                                        noise = stochastic_term )
-                model_par = list( d = dimension, x0 = x0, r = rng, 
-                                  A = A[1:dimension],
-                                  noise = stochastic_term  ) 
-                model_function  =  Linear_function
-            }
-            
-            if ( is.null( input ) ) stop( 'Model name is incorrect' )
-            stat.sim_origin  =  input$stat.sim
+            input  =  Get_data( dimension = dimension, rng = rng, 
+                                restrict_points_number = restrict_points_number, 
+                                   Number_of_points = Number_of_points, 
+                                   A = A, sigma = sigma, stochastic_term = stochastic_term )
+            par.sim   =  input$par.sim 
+            stat.sim  =  input$stat.sim
             stat.obs  =  input$stat.obs
-            par.sim_origin  =  input$par.sim
-            rm( input )
-            
-            # Apply restrict number of points:
-            tol = restrict_points_number / nrow( stat.sim_origin )
-            rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
-                            method = 'rejection', tol = tol )
-            
-            stat.sim  =  stat.sim_origin[ rej$region, ]
-            par.sim   =   par.sim_origin[ rej$region, ] 
+            model_par =  input$model_par
             
             psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
                                     stat.obs = stat.obs, talkative = FALSE, 

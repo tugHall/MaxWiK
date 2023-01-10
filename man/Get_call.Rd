@@ -33,7 +33,7 @@ Get_call_all_methods(
   model_par = list(d = 1, x0 = 3, r = range(0, 10), noise = 0, A = 1, sigma = 1)
 )
 
-Get_hyperparameters(stat.obs, stat.sim, par.sim, G = NULL, par.truth)
+Get_hyperparameters(stat.obs, stat.sim, par.sim, par.truth)
 }
 \arguments{
 \item{method_name}{Name of a method}

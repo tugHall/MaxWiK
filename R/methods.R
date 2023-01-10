@@ -268,7 +268,7 @@ adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1
 #' 
 #' @examples
 #' NULL
-Get_hyperparameters  <-  function( stat.obs, stat.sim, par.sim, G = NULL, par.truth ){
+Get_hyperparameters  <-  function( stat.obs, stat.sim, par.sim, par.truth ){
     
     kernel_names = c( 'Gaussian', 'Laplacian', 'iKernel' )
     
