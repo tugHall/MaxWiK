@@ -31,11 +31,15 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
                         stat.obs, stat.sim, par.sim, G = NULL, par.truth, 
                         model_function  =  Gauss_function,
                         model_par = list(d = 1, x0 = 3, r = range(0,10), noise = 0, 
-                                         A = 1, sigma = 1 ) ){
+                                         A = 1, sigma = 1 ),
+                        hyper ){
     
-    n_min  =  100 
+    n_min  =  50 
     time_start  =  Sys.time( )
     par.est  =  NA 
+    
+    tol  =  hyper[[ 'tolerance' ]]  
+    if ( tol * nrow(stat.sim) < n_min ) tol = n_min / nrow( stat.sim )
     
     if ( method_name == 'K2-ABC' & kernel_name != 'iKernel' ){
         if ( kernel_name == 'Gaussian'){
@@ -44,7 +48,9 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
             kernel  =  laplacedot
         }
         par.est  =  adjust_K2_ABC( par.sim = par.sim, stat.sim = stat.sim, 
-                                   stat.obs = stat.obs, kernel = kernel )[[ 'par.est' ]]
+                                   stat.obs = stat.obs, kernel = kernel, 
+                                   epsilon = hyper[[ kernel_name ]][[ 'epsilon' ]]
+                                                    )[[ 'par.est' ]]
     }
     
     if ( method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
@@ -53,68 +59,37 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
     }
     
     if ( method_name == 'Rejection' ){
-        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
-                                          stat.obs = stat.obs )
-        par.est  =  res$par.est
+
+        res  =  abc( target = stat.obs, param = par.sim, sumstat = stat.sim, 
+                     tol = tol, method  =  'rejection' )
+        par.est  =  Get_MAP( as.data.frame( res$unadj.values ) )
     }
     
     if ( method_name == 'Loclinear' ){
-        
-        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
-                                          stat.obs = stat.obs )
-        tol   =   res$tolerance
-        if ( tol * nrow(stat.sim) < n_min ) tol = n_min / nrow( stat.sim )
         
         loclin   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
                            tol = tol, method  =  'loclinear', hcorr   =  FALSE, 
                            transf=c( "none" ) )
         
         par.est  =  Get_MAP( as.data.frame( loclin$adj.values ) )
-        # lc = round( loclin$adj.values + runif( n= length(loclin$adj.values) )/1E6, digits = 9 )
-        
-        # if (nrow( unique.data.frame(lc) ) > 1 ){
-        #     par.est  =  point_estimate( lc )$MAP
-        # } else {
-        #     par.est  =  unique.data.frame(lc)
-        # }
     }
     
     if ( method_name == 'Neuralnet' ){
-        
-        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
-                                          stat.obs = stat.obs )
-        tol   =   res$tolerance
-        if ( tol * nrow(stat.sim) < n_min ) tol  =  n_min / nrow( stat.sim )
         
         nn   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
                        tol = tol, method  =  'neuralnet', hcorr   =  TRUE, 
                        transf=c("none","log"), lambda = 0.0001, trace = FALSE )
         
         par.est  =  Get_MAP( as.data.frame( nn$adj.values ) )
-        # nn_adj = round( nn$adj.values + runif( n= length( nn$adj.values ) ) / 1E6, digits = 9 )
-        # par.est  =  point_estimate( nn_adj )$MAP
     }
     
     if ( method_name == 'Ridge' ){
-        
-        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
-                                          stat.obs = stat.obs )
-        tol   =   res$tolerance
-        if ( tol * nrow(stat.sim) < n_min ) tol = n_min / nrow( stat.sim )
         
         rdg   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
                         tol = tol, method  =  'ridge', hcorr   =  FALSE, 
                         transf=c("none","log"), kernel = 'epanechnikov' )
         
-        #rdg_adj = round( rdg$adj.values + runif( n= length( rdg$adj.values ) )/1E6, digits = 9 )
-        
         par.est  =  Get_MAP( as.data.frame( rdg$adj.values ) ) 
-        
-        # if ( nrow( unique.data.frame( rdg_adj ) ) > 1 ){
-        #    par.est  =  point_estimate( rdg_adj )$MAP
-        # } else {
-        #    par.est  =  unique.data.frame(rdg_adj)
-        # }
     }
     
     if ( method_name == 'MaxWiK_MAP' ){
@@ -132,7 +107,7 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
         model_par_all  =  c( model_par, list( par.sim1 = par.est ) )
         model_par_all$noise  =  0 
         sim_est  =  do.call( model_function, model_par_all )
-        MSE  =  MSE_sim(stat.obs = stat.obs, stat.sim = sim_est )  # sum( ( par.truth - par.est ) ** 2  )
+        MSE  =  MSE_sim(stat.obs = stat.obs, stat.sim = sim_est ) 
     }
     
     running_time  =  as.numeric( difftime(Sys.time(), time_start, units = "secs")[[1]] )
