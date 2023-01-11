@@ -14,6 +14,7 @@
 #' @param par.truth Truth parameter value to check result of estimation
 #' @param model_function Function that is used as function to calculate output for an estimated parameter
 #' @param model_par List of parameters for a model function
+#' @param hyper List of hyperparameters to use for a method
 #'
 #' @return \code{Get_call()} returns the list: \cr
 #' method_name = method_name, \cr

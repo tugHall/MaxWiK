@@ -17,7 +17,8 @@ Get_call(
   G = NULL,
   par.truth,
   model_function = Gauss_function,
-  model_par = list(d = 1, x0 = 3, r = range(0, 10), noise = 0, A = 1, sigma = 1)
+  model_par = list(d = 1, x0 = 3, r = range(0, 10), noise = 0, A = 1, sigma = 1),
+  hyper
 )
 
 Get_call_all_methods(
@@ -57,6 +58,8 @@ Get_hyperparameters(stat.obs, stat.sim, par.sim, par.truth)
 \item{model_function}{Function that is used as function to calculate output for an estimated parameter}
 
 \item{model_par}{List of parameters for a model function}
+
+\item{hyper}{List of hyperparameters to use for a method}
 
 \item{cores}{Number of cores for parallel calculation with iterations}
 }
