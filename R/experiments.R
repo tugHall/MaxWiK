@@ -138,7 +138,8 @@ Get_call_all_methods  <-  function( dimension, iterations, stat.obs, stat.sim,
                                     par.sim, G, par.truth, cores = 4,
                                     model_function  =  Gauss_function,
                                     model_par = list(d = 1, x0 = 3, r = range(0,10), noise = 0, 
-                                                     A = 1, sigma = 1 ) ){
+                                                     A = 1, sigma = 1 ), 
+                                    hyper ){
     
     DF  =  NULL
     Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 'Rejection', 
@@ -161,7 +162,8 @@ Get_call_all_methods  <-  function( dimension, iterations, stat.obs, stat.sim,
                                    G          =  G, 
                                    par.truth  =  par.truth,
                                    model_function  =  model_function,
-                                   model_par  =  model_par
+                                   model_par  =  model_par, 
+                                   hyper      =  hyper
                                 )
         }, mc.cores  =  cores )
         # Check an error

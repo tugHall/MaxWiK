@@ -155,7 +155,8 @@ for( model in models ){
                 par.truth  =  model_par$x0, 
                 cores = cores,
                 model_function = model_function, 
-                model_par = model_par )
+                model_par = model_par, 
+                hyper  =  hyper )
             DF_new$model_name  =  model
             
             DF  =  rbind( DF, DF_new )

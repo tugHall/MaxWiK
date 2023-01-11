@@ -31,7 +31,8 @@ Get_call_all_methods(
   par.truth,
   cores = 4,
   model_function = Gauss_function,
-  model_par = list(d = 1, x0 = 3, r = range(0, 10), noise = 0, A = 1, sigma = 1)
+  model_par = list(d = 1, x0 = 3, r = range(0, 10), noise = 0, A = 1, sigma = 1),
+  hyper
 )
 
 Get_hyperparameters(stat.obs, stat.sim, par.sim, par.truth)
