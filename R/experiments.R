@@ -118,8 +118,8 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
                           # model_name  = model_par$name,
                           dimension   = dimension, 
                           stochastic_term = stochastic_term,
-                          MSE = MSE, 
-                          running_time = running_time, 
+                          MSE = round( x = MSE, digits = 2 ),
+                          running_time = round( x = running_time, digits = 2 ), 
                           iteration = iteration ) )
 }
 
