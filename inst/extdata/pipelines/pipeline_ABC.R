@@ -105,10 +105,20 @@ par.truth =  input$model_par$x0
 
 hyper  =  Get_hyperparameters(stat.obs = stat.obs, stat.sim = stat.sim, 
                               par.sim = par.sim, par.truth = par.truth )
+utils::capture.output( hyper, file = 'HyperParameters.txt', append = FALSE )
 
+psi_t  =  hyper$iKernel$psi_t
 
 DF = NULL   # Data frame to collect results of all the simulations
 for( model in models ){
+    
+    if ( model == 'Gaussian' ) {
+        model_function  =  Gauss_function
+    }
+    if ( model == 'Linear' ) {
+        model_function  =  Linear_function
+    }
+    
     for( dimension in dimensions ){
         for( stochastic_term in stochastic_terms ){
             
@@ -122,19 +132,6 @@ for( model in models ){
             stat.obs  =  input$stat.obs
             model_par =  input$model_par
             
-            if ( model == 'Gaussian' ) {
-                model_function  =  Gauss_function
-            }
-            if ( model == 'Linear' ) {
-                model_function  =  Linear_function
-            }
-            
-            psi_t  =  hyper$iKernel$psi_t  
-                      # adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
-                      #                stat.obs = stat.obs, talkative = FALSE, 
-                      #               check_pos_def = FALSE, 
-                      #                n_best = 8, cores = 4 )
-            
             ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
                                   param = par.sim, 
                                   stat.sim = stat.sim, 
@@ -144,9 +141,7 @@ for( model in models ){
             
             G = matrix( data = ikern$similarity, ncol = 1 )
             DF_new  =  Get_call_all_methods(    
-                # model_name = model, 
                 dimension  = dimension,
-                # stochastic_term = stochastic_term, 
                 iterations  =  1:12,
                 stat.obs = stat.obs, 
                 stat.sim = stat.sim, 
@@ -171,8 +166,6 @@ for( model in models ){
         }
     }
 }
-
-utils::capture.output( hyper, file = 'HyperParameters.txt', append = FALSE )
 
 ###  Results of simulation is collected in dataset DF
 print( 'Results of simulation is collected in dataset DF' )
