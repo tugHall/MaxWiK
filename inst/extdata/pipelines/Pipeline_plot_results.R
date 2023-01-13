@@ -1,4 +1,7 @@
 library(MaxWiK)
+
+
+
 RES = MaxWiK::Results_toy_experiments
 RES$method_kernel  =  paste0( RES$method_name, '_', RES$kernel_name )
 RES  =  RES[ , 3:9]
