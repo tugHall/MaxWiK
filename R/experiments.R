@@ -34,73 +34,16 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
                         model_par = list(d = 1, x0 = 3, r = range(0,10), noise = 0, 
                                          A = 1, sigma = 1 ),
                         hyper ){
-    
-    n_min  =  50 
-    time_start  =  Sys.time( )
-    par.est  =  NA 
-    
-    tol  =  hyper[[ 'tolerance' ]]  
-    if ( tol * nrow(stat.sim) < n_min ) tol = n_min / nrow( stat.sim )
-    
-    if ( method_name == 'K2-ABC' & kernel_name != 'iKernel' ){
-        if ( kernel_name == 'Gaussian'){
-            kernel  =  rbfdot
-        } else {
-            kernel  =  laplacedot
-        }
-        par.est  =  adjust_K2_ABC( par.sim = par.sim, stat.sim = stat.sim, 
-                                   stat.obs = stat.obs, kernel = kernel, 
-                                   epsilon = hyper[[ kernel_name ]][[ 'epsilon' ]]
-                                                    )[[ 'par.est' ]]
-    }
-    
-    if ( method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
-        par.est  =  adjust_K2_ABC_iKernel( par.sim = par.sim, stat.sim = stat.sim, 
-                                           stat.obs = stat.obs, G = G )[[ 'par.est' ]]
-    }
-    
-    if ( method_name == 'Rejection' ){
 
-        res  =  abc( target = stat.obs, param = par.sim, sumstat = stat.sim, 
-                     tol = tol, method  =  'rejection' )
-        par.est  =  Get_MAP( as.data.frame( res$unadj.values ) )
-    }
-    
-    if ( method_name == 'Loclinear' ){
-        
-        loclin   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
-                           tol = tol, method  =  'loclinear', hcorr   =  FALSE, 
-                           transf=c( "none" ) )
-        
-        par.est  =  Get_MAP( as.data.frame( loclin$adj.values ) )
-    }
-    
-    if ( method_name == 'Neuralnet' ){
-        
-        nn   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
-                       tol = tol, method  =  'neuralnet', hcorr   =  TRUE, 
-                       transf=c("none","log"), lambda = 0.0001, trace = FALSE )
-        
-        par.est  =  Get_MAP( as.data.frame( nn$adj.values ) )
-    }
-    
-    if ( method_name == 'Ridge' ){
-        
-        rdg   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
-                        tol = tol, method  =  'ridge', hcorr   =  FALSE, 
-                        transf=c("none","log"), kernel = 'epanechnikov' )
-        
-        par.est  =  Get_MAP( as.data.frame( rdg$adj.values ) ) 
-    }
-    
-    if ( method_name == 'MaxWiK_MAP' ){
-        par.est  =  get_Spider_MAP( par.sim = par.sim, stat.sim = stat.sim, stat.obs = stat.obs )
-    }
-    
-    if ( method_name == 'MaxWiK' ){
-        par.est  =  get_Spider_MAP( par.sim = par.sim, stat.sim = stat.sim, 
-                                    stat.obs = stat.obs, n_best = 1 )
-    }
+    time_start  =  Sys.time( )
+
+    par.est  =  Get_parameter( method_name =  method_name, 
+                               kernel_name =  kernel_name,
+                               stat.obs    =  stat.obs, 
+                               stat.sim    =  stat.sim, 
+                               par.sim     =  par.sim, 
+                               G           =  G,
+                               hyper       =  hyper )
     
     ### Get MSE 
     MSE = NULL

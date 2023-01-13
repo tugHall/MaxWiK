@@ -1,33 +1,22 @@
 # This is a sampler for ABC method that based on maxima weighted isolation kernel method
 
-#' Function to call a method to get parameter estimation and MSE for each used method
+#' @describeIn Get_call Function to get a parameter estimation using a method
 #'
-#' @param method_name Name of a method
-#' @param kernel_name Name of kernel function
-#' @param stat.obs Data frame of statistics of observation point
-#' @param stat.sim Data frame of statistics of simulations
-#' @param par.sim Data frame of parameters
-#' @param G Matrix of similarities for K2-ABC based on isolation kernel
-#' @param par.truth Truth parameter value to check result of estimation
-#'
-#' @return \code{par.truth,()} returns the list: \cr
-#' method_name = method_name, \cr
-#' - kernel_name, \cr
-#' - model_name, \cr
-#' - stochastic_term, \cr
-#' - MSE, \cr
-#' - running_time, \cr
-#' - iteration.
+#' @return \code{Get_parameter()} returns the parameter estimation
+#' 
 #' @export
 #' 
 #' @examples
 #' NULL
-Get_parameter  <-  function( method_name, kernel_name = '',  
-                        stat.obs, stat.sim, par.sim, G = NULL, par.truth ){
+Get_parameter  <-  function( method_name, kernel_name = '',
+                        stat.obs, stat.sim, par.sim, G = NULL,
+                        hyper ){
     
-    n_min  =  100 
-    time_start  =  Sys.time( )
+    n_min  =  50 
     par.est  =  NA 
+    
+    tol  =  hyper[[ 'tolerance' ]]  
+    if ( tol * nrow(stat.sim) < n_min ) tol = n_min / nrow( stat.sim )
     
     if ( method_name == 'K2-ABC' & kernel_name != 'iKernel' ){
         if ( kernel_name == 'Gaussian'){
@@ -36,7 +25,9 @@ Get_parameter  <-  function( method_name, kernel_name = '',
             kernel  =  laplacedot
         }
         par.est  =  adjust_K2_ABC( par.sim = par.sim, stat.sim = stat.sim, 
-                                   stat.obs = stat.obs, kernel = kernel )[[ 'par.est' ]]
+                                   stat.obs = stat.obs, kernel = kernel, 
+                                   epsilon = hyper[[ kernel_name ]][[ 'epsilon' ]]
+        )[[ 'par.est' ]]
     }
     
     if ( method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
@@ -45,69 +36,37 @@ Get_parameter  <-  function( method_name, kernel_name = '',
     }
     
     if ( method_name == 'Rejection' ){
-        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
-                                          stat.obs = stat.obs )
-        par.est  =  res$par.est
+        
+        res  =  abc( target = stat.obs, param = par.sim, sumstat = stat.sim, 
+                     tol = tol, method  =  'rejection' )
+        par.est  =  Get_MAP( as.data.frame( res$unadj.values ) )
     }
     
     if ( method_name == 'Loclinear' ){
-        
-        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
-                                          stat.obs = stat.obs )
-        tol   =   res$tolerance
-        if ( tol * nrow(stat.sim) < n_min ) tol = n_min / nrow( stat.sim )
         
         loclin   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
                            tol = tol, method  =  'loclinear', hcorr   =  FALSE, 
                            transf=c( "none" ) )
         
-        lc = round( loclin$adj.values + runif( n= length(loclin$adj.values) )/1E6, digits = 9 )
-        
-        par.est  =  Get_MAP( as.data.frame( lc ) )
-        
-        #if (nrow( unique.data.frame(lc) ) > 1 ){
-        #    par.est  =  point_estimate( lc )$MAP
-        #} else {
-        #    par.est  =  unique.data.frame(lc)
-        #}
+        par.est  =  Get_MAP( as.data.frame( loclin$adj.values ) )
     }
     
     if ( method_name == 'Neuralnet' ){
-        
-        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
-                                          stat.obs = stat.obs )
-        tol   =   res$tolerance
-        if ( tol * nrow(stat.sim) < n_min ) tol  =  n_min / nrow( stat.sim )
         
         nn   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
                        tol = tol, method  =  'neuralnet', hcorr   =  TRUE, 
                        transf=c("none","log"), lambda = 0.0001, trace = FALSE )
         
-        # nn_adj = round( nn$adj.values + runif( n= length( nn$adj.values ) ) / 1E6, digits = 9 )
-        # par.est  =  point_estimate( nn_adj )$MAP
         par.est  =  Get_MAP( as.data.frame( nn$adj.values ) )
     }
     
     if ( method_name == 'Ridge' ){
         
-        res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
-                                          stat.obs = stat.obs )
-        tol   =   res$tolerance
-        if ( tol * nrow(stat.sim) < n_min ) tol = n_min / nrow( stat.sim )
-        
         rdg   =  abc(   target = stat.obs, param = par.sim, sumstat = stat.sim, 
                         tol = tol, method  =  'ridge', hcorr   =  FALSE, 
                         transf=c("none","log"), kernel = 'epanechnikov' )
         
-        # rdg_adj = round( rdg$adj.values + runif( n= length( rdg$adj.values ) )/1E6, digits = 9 )
-        
-        # if ( nrow( unique.data.frame( rdg_adj ) ) > 1 ){
-        #     par.est  =  point_estimate( rdg_adj )$MAP
-        # } else {
-        #     par.est  =  unique.data.frame(rdg_adj)
-        # }
-        
-        par.est  =  Get_MAP( as.data.frame( rdg$adj.values ) )
+        par.est  =  Get_MAP( as.data.frame( rdg$adj.values ) ) 
     }
     
     if ( method_name == 'MaxWiK_MAP' ){
@@ -119,18 +78,9 @@ Get_parameter  <-  function( method_name, kernel_name = '',
                                     stat.obs = stat.obs, n_best = 1 )
     }
     
-    ### Get MSE 
-    MSE = NULL
-    if ( !is.na( par.est )[1] ) MSE  =  sum( ( par.truth - par.est ) ** 2  )
-    
-    running_time  =  as.numeric( difftime(Sys.time(), time_start, units = "secs")[[ 1 ]] )
-    
-    return( list( stat = data.frame(    method_name = method_name,
-                                        kernel_name = kernel_name,
-                                        MSE = MSE, 
-                                        running_time = running_time), 
-                  par.est = par.est ) )
+    return( par.est )
 }
+
 
 #' @describeIn Get_parameter Function to generate parameters and simulate a model based on MaxWiK algorithm 
 #'
