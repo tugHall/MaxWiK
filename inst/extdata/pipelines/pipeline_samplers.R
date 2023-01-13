@@ -1,9 +1,7 @@
 ### 
-###  Pipeline to get parameter estimation 
+###  Pipeline to get parameter estimation based on sampling schemes
 
 library('MaxWiK')
-
-# Please, pay attention running of pipeline will take X-X hours for 4 cores. 
 
 # DEfine the working folder:
 wd  =  '../Simulation'
@@ -18,23 +16,6 @@ if ( dir.exists( wd ) ) {
 
 ### Check installation of libraries:
 check_packages()
-
-
-### This is the function to execute the pipeline automatically, 
-###    so, if you need just to repeat the results of the dataset, 
-###    please, use this short cut 
-
-if ( FALSE ){
-    setwd( dir = wd )
-    RES  =  experiment_samplers(   file_name = './output.txt', 
-                                   model_name = 'Gaussian',
-                                   dimension = 2, 
-                                   stochastic_term  =  2,
-                                   rng  =  c( 0,10 ), 
-                                   restrict_points_number = 100, 
-                                   nmax = 30 )
-}
-
 
 ### In order to understand procedure of execution all the method, please, see
 ### the functions:
