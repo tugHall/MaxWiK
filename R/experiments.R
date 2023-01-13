@@ -1,6 +1,74 @@
 
 ### File to organize toy experiments which code is presented in pipeline_ABC.R 
 
+
+#' Function to call a method to get a parameter estimation and MSE
+#'
+#' @param method_name Name of a method
+#' @param kernel_name Name of kernel function
+#' @param dimension  Dimension of the model
+#' @param iteration Iteration number of trial with the same model and other parameters
+#' @param stat.obs Data frame of statistics of observation point
+#' @param stat.sim Data frame of statistics of simulations
+#' @param par.sim Data frame of parameters
+#' @param G Matrix of similarities for K2-ABC based on isolation kernel
+#' @param par.truth Truth parameter value to check result of estimation
+#' @param model_function Function that is used as function to calculate output for an estimated parameter
+#' @param model_par List of parameters for a model function
+#' @param hyper List of hyperparameters to use for a method
+#'
+#' @return \code{Get_call()} returns the list: \cr
+#' method_name = method_name, \cr
+#' - kernel_name, \cr
+#' - model_name, \cr
+#' - stochastic_term, \cr
+#' - MSE, \cr
+#' - running_time, \cr
+#' - iteration.
+#' @export
+#' 
+#' @examples
+#' NULL
+Get_call  <-  function( method_name, kernel_name = '', dimension, iteration, 
+                        stat.obs, stat.sim, par.sim, G = NULL, par.truth, 
+                        model_function  =  Gauss_function,
+                        model_par = list(d = 1, x0 = 3, r = range(0,10), noise = 0, 
+                                         A = 1, sigma = 1 ),
+                        hyper ){
+
+    time_start  =  Sys.time( )
+
+    par.est  =  Get_parameter( method_name =  method_name, 
+                               kernel_name =  kernel_name,
+                               stat.obs    =  stat.obs, 
+                               stat.sim    =  stat.sim, 
+                               par.sim     =  par.sim, 
+                               G           =  G,
+                               hyper       =  hyper )
+    
+    ### Get MSE 
+    MSE = NULL
+    if ( !is.na( par.est )[1] ){
+        model_par_all  =  c( model_par, list( par.sim1 = par.est ) )
+        model_par_all$noise  =  0 
+        sim_est  =  do.call( model_function, model_par_all )
+        MSE  =  MSE_sim(stat.obs = stat.obs, stat.sim = sim_est ) 
+    }
+    
+    running_time  =  as.numeric( difftime(Sys.time(), time_start, units = "secs")[[1]] )
+    
+    return( data.frame(   method_name = method_name,
+                          kernel_name = kernel_name,
+                          # model_name  = model_par$name,
+                          dimension   = dimension, 
+                          stochastic_term = stochastic_term,
+                          MSE = round( x = MSE, digits = 2 ),
+                          running_time = round( x = running_time, digits = 2 ), 
+                          iteration = iteration ) )
+}
+
+
+
 #' @describeIn Get_call Function to get a parameter estimation using a method
 #'
 #' @return \code{Get_parameter()} returns the parameter estimation
@@ -80,72 +148,6 @@ Get_parameter  <-  function( method_name, kernel_name = '',
     }
     
     return( par.est )
-}
-
-
-#' Function to call a method to get a parameter estimation and MSE
-#'
-#' @param method_name Name of a method
-#' @param kernel_name Name of kernel function
-#' @param dimension  Dimension of the model
-#' @param iteration Iteration number of trial with the same model and other parameters
-#' @param stat.obs Data frame of statistics of observation point
-#' @param stat.sim Data frame of statistics of simulations
-#' @param par.sim Data frame of parameters
-#' @param G Matrix of similarities for K2-ABC based on isolation kernel
-#' @param par.truth Truth parameter value to check result of estimation
-#' @param model_function Function that is used as function to calculate output for an estimated parameter
-#' @param model_par List of parameters for a model function
-#' @param hyper List of hyperparameters to use for a method
-#'
-#' @return \code{Get_call()} returns the list: \cr
-#' method_name = method_name, \cr
-#' - kernel_name, \cr
-#' - model_name, \cr
-#' - stochastic_term, \cr
-#' - MSE, \cr
-#' - running_time, \cr
-#' - iteration.
-#' @export
-#' 
-#' @examples
-#' NULL
-Get_call  <-  function( method_name, kernel_name = '', dimension, iteration, 
-                        stat.obs, stat.sim, par.sim, G = NULL, par.truth, 
-                        model_function  =  Gauss_function,
-                        model_par = list(d = 1, x0 = 3, r = range(0,10), noise = 0, 
-                                         A = 1, sigma = 1 ),
-                        hyper ){
-
-    time_start  =  Sys.time( )
-
-    par.est  =  Get_parameter( method_name =  method_name, 
-                               kernel_name =  kernel_name,
-                               stat.obs    =  stat.obs, 
-                               stat.sim    =  stat.sim, 
-                               par.sim     =  par.sim, 
-                               G           =  G,
-                               hyper       =  hyper )
-    
-    ### Get MSE 
-    MSE = NULL
-    if ( !is.na( par.est )[1] ){
-        model_par_all  =  c( model_par, list( par.sim1 = par.est ) )
-        model_par_all$noise  =  0 
-        sim_est  =  do.call( model_function, model_par_all )
-        MSE  =  MSE_sim(stat.obs = stat.obs, stat.sim = sim_est ) 
-    }
-    
-    running_time  =  as.numeric( difftime(Sys.time(), time_start, units = "secs")[[1]] )
-    
-    return( data.frame(   method_name = method_name,
-                          kernel_name = kernel_name,
-                          # model_name  = model_par$name,
-                          dimension   = dimension, 
-                          stochastic_term = stochastic_term,
-                          MSE = round( x = MSE, digits = 2 ),
-                          running_time = round( x = running_time, digits = 2 ), 
-                          iteration = iteration ) )
 }
 
 
