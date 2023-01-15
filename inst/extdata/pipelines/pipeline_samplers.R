@@ -27,81 +27,102 @@ check_packages()
 ###      here you can change hyper parameters as well as the models' data like
 ###      name, dimension and stochastic term.
 
-# We use these input parameters for experiment_samplers() function:
 
-file_name = './output.txt'
-model_name = 'Gaussian'
-dimension = 2
-stochastic_term  =  1
-rng  =  c( 0,10 )
-restrict_points_number = 100
-nmax = 300 
+file_name   =  'output.txt'
+model       =  c( 'Gaussian', 'Linear' )[ 1 ]
+dimension   =  2
+stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 1 ]
+rng  =  c( 0, 1000 )   # range of parameters
+restrict_points_number  =  500
+d = max( dimension )
+A      =  ( ( 1:d ) + 12 ) * 100  # Amplitude for Gauss function / Linear function
+sigma  =  rep( rng[2]/ 5, d )     # Sigma for Gauss function 
 
-
-# delete the file from the previous simulation
-if ( file.exists( file_name) ) unlink( file_name )
-
-input  =  NULL
-x0  =  round( runif( n = dimension, min = rng[1], max = rng[2] ), digits = 4 )
-Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
-
-if ( model_name == 'Gaussian' ) {
-    input = get_dataset_of_Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
-                            n = Number_of_points, r = rng,
-                            noise = stochastic_term )
+if ( model == 'Gaussian' ) {
+    model_function  =  Gauss_function
 }
-if ( model_name == 'Linear' ) {
-    input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
-                            n = Number_of_points, r = rng,
-                            noise = stochastic_term )
+if ( model == 'Linear' ) {
+    model_function  =  Linear_function
 }
 
-if ( is.null( input ) ) stop( 'Model name is incorrect' )
-stat.sim_origin  =  input$stat.sim
-stat.obs  =  input$stat.obs
-par.sim_origin  =  input$par.sim
-rm( input )
-
-# Apply restrict number of points:
-tol = restrict_points_number / nrow( stat.sim_origin )
-rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
-                method = 'rejection', tol = tol )
-
-stat.sim  =  stat.sim_origin[ rej$region, ]
-par.sim   =  par.sim_origin[ rej$region, ] 
-par.truth =  data.frame( matrix( x0, ncol = dimension ) )
-rm(x0)
-psi_t  =  adjust_psi_t( par.sim = par.sim, stat.sim = stat.sim, 
-                        stat.obs = stat.obs, talkative = FALSE, 
-                        check_pos_def = FALSE, 
-                        n_best = 10, cores = 4 )
-
-ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
-                      param = par.sim, 
-                      stat.sim = stat.sim, 
-                      stat.obs = stat.obs, 
-                      talkative = FALSE, 
-                      check_pos_def = FALSE )
-
-G = matrix( data = ikern$similarity, ncol = 1 )
-
-### Next block of the code is the content of the sampler_all_methods() function:
-if ( FALSE ){
-    RES = sampler_all_methods(  model_name = model_name, 
-                                dimension = dimension, 
-                                stochastic_term = stochastic_term, 
-                                stat.obs = stat.obs, 
-                                stat.sim = stat.sim, 
-                                par.sim = par.sim, 
-                                par.truth = par.truth, 
-                                G = G,
-                                nmax = nmax
-                            )
-}
-
+#  By default number of processors in parallel calculations
+#             cores = 4 in the function Get_call_all_methods
+#   YOU can change this parameter to accelerate calculations ( see the code below )
 cores = 4
 
-DF  =  NULL
+# delete old file
+if ( file.exists( file_name) ) unlink( file_name )
+
+
+Get_data  =  function( dimension, rng, restrict_points_number, 
+                       Number_of_points, model,
+                       A, sigma, stochastic_term ){
+    
+    input  =  NULL
+    x0  =  runif( n = dimension, min = rng[1], max = rng[2] )
+    Number_of_points  =  max( c( 50 * dimension, restrict_points_number ) )
+    
+    if ( model == 'Gaussian' ) {
+        input = get_dataset_of_Gaussian_model( d = dimension, x0 = x0, probability = TRUE, 
+                                               n = Number_of_points, r = rng, 
+                                               A = A[1:dimension], sigma = sigma[1:dimension], 
+                                               noise = stochastic_term )
+        
+        model_par = list(d = dimension, x0 = x0, r = rng, 
+                         A = A[1:dimension], sigma = sigma[1:dimension], 
+                         noise = stochastic_term  ) 
+    }
+    if ( model == 'Linear' ) {
+        input  =  get_dataset_of_Linear_model( d = dimension, x0 = x0, probability = TRUE, 
+                                               n = Number_of_points, r = rng, A = A[1:dimension],
+                                               noise = stochastic_term )
+        model_par = list( d = dimension, x0 = x0, r = rng, 
+                          A = A[1:dimension],
+                          noise = stochastic_term  ) 
+    }
+    
+    if ( is.null( input ) ) stop( 'Model name is incorrect' )
+    stat.sim_origin  =  input$stat.sim
+    stat.obs  =  input$stat.obs
+    par.sim_origin  =  input$par.sim
+    rm( input )
+    
+    # Apply restrict number of points:
+    tol = restrict_points_number / nrow( stat.sim_origin )
+    rej = abc::abc( target = stat.obs, param = par.sim_origin, sumstat = stat.sim_origin,
+                    method = 'rejection', tol = tol )
+    
+    stat.sim  =  stat.sim_origin[ rej$region, ]
+    par.sim   =   par.sim_origin[ rej$region, ] 
+    
+    return( list( stat.obs  =  stat.obs,
+                  stat.sim  =  stat.sim, 
+                  par.sim   =  par.sim,
+                  model_par =  model_par ) )
+}
+
+
+input  =  Get_data( dimension = dimension, rng = rng, 
+                    restrict_points_number = restrict_points_number, 
+                    Number_of_points = Number_of_points,
+                    model = 'Gaussian',
+                    A = A, sigma = sigma, stochastic_term = 0 )
+par.sim   =  input$par.sim 
+stat.sim  =  input$stat.sim
+stat.obs  =  input$stat.obs
+par.truth =  input$model_par$x0
+model_par =  input$model_par
+
+stat.sim_init =  stat.sim
+par.sim_init  =  par.sim
+
+hyper  =  Get_hyperparameters(stat.obs = stat.obs, stat.sim = stat.sim, 
+                              par.sim = par.sim, par.truth = par.truth )
+utils::capture.output( hyper, file = 'HyperParameters.txt', append = FALSE )
+
+psi_t  =  hyper$iKernel$psi_t
+
+
 Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 'Rejection', 
                                      'Loclinear', 'Neuralnet', 'Ridge',
                                      'MaxWiK_MAP', 'MaxWiK' ), 
@@ -109,6 +130,64 @@ Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 'Rejection',
                                      '',          '',          'epanechnikov',
                                      'iKernel', 'iKernel') 
 )
+
+
+method_name  =  Meth_Kern$Method[ 4 ]
+kernel_name  =  Meth_Kern$Kernel[ 4 ]
+
+stat.sim_itt =  stat.sim
+par.sim_itt  =  par.sim
+
+# Maximal number of itteration in sampling for each method
+nmax  =  100   
+
+res = NULL
+for( itt in 1:nmax ){
+    
+    input  =  restrict_data( par.sim = par.sim_itt, 
+                             stat.sim = stat.sim_itt, 
+                             stat.obs = stat.obs, 
+                             size = restrict_points_number ) 
+    stat.sim_itt =  input$stat.sim
+    par.sim_itt  =  input$par.sim
+    
+    new_par = Get_parameter( method_name = method_name, 
+                             kernel_name = kernel_name, 
+                             stat.obs   =  stat.obs, 
+                             stat.sim   =  stat.sim_itt, 
+                             par.sim    =  par.sim_itt, 
+                             G          =  NULL, 
+                             hyper      =  hyper )
+    
+    res = rbind( res, new_par )
+    
+    add_arg  =  list( par.sim1 =  as.data.frame( new_par ) )
+
+    new_sim  =  do.call( what = model_function, 
+                         args = c( model_par, add_arg ) )
+    
+    par.sim_itt  =  rbind( par.sim_itt, new_par )
+    stat.sim_itt =  rbind( stat.sim_itt, new_sim )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Define model function:
 if ( model_name == 'Gaussian' ) {
