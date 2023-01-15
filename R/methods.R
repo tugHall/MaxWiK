@@ -317,8 +317,11 @@ Get_hyperparameters  <-  function( stat.obs, stat.sim, par.sim, par.truth ){
 
     res      =  adjust_ABC_tolerance( par.sim = par.sim, stat.sim = stat.sim, 
                                           stat.obs = stat.obs )
-    hyper[[ 'tolerance' ]]  =  res$tolerance
-    
+    if ( ( res$tolerance * nrow( par.sim ) < 20 ) ){ 
+            hyper[[ 'tolerance' ]]  =  20 / nrow( par.sim )
+        } else {
+            hyper[[ 'tolerance' ]]  =  res$tolerance
+    }
     return( hyper )
 }
 
