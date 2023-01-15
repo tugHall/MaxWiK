@@ -22,7 +22,7 @@ check_packages()
 ###             *   Get_call               - to call particular method with 
 ###                                 fitting hyper parameters for each method
 
-### This pipeline is the content of the experiment_models() function,
+### This pipeline has two models with different parameters,
 ###      here you can change hyper parameters as well as the models' data like
 ###      dimension and stochastic term.
 
