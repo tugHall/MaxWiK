@@ -2,7 +2,6 @@
 ###  Pipeline to get parameter estimation based on sampling schemes
 
 library('MaxWiK')
-library('parallel')
 
 # DEfine the working folder:
 wd  =  '../Simulation'
@@ -174,7 +173,7 @@ for( j in 1:length( Meth_Kern$Method ) ){
     res  =  lapply( X = w, FUN = function( x ){
     
         G = NULL
-        if ( kernel_name  ==  'iKernel' ){
+        if ( method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
             ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
                                   param = par.sim[1:x, ], 
                                   stat.sim = stat.sim[1:x, ], 
@@ -213,14 +212,18 @@ for( j in 1:length( Meth_Kern$Method ) ){
     
 }   # End of loop for all the methods
 
-
-
-
-plot(x = w, y = log( res_2 ), type = 'p' )
-points( x = w, y = log( res_1 ), col = 'blue' )    
+nl  =  c(2,3, 8:10)
+l   =  length( nl )
+clrs  =  as.vector( gen_colors( nm = l ) )
+plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
+               names = c( 'Iterations', 'log of MSE'), xr = c(500, 1500), 
+               yr = c(1E-2, 1E6), logscale = 'y', 
+               col = clrs$color, 
+               lwd = 2, lt = 1:l, cex = 1.5, 
+               draw_key = TRUE )
     
 
-
+##### stop here 
 
 
 
