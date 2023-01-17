@@ -30,8 +30,8 @@ check_packages()
 
 file_name   =  'output.txt'
 model       =  c( 'Gaussian', 'Linear' )[ 1 ]
-dimension   =  2
-stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 1 ]
+dimension   =  20
+stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 3 ]
 rng  =  c( 0, 1000 )   # range of parameters
 restrict_points_number  =  Number_of_points  =  500
 d = max( dimension )
@@ -150,15 +150,15 @@ data_MSE      =  data.frame( w = w )
 
 ############### Start of a method
 
-Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 'Rejection', 
-                                     'Loclinear', 'Neuralnet', 'Ridge',
+Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'Rejection', 
+                                     'Loclinear',
                                      'MaxWiK_MAP', 'MaxWiK' ), 
-                          Kernel = c('Gaussian', 'Laplacian', 'iKernel', '',
-                                     '',          '',          'epanechnikov',
+                          Kernel = c('Gaussian', 'Laplacian', '',
+                                     '',
                                      'iKernel', 'iKernel') 
 )
 
-# Start of looop for all the methods:
+# Start of loop for all the methods:
 for( j in 1:length( Meth_Kern$Method ) ){
     
     method_name  =  Meth_Kern$Method[ j ]
@@ -212,7 +212,7 @@ for( j in 1:length( Meth_Kern$Method ) ){
     
 }   # End of loop for all the methods
 
-nl  =  c(2,3, 9:10 ) # 8:10)
+nl  =  c(3,5:7 ) # 8:10)
 l   =  length( nl )
 
 hue = c(" ", "random", "red", "orange", "yellow",
@@ -226,8 +226,8 @@ clrs  =  randomColor(count = l,
 # palette.colors( n = l, palette = 'ggplot2' )  # as.vector( gen_colors( nm = l ) )
 
 plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
-               names = c( 'Iterations', 'log of MSE'), xr = c(500, 1500), 
-               yr = c(1E0, 1E7), logscale = 'y', 
+               names = c( 'Iterations', 'log of MSE'), xr = c(1000, 2000), 
+               yr = c(1E7, 1E8), logscale = 'y', 
                col = clrs, 
                lwd = 2, lt = 1:l, cex = 1.5, 
                draw_key = TRUE )
@@ -237,7 +237,127 @@ data_par_est$MSE  =  data_MSE
 saveRDS( object = data_par_est, 
          file = paste0('par_est_', dimension, '_', stochastic_term, '.RDS' ))
 
-##### stop here 
+
+
+
+
+
+##### Sampling from EasyABC package and methods from it
+
+
+# 4.GET ACCURATE MAP based on SAMPLING ------------------------------------
+
+library( 'EasyABC' )
+
+toy_model  =  function(x){
+    cntr  <<-  cntr + 1
+    # print( paste0( 'Simulation N ', cntr ) )
+    y = c( 100 * exp( - (x[1] - 30) ** 2 / 32 ),
+           100 * exp( - (x[2] - 55) ** 2 / 32 ) )
+    return( y )
+}
+
+
+toy_prior  =  list( c( "unif", 0, 100 ), c( "unif", 0, 100 ) )
+sum_stat_obs  =  c( 100, 100 )
+set.seed(1)
+
+
+############# REJECTION ABC
+n=300
+ABC_rej  =  ABC_rejection( model = toy_model, prior = toy_prior,
+                           nb_simul = n,
+                           summary_stat_target = sum_stat_obs,
+                           tol = 0.02,
+                           progress_bar = TRUE )
+print( paste0( 'The number of simulations is ', ABC_rej$nsim ) )
+
+ABC_rej$param
+ABC_rej$stats
+
+hist( ABC_rej$param[ , 1] )
+hist( ABC_rej$param[ , 2] )
+
+
+############# Adaptive ABC or sequential ABC scheme
+
+### Ref:
+# Beaumont, M. A., Cornuet, J., Marin, J., and Robert, C. P. (2009)
+# Adaptive approximate Bayesian computation. Biometrika, 96, 983–990.
+
+tolerance  =  c( 4E-1, 1E-1 )
+n = 20
+ABC_Beaumont  =  ABC_sequential( method = "Beaumont",
+                                 model  = toy_model,
+                                 prior  = toy_prior,
+                                 nb_simul = n,
+                                 summary_stat_target = sum_stat_obs,
+                                 tolerance_tab = tolerance,
+                                 verbose = TRUE )
+
+print( paste0( 'The number of simulations is ', ABC_Beaumont$nsim ) )
+
+ABC_Beaumont$weights
+ABC_Beaumont$param
+
+hist( ABC_Beaumont$param[, 1])
+hist( ABC_Beaumont$param[, 2])
+
+
+#### Performing a ABC-MCMC scheme
+
+n  =  100
+
+ABC_Marjoram_original  =  ABC_mcmc( method="Marjoram_original",
+                                    model=toy_model,
+                                    prior=toy_prior,
+                                    summary_stat_target=sum_stat_obs,
+                                    n_rec=n )
+
+print( paste0( 'The number of simulations is ', ABC_Marjoram_original$nsim ) )
+
+ABC_Marjoram_original$param
+
+hist( ABC_Marjoram_original$param[ , 1 ] )
+hist( ABC_Marjoram_original$param[ , 2 ] )
+
+ABC_Marjoram_original$stats_normalization
+
+
+
+
+### Performing a A Simulated Annealing Approach to Approximate Bayes Computations scheme
+
+### Ref:
+# Albert C., Kunsch HR., Scheidegger A. (2014)
+# A Simulated Annealing Approach to Approximate Bayes Computations.
+# Stat. Comput., 1–16, arXiv:1208.2157.
+
+# Sampler:
+r.prior  =  function()   c( runif( 1, 0, 100), runif( 1, 0, 100) )
+
+# Density:
+d.prior  =  function(x)  dunif( x[1], 0, 100 ) * dunif( x[2], 0, 100 )
+
+n.sample  =  300
+
+iter.max  =  n.sample * 30
+
+eps.init  =  2
+cntr  =  0
+ABC_Albert  =  SABC(   r.model  =  toy_model,
+                       r.prior  =  r.prior,
+                       d.prior  =  d.prior,
+                       n.sample =  n.sample,
+                       eps.init =  eps.init,
+                       iter.max =  iter.max,
+                       method   =  "informative",
+                       y        =  sum_stat_obs )
+
+print( paste0( 'The number of simulations is ', cntr ) )
+
+hist( ABC_Albert$E[ , 1 ], breaks = 25 )
+hist( ABC_Albert$E[ , 2 ], breaks = 25 )
 
 
 
@@ -249,14 +369,12 @@ saveRDS( object = data_par_est,
 
 
 
+# OLD SECTION -------------------------------------------------------------
 
 
 
 
-
-
-
-
+### OLD CODE
 
 DF_1_S  =  mclapply( 1:nrow(Meth_Kern) , FUN = function( mk ){   
     sampler_method( method_name =  as.character( Meth_Kern$Method[mk] ), 
