@@ -3,6 +3,7 @@
 export(GET_SUBSET)
 export(GRAM_iKernel)
 export(Gauss_function)
+export(Get_MAP)
 export(Get_call)
 export(Get_call_all_methods)
 export(Get_hyperparameters)
