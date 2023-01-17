@@ -264,7 +264,8 @@ set.seed(1)
 
 
 ############# REJECTION ABC
-n=300
+n=1000
+cntr = 0
 ABC_rej  =  ABC_rejection( model = toy_model, prior = toy_prior,
                            nb_simul = n,
                            summary_stat_target = sum_stat_obs,
@@ -278,6 +279,7 @@ ABC_rej$stats
 hist( ABC_rej$param[ , 1] )
 hist( ABC_rej$param[ , 2] )
 
+MaxWiK:: Get_MAP( DF = as.data.frame( ABC_rej$param ) )
 
 ############# Adaptive ABC or sequential ABC scheme
 
@@ -286,7 +288,8 @@ hist( ABC_rej$param[ , 2] )
 # Adaptive approximate Bayesian computation. Biometrika, 96, 983–990.
 
 tolerance  =  c( 4E-1, 1E-1 )
-n = 20
+n = 4
+cntr = 0
 ABC_Beaumont  =  ABC_sequential( method = "Beaumont",
                                  model  = toy_model,
                                  prior  = toy_prior,
@@ -302,6 +305,8 @@ ABC_Beaumont$param
 
 hist( ABC_Beaumont$param[, 1])
 hist( ABC_Beaumont$param[, 2])
+
+MaxWiK:: Get_MAP( DF = as.data.frame( ABC_Beaumont$param ) )
 
 
 #### Performing a ABC-MCMC scheme
@@ -323,7 +328,7 @@ hist( ABC_Marjoram_original$param[ , 2 ] )
 
 ABC_Marjoram_original$stats_normalization
 
-
+MaxWiK:: Get_MAP( DF = as.data.frame( ABC_Marjoram_original$param ) )
 
 
 ### Performing a A Simulated Annealing Approach to Approximate Bayes Computations scheme
@@ -339,9 +344,9 @@ r.prior  =  function()   c( runif( 1, 0, 100), runif( 1, 0, 100) )
 # Density:
 d.prior  =  function(x)  dunif( x[1], 0, 100 ) * dunif( x[2], 0, 100 )
 
-n.sample  =  300
+n.sample  =  100
 
-iter.max  =  n.sample * 30
+iter.max  =  n.sample * 7
 
 eps.init  =  2
 cntr  =  0
@@ -359,7 +364,7 @@ print( paste0( 'The number of simulations is ', cntr ) )
 hist( ABC_Albert$E[ , 1 ], breaks = 25 )
 hist( ABC_Albert$E[ , 2 ], breaks = 25 )
 
-
+MaxWiK:: Get_MAP( DF = as.data.frame( ABC_Albert$E[ , c(1,2)] ) )
 
 
 
