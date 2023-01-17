@@ -2,7 +2,7 @@
 ###  Pipeline to get parameter estimation based on sampling schemes
 
 library('MaxWiK')
-
+library('randomcoloR')
 # DEfine the working folder:
 wd  =  '../Simulation'
 
@@ -212,16 +212,30 @@ for( j in 1:length( Meth_Kern$Method ) ){
     
 }   # End of loop for all the methods
 
-nl  =  c(2,3, 8:10)
+nl  =  c(2,3, 9:10 ) # 8:10)
 l   =  length( nl )
-clrs  =  as.vector( gen_colors( nm = l ) )
+
+hue = c(" ", "random", "red", "orange", "yellow",
+        "green", "blue", "purple", "pink", "monochrome")[1]
+luminosity = c(" ", "random", "light", "bright", "dark")[5] 
+
+clrs  =  randomColor(count = l,
+                     hue = hue,
+                     luminosity = luminosity )
+
+# palette.colors( n = l, palette = 'ggplot2' )  # as.vector( gen_colors( nm = l ) )
+
 plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
                names = c( 'Iterations', 'log of MSE'), xr = c(500, 1500), 
-               yr = c(1E-2, 1E6), logscale = 'y', 
-               col = clrs$color, 
+               yr = c(1E0, 1E7), logscale = 'y', 
+               col = clrs, 
                lwd = 2, lt = 1:l, cex = 1.5, 
                draw_key = TRUE )
-    
+
+# Save data to a file
+data_par_est$MSE  =  data_MSE
+saveRDS( object = data_par_est, 
+         file = paste0('par_est_', dimension, '_', stochastic_term, '.RDS' ))
 
 ##### stop here 
 
