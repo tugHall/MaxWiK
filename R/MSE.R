@@ -78,6 +78,8 @@ MSE_parameters   <-   function( par.truth, par.top = NULL, par.best ){
 #'
 #' @return The function \code{Get_MAP} returns the MAP for each dimension in data frame DF of vector
 #' 
+#' @export
+#' 
 #' @examples
 #' NULL 
 Get_MAP <- function( DF ) {
