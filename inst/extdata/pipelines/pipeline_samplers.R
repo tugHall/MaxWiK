@@ -17,6 +17,8 @@ if ( dir.exists( wd ) ) {
 ### Check installation of libraries:
 check_packages()
 
+
+
 ### In order to understand procedure of execution all the method, please, see
 ### the functions:
 ###             *   sampler_all_methods    - to call all the methods, and
@@ -30,8 +32,8 @@ check_packages()
 
 file_name   =  'output.txt'
 model       =  c( 'Gaussian', 'Linear' )[ 1 ]
-dimension   =  20
-stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 3 ]
+dimension   =  2
+stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 1 ]
 rng  =  c( 0, 1000 )   # range of parameters
 restrict_points_number  =  Number_of_points  =  500
 d = max( dimension )
@@ -94,6 +96,16 @@ Get_data  =  function( dimension, rng,
                   model_par =  model_par ) )
 }
 
+Get_MSE  <-  function( new_par, model_par, model_function, stat.obs ){
+    
+    model_par_all  =  c( model_par, list( par.sim1 = new_par ) )
+    model_par_all$noise  =  0 
+    sim_est  =  do.call( model_function, model_par_all )
+    
+    MSE  =  MSE_sim(stat.obs = stat.obs, stat.sim = sim_est ) 
+    
+    return( MSE )
+}
 
 input  =  Get_data( dimension = dimension, rng = rng, 
                     Number_of_points = Number_of_points,
@@ -201,18 +213,18 @@ for( j in 1:length( Meth_Kern$Method ) ){
     for( i in 1:nrow( data_par_est[[ MK ]] ) ){      
         
         new_par  =  data_par_est[[ MK ]][ i, ]
-        model_par_all  =  c( model_par, list( par.sim1 = new_par ) )
-        model_par_all$noise  =  0 
-        sim_est  =  do.call( model_function, model_par_all )
         
-        MSE  =  MSE_sim(stat.obs = stat.obs, stat.sim = sim_est ) 
+        MSE  =  Get_MSE( new_par    =  new_par, 
+                         model_par  =  model_par, 
+                         model_function = model_function, 
+                         stat.obs = stat.obs )
     
         data_MSE[ i, MK ]  = MSE
     }
     
 }   # End of loop for all the methods
 
-nl  =  c(3,5:7 ) # 8:10)
+nl  =  c(2:6 ) # 8:10)
 l   =  length( nl )
 
 hue = c(" ", "random", "red", "orange", "yellow",
@@ -226,8 +238,8 @@ clrs  =  randomColor(count = l,
 # palette.colors( n = l, palette = 'ggplot2' )  # as.vector( gen_colors( nm = l ) )
 
 plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
-               names = c( 'Iterations', 'log of MSE'), xr = c(1000, 2000), 
-               yr = c(1E7, 1E8), logscale = 'y', 
+               names = c( 'Iterations', 'log of MSE'), xr = c(500, 1500), 
+               yr = c(1E-3, 1E6), logscale = 'y', 
                col = clrs, 
                lwd = 2, lt = 1:l, cex = 1.5, 
                draw_key = TRUE )
@@ -245,21 +257,30 @@ saveRDS( object = data_par_est,
 ##### Sampling from EasyABC package and methods from it
 
 
-# 4.GET ACCURATE MAP based on SAMPLING ------------------------------------
+# 4.GET MAP based on SAMPLING ------------------------------------
 
 library( 'EasyABC' )
 
-toy_model  =  function(x){
+toy_model  =  function( x ){
+    
     cntr  <<-  cntr + 1
-    # print( paste0( 'Simulation N ', cntr ) )
-    y = c( 100 * exp( - (x[1] - 30) ** 2 / 32 ),
-           100 * exp( - (x[2] - 55) ** 2 / 32 ) )
+    
+    new_par  =  data.frame( matrix( x, nrow = 1 ) )
+
+    model_par_all  =  c( model_par, list( par.sim1 = new_par ) )
+    
+    model_par_all$noise  =  0 
+    
+    y     =  as.numeric( do.call( model_function, model_par_all ) )
+    
     return( y )
 }
 
+### Results:
+MSE_samplings  =  list(  )
 
-toy_prior  =  list( c( "unif", 0, 100 ), c( "unif", 0, 100 ) )
-sum_stat_obs  =  c( 100, 100 )
+toy_prior  =  list( c( "unif", model_par$r ), c( "unif", model_par$r ) )
+sum_stat_obs  = as.numeric( stat.obs )  #  c( 100, 100 )
 set.seed(1)
 
 
@@ -287,8 +308,8 @@ MaxWiK:: Get_MAP( DF = as.data.frame( ABC_rej$param ) )
 # Beaumont, M. A., Cornuet, J., Marin, J., and Robert, C. P. (2009)
 # Adaptive approximate Bayesian computation. Biometrika, 96, 983–990.
 
-tolerance  =  c( 4E-1, 1E-1 )
-n = 4
+tolerance  =  ( 20 : 1 )*0.02  # c( 4E-1, 1E-1, 4E-2 )
+n = 100
 cntr = 0
 ABC_Beaumont  =  ABC_sequential( method = "Beaumont",
                                  model  = toy_model,
@@ -298,7 +319,7 @@ ABC_Beaumont  =  ABC_sequential( method = "Beaumont",
                                  tolerance_tab = tolerance,
                                  verbose = TRUE )
 
-print( paste0( 'The number of simulations is ', ABC_Beaumont$nsim ) )
+print( paste0( 'The number of simulations is ', cntr ) )
 
 ABC_Beaumont$weights
 ABC_Beaumont$param
@@ -306,12 +327,35 @@ ABC_Beaumont$param
 hist( ABC_Beaumont$param[, 1])
 hist( ABC_Beaumont$param[, 2])
 
+# Weighted estimations:
+sum( ABC_Beaumont$weights * ABC_Beaumont$param[ , 1 ] )
+sum( ABC_Beaumont$weights * ABC_Beaumont$param[ , 2 ] )
+
 MaxWiK:: Get_MAP( DF = as.data.frame( ABC_Beaumont$param ) )
+
+
+MSE_samplings$ABC_Beaumont  =  data.frame()
+for (i in 1 : length( ABC_Beaumont$intermediary ) ){
+    
+    new_par  =  sapply( X = 2 : ( 1 + ncol( par.sim ) ), FUN = function( x ) {
+                        sum( ABC_Beaumont$intermediary[[ i ]]$posterior[ , x ] * 
+                        ABC_Beaumont$intermediary[[ i ]]$posterior[ , 1 ] ) 
+                    } )
+    MSE_samplings$ABC_Beaumont[ i, 'MSE' ]  =  
+        Get_MSE(new_par = new_par, model_par = model_par, 
+                    model_function = model_function, stat.obs = stat.obs )
+    MSE_samplings$ABC_Beaumont[ i, 'n_simul_tot' ]  =  
+        ABC_Beaumont$intermediary[[ i ]]$n_simul_tot
+}
+
+plot(x = MSE_samplings$ABC_Beaumont$n_simul_tot, 
+     y = MSE_samplings$ABC_Beaumont$MSE, log = 'y', type = 'l' )
+
 
 
 #### Performing a ABC-MCMC scheme
 
-n  =  100
+n  =  20
 
 ABC_Marjoram_original  =  ABC_mcmc( method="Marjoram_original",
                                     model=toy_model,
@@ -339,12 +383,12 @@ MaxWiK:: Get_MAP( DF = as.data.frame( ABC_Marjoram_original$param ) )
 # Stat. Comput., 1–16, arXiv:1208.2157.
 
 # Sampler:
-r.prior  =  function()   c( runif( 1, 0, 100), runif( 1, 0, 100) )
+r.prior  =  function()   c( runif( 1, 1, 1000 ), runif( 1, 1, 1000 ) )
 
 # Density:
-d.prior  =  function(x)  dunif( x[1], 0, 100 ) * dunif( x[2], 0, 100 )
+d.prior  =  function(x)  dunif( x[1], 1, 1000 ) * dunif( x[2], 1, 1000 )
 
-n.sample  =  100
+n.sample  =  200
 
 iter.max  =  n.sample * 7
 
