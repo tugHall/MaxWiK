@@ -84,7 +84,7 @@ get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10),
 Gauss_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0, 
                               A = 1, sigma = 1, par.sim1 ){
     
-    par.sim  =   unlist( as.vector( par.sim1 ) )
+    par.sim  =   as.numeric( par.sim1 )
     sim1  =  data.frame( matrix( NA, nrow = 1, ncol = d ) )
     names( sim1 )  =  paste0( 'Y', 1:d )
     for( i in 1:d ){
@@ -179,7 +179,7 @@ get_dataset_of_Linear_model  <-  function( d = 1, x0 = 3, r = range(0,10),
 Linear_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0, 
                               A = 1, par.sim1 ){
     if ( any(x0 == 0 ) )  stop( 'X0 parameters should be non-zeros for Linear model')
-    par.sim  =   unlist( as.vector( par.sim1 ) )
+    par.sim  =   as.numeric( par.sim1 )
     sim1  =  data.frame( matrix( NA, nrow = 1, ncol = d ) )
     names( sim1 )  =  paste0( 'Y', 1:d )
     for( i in 1:d ){
