@@ -184,23 +184,23 @@ for( j in 1:length( Meth_Kern$Method ) ){
     # time_start  =  Sys.time( )
     res  =  lapply( X = w, FUN = function( x ){
     
-        G = NULL
-        if ( method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
-            ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
-                                  param = par.sim[1:x, ], 
-                                  stat.sim = stat.sim[1:x, ], 
-                                  stat.obs = stat.obs, 
-                                  talkative = FALSE, 
-                                  check_pos_def = FALSE )
+        # G = NULL
+        if ( FALSE & method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
+                ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
+                                      param = par.sim[1:x, ], 
+                                      stat.sim = stat.sim[1:x, ], 
+                                      stat.obs = stat.obs, 
+                                      talkative = FALSE, 
+                                      check_pos_def = FALSE )
+                
+                G = matrix( data = ikern$similarity, ncol = 1 )
+            }
             
-            G = matrix( data = ikern$similarity, ncol = 1 )
-        }
         new_par = Get_parameter( method_name = method_name, 
                                  kernel_name = kernel_name, 
                                  stat.obs   =  stat.obs, 
                                  stat.sim   =  stat.sim[1:x, ], 
                                  par.sim    =  par.sim[1:x, ], 
-                                 G          =  NULL, 
                                  hyper      =  hyper )
         setTxtProgressBar(pb, x)
         return( new_par )
