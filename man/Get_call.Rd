@@ -15,7 +15,6 @@ Get_call(
   stat.obs,
   stat.sim,
   par.sim,
-  G = NULL,
   par.truth,
   model_function = Gauss_function,
   model_par = list(d = 1, x0 = 3, r = range(0, 10), noise = 0, A = 1, sigma = 1),
@@ -28,7 +27,6 @@ Get_parameter(
   stat.obs,
   stat.sim,
   par.sim,
-  G = NULL,
   hyper
 )
 
@@ -38,7 +36,6 @@ Get_call_all_methods(
   stat.obs,
   stat.sim,
   par.sim,
-  G,
   par.truth,
   cores = 4,
   model_function = Gauss_function,
@@ -62,8 +59,6 @@ Get_hyperparameters(stat.obs, stat.sim, par.sim, par.truth)
 \item{stat.sim}{Data frame of statistics of simulations}
 
 \item{par.sim}{Data frame of parameters}
-
-\item{G}{Matrix of similarities for K2-ABC based on isolation kernel}
 
 \item{par.truth}{Truth parameter value to check result of estimation}
 
