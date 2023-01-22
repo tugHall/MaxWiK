@@ -60,32 +60,3 @@ ggplot(HT_Gaus, aes(X, Y, fill= factor(Z) ) ) +
         legend.text = element_text( size=16, colour = "black", family = "Helvetica")
     )
 
-
-
---- 
-
-
-
-
-# Dummy data
-x <- LETTERS[1:10]
-y <- paste0("var", seq(1,8))
-data <- expand.grid(X=x, Y=y)
-data$Z <- sample(x = c('A', 'B', 'C', 'D' ), size = 80, replace = TRUE )  # runif(40, 1, 3)
-
-
-
-colors <- c( 'green', 'yellow', "red", 'black')
-
-ggplot(data, aes(X, Y, fill= factor(Z) ) ) + 
-    geom_tile() + 
-    scale_fill_manual(values=colors)
-
-
-
-# For continuous values of Z:
-library(hrbrthemes)
-ggplot(data, aes(X, Y, fill= Z)) + 
-    geom_tile() +
-    scale_fill_distiller(palette = "RdPu") +
-    theme_ipsum()
