@@ -11,7 +11,6 @@
 #' @param stat.obs Data frame of statistics of observation point
 #' @param stat.sim Data frame of statistics of simulations
 #' @param par.sim Data frame of parameters
-#' @param G Matrix of similarities for K2-ABC based on isolation kernel
 #' @param par.truth Truth parameter value to check result of estimation
 #' @param model_function Function that is used as function to calculate output for an estimated parameter
 #' @param model_par List of parameters for a model function
@@ -30,7 +29,7 @@
 #' @examples
 #' NULL
 Get_call  <-  function( method_name, kernel_name = '', dimension, iteration, 
-                        stat.obs, stat.sim, par.sim, G = NULL, par.truth, 
+                        stat.obs, stat.sim, par.sim, par.truth, 
                         model_function  =  Gauss_function,
                         model_par = list(d = 1, x0 = 3, r = range(0,10), noise = 0, 
                                          A = 1, sigma = 1 ),
@@ -43,7 +42,6 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
                                stat.obs    =  stat.obs, 
                                stat.sim    =  stat.sim, 
                                par.sim     =  par.sim, 
-                               G           =  G,
                                hyper       =  hyper )
     
     ### Get MSE 
@@ -78,7 +76,7 @@ Get_call  <-  function( method_name, kernel_name = '', dimension, iteration,
 #' @examples
 #' NULL
 Get_parameter  <-  function( method_name, kernel_name = '',
-                             stat.obs, stat.sim, par.sim, G = NULL,
+                             stat.obs, stat.sim, par.sim,
                              hyper ){
     
     n_min  =  50 
@@ -100,6 +98,17 @@ Get_parameter  <-  function( method_name, kernel_name = '',
     }
     
     if ( method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
+        
+        ikern  =  iKernelABC( psi = hyper$iKernel$psi_t$psi[ 1 ], 
+                              t   = hyper$iKernel$psi_t$t[ 1 ], 
+                              param = par.sim, 
+                              stat.sim = stat.sim, 
+                              stat.obs = stat.obs, 
+                              talkative = FALSE, 
+                              check_pos_def = FALSE )
+        
+        G = matrix( data = ikern$similarity, ncol = 1 )
+        
         par.est  =  adjust_K2_ABC_iKernel( par.sim = par.sim, stat.sim = stat.sim, 
                                            stat.obs = stat.obs, G = G )[[ 'par.est' ]]
     }
@@ -162,7 +171,7 @@ Get_parameter  <-  function( method_name, kernel_name = '',
 #' @examples
 #' NULL 
 Get_call_all_methods  <-  function( dimension, iterations, stat.obs, stat.sim, 
-                                    par.sim, G, par.truth, cores = 4,
+                                    par.sim, par.truth, cores = 4,
                                     model_function  =  Gauss_function,
                                     model_par = list(d = 1, x0 = 3, r = range(0,10), noise = 0, 
                                                      A = 1, sigma = 1 ), 
