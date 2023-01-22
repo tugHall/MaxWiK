@@ -351,28 +351,88 @@ for (i in 1 : length( ABC_Beaumont$intermediary ) ){
 plot(x = MSE_samplings$ABC_Beaumont$n_simul_tot, 
      y = MSE_samplings$ABC_Beaumont$MSE, log = 'y', type = 'l' )
 
+##### Sequential Monte-Carlo
+### See:
+### Del Moral, P., Doucet, A., and Jasra, A. (2012) 
+###     An adaptive sequential Monte Carlo method for approximate Bayesian computation. 
+###     Statistics and Computing, 22, 1009–1020.
+
+tolerance  =  0.5  # c( 4E-1, 1E-1, 4E-2 )
+alpha_delmo  =  0.5
+n = 100
+cntr = 0
+ABC_Delmoral  =  ABC_sequential( method = "Delmoral",
+                                 model  = toy_model,
+                                 prior  = toy_prior,
+                                 nb_simul = n,
+                                 summary_stat_target = sum_stat_obs,
+                                 tolerance_target = tolerance, 
+                                 alpha  =  alpha_delmo, 
+                                 verbose = TRUE )
+
+print( paste0( 'The number of simulations is ', cntr ) )
+
+MSE_samplings$Delmoral  =  data.frame( n_simul_tot = NA, MSE = NA )
+for (i in 1 : length( ABC_Delmoral$intermediary ) ){
+    
+    new_par  =  sapply( X = 2 : ( 1 + ncol( par.sim ) ), FUN = function( x ) {
+        sum( ABC_Delmoral$intermediary[[ i ]]$posterior[ , x ] * 
+                 ABC_Delmoral$intermediary[[ i ]]$posterior[ , 1 ] ) 
+    } )
+    MSE_samplings$Delmoral[ i, 'MSE' ]  =  
+        Get_MSE(new_par = new_par, model_par = model_par, 
+                model_function = model_function, stat.obs = stat.obs )
+    MSE_samplings$Delmoral[ i, 'n_simul_tot' ]  =  
+        ABC_Delmoral$intermediary[[ i ]]$n_simul_tot
+}
+
+plot(x = MSE_samplings$Delmoral$n_simul_tot, 
+     y = MSE_samplings$Delmoral$MSE, log = 'y', type = 'p' , 
+     xlim = c( 0, 3000 ))
+points(x = data_MSE$w, data_MSE$`K2-ABC_Laplacian`, pch = 16 )
+
+
+
+
 
 
 #### Performing a ABC-MCMC scheme
 
-n  =  20
+# n  =  20
+n_between_sampling  =  10
+MSE_samplings$ABC_Marjoram_original  =  data.frame( n = NA, MSE = NA )
+for( i in 1:30 ){
 
-ABC_Marjoram_original  =  ABC_mcmc( method="Marjoram_original",
+    n  =  20 * i
+    ABC_Marjoram_original  =  ABC_mcmc( method="Marjoram_original",
                                     model=toy_model,
                                     prior=toy_prior,
                                     summary_stat_target=sum_stat_obs,
-                                    n_rec=n )
+                                    n_rec=n, 
+                                    n_between_sampling = n_between_sampling )
 
-print( paste0( 'The number of simulations is ', ABC_Marjoram_original$nsim ) )
+    # print( paste0( 'The number of simulations is ', ABC_Marjoram_original$nsim ) )
 
-ABC_Marjoram_original$param
+    # ABC_Marjoram_original$param
 
-hist( ABC_Marjoram_original$param[ , 1 ] )
-hist( ABC_Marjoram_original$param[ , 2 ] )
+    # hist( ABC_Marjoram_original$param[ , 1 ] )
+    # hist( ABC_Marjoram_original$param[ , 2 ] )
 
-ABC_Marjoram_original$stats_normalization
+    # ABC_Marjoram_original$stats_normalization
 
-MaxWiK:: Get_MAP( DF = as.data.frame( ABC_Marjoram_original$param ) )
+    new_par  =  MaxWiK:: Get_MAP( DF = as.data.frame( ABC_Marjoram_original$param ) )
+    
+    MSE  =  Get_MSE( new_par    =  new_par, 
+                         model_par  =  model_par, 
+                         model_function  =  model_function, 
+                         stat.obs = stat.obs )
+    MSE_samplings$ABC_Marjoram_original[ i, 'n']    =  ABC_Marjoram_original$nsim
+    MSE_samplings$ABC_Marjoram_original[ i, 'MSE']  =  MSE
+}
+
+plot( x = MSE_samplings$ABC_Marjoram_original$n, 
+      y = MSE_samplings$ABC_Marjoram_original$MSE, 
+      log  =  'y', ylim = c(0.1, 1E6) )
 
 
 ### Performing a A Simulated Annealing Approach to Approximate Bayes Computations scheme
@@ -388,9 +448,10 @@ r.prior  =  function()   c( runif( 1, 1, 1000 ), runif( 1, 1, 1000 ) )
 # Density:
 d.prior  =  function(x)  dunif( x[1], 1, 1000 ) * dunif( x[2], 1, 1000 )
 
-n.sample  =  200
 
-iter.max  =  n.sample * 7
+n.sample  =  300
+
+iter.max  =  n.sample * 20
 
 eps.init  =  2
 cntr  =  0
@@ -400,7 +461,8 @@ ABC_Albert  =  SABC(   r.model  =  toy_model,
                        n.sample =  n.sample,
                        eps.init =  eps.init,
                        iter.max =  iter.max,
-                       method   =  "informative",
+                       method   =  "informative", 
+                       resample = 100, 
                        y        =  sum_stat_obs )
 
 print( paste0( 'The number of simulations is ', cntr ) )
@@ -408,7 +470,10 @@ print( paste0( 'The number of simulations is ', cntr ) )
 hist( ABC_Albert$E[ , 1 ], breaks = 25 )
 hist( ABC_Albert$E[ , 2 ], breaks = 25 )
 
-MaxWiK:: Get_MAP( DF = as.data.frame( ABC_Albert$E[ , c(1,2)] ) )
+
+#   
+
+
 
 
 
