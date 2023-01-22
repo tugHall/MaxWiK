@@ -112,7 +112,7 @@ input  =  Get_data( dimension = dimension, rng = rng,
                     model = 'Gaussian',
                     A = A, sigma = sigma, 
                     stochastic_term = stochastic_term, 
-                    probability = TRUE )
+                    probability = FALSE )
 par.sim   =  input$par.sim 
 stat.sim  =  input$stat.sim
 stat.obs  =  input$stat.obs
@@ -224,7 +224,7 @@ for( j in 1:length( Meth_Kern$Method ) ){
     
 }   # End of loop for all the methods
 
-nl  =  c(2:6 ) # 8:10)
+nl  =  c(3:7 ) # 8:10)
 l   =  length( nl )
 
 hue = c(" ", "random", "red", "orange", "yellow",
@@ -239,7 +239,7 @@ clrs  =  randomColor(count = l,
 
 plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
                names = c( 'Iterations', 'log of MSE'), xr = c(500, 1500), 
-               yr = c(1E-3, 1E6), logscale = 'y', 
+               yr = c(1E-3, 1E4), logscale = '', 
                col = clrs, 
                lwd = 2, lt = 1:l, cex = 1.5, 
                draw_key = TRUE )
@@ -359,7 +359,7 @@ plot(x = MSE_samplings$ABC_Beaumont$n_simul_tot,
 
 tolerance  =  0.5  # c( 4E-1, 1E-1, 4E-2 )
 alpha_delmo  =  0.5
-n = 100
+n = 200
 cntr = 0
 ABC_Delmoral  =  ABC_sequential( method = "Delmoral",
                                  model  = toy_model,
@@ -388,7 +388,7 @@ for (i in 1 : length( ABC_Delmoral$intermediary ) ){
 
 plot(x = MSE_samplings$Delmoral$n_simul_tot, 
      y = MSE_samplings$Delmoral$MSE, log = 'y', type = 'p' , 
-     xlim = c( 0, 3000 ))
+     xlim = c( 0, 1000 ))
 points(x = data_MSE$w, data_MSE$`K2-ABC_Laplacian`, pch = 16 )
 
 
@@ -433,6 +433,12 @@ for( i in 1:30 ){
 plot( x = MSE_samplings$ABC_Marjoram_original$n, 
       y = MSE_samplings$ABC_Marjoram_original$MSE, 
       log  =  'y', ylim = c(0.1, 1E6) )
+
+
+
+
+# Sequential ABC - does not work ------------------------------------------
+
 
 
 ### Performing a A Simulated Annealing Approach to Approximate Bayes Computations scheme
