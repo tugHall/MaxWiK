@@ -162,11 +162,11 @@ data_MSE      =  data.frame( w = w )
 
 ############### Start of a method
 
-Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'Rejection', 
-                                     'Loclinear',
+Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 
+                                     'Rejection', 'Loclinear',
                                      'MaxWiK_MAP', 'MaxWiK' ), 
-                          Kernel = c('Gaussian', 'Laplacian', '',
-                                     '',
+                          Kernel = c('Gaussian', 'Laplacian', 'iKernel',
+                                     '', '',
                                      'iKernel', 'iKernel') 
 )
 
@@ -224,7 +224,7 @@ for( j in 1:length( Meth_Kern$Method ) ){
     
 }   # End of loop for all the methods
 
-nl  =  c(3:7 ) # 8:10)
+nl  =  c(2:8 ) # 8:10)
 l   =  length( nl )
 
 hue = c(" ", "random", "red", "orange", "yellow",
@@ -239,7 +239,7 @@ clrs  =  randomColor(count = l,
 
 plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
                names = c( 'Iterations', 'log of MSE'), xr = c(500, 1500), 
-               yr = c(1E-3, 1E4), logscale = '', 
+               yr = c(1E-5, 1E6), logscale = 'y', 
                col = clrs, 
                lwd = 2, lt = 1:l, cex = 1.5, 
                draw_key = TRUE )
