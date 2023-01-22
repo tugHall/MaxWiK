@@ -132,21 +132,12 @@ for( model in models ){
             stat.obs  =  input$stat.obs
             model_par =  input$model_par
             
-            ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
-                                  param = par.sim, 
-                                  stat.sim = stat.sim, 
-                                  stat.obs = stat.obs, 
-                                  talkative = FALSE, 
-                                  check_pos_def = FALSE )
-            
-            G = matrix( data = ikern$similarity, ncol = 1 )
             DF_new  =  Get_call_all_methods(    
                 dimension  = dimension,
                 iterations  =  1:12,
                 stat.obs = stat.obs, 
                 stat.sim = stat.sim, 
                 par.sim  = par.sim, 
-                G        = G, 
                 par.truth  =  model_par$x0, 
                 cores = cores,
                 model_function = model_function, 
