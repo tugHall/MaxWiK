@@ -225,7 +225,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
             
             res_1  =  web$par.best
             
-            new_best.sim  =  do.call( what = model, args = c( arg0, list( par.sim1 =  web$par.best ) ) )
+            new_best.sim  =  do.call( what = model, args = c( arg0, list( x =  web$par.best ) ) )
             n_simulations  =  n_simulations  +  1
 
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim
@@ -385,7 +385,7 @@ sampler_MaxWiK_old  <-  function( stat.obs, stat.sim, par.sim, model,
             
             res_1  =  web$par.best
             
-            new_best.sim  =  do.call( what = model, args = c( arg0, list( par.sim1 =  web$par.best ) ) )
+            new_best.sim  =  do.call( what = model, args = c( arg0, list( x =  web$par.best ) ) )
             n_simulations  =  n_simulations  +  1
             
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim

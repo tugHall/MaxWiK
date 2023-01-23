@@ -103,7 +103,7 @@ Get_data  =  function( dimension, rng,
 
 Get_MSE  <-  function( new_par, model_par, model_function, stat.obs ){
     
-    model_par_all  =  c( model_par, list( par.sim1 = new_par ) )
+    model_par_all  =  c( model_par, list( x = new_par ) )
     model_par_all$noise  =  0 
     sim_est  =  do.call( model_function, model_par_all )
     
@@ -278,7 +278,7 @@ toy_model  =  function( x ){
     
     new_par  =  data.frame( matrix( x, nrow = 1 ) )
 
-    model_par_all  =  c( model_par, list( par.sim1 = new_par ) )
+    model_par_all  =  c( model_par, list( x = new_par ) )
     
     model_par_all$noise  =  0 
     

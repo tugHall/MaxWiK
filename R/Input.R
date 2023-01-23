@@ -39,7 +39,7 @@ get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10),
             prob  =  lapply( rnd, FUN = function( x ){ 
                 ( A[ i ] - Gauss_function( d = 1, x0 = x0[ i ], 
                                            r = r, noise = 0, A = A[ i ], sigma = sigma[ i ], 
-                                           par.sim1 = as.data.frame(x) ) ) / A[ i ]
+                                           x = as.data.frame(x) ) ) / A[ i ]
                             } )
             prob  =  unlist( prob )
         } else {
@@ -55,7 +55,7 @@ get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10),
         stat.sim[ , i ]  = unlist( lapply( X = par.sim[ , i ], FUN = function( x ){ 
             Gauss_function( d = 1, x0 = x0[ i ], 
                                        r = r, noise = noise, A = A[ i ], sigma = sigma[ i ], 
-                                       par.sim1 = x )
+                                       x = x )
                             } )   )
             # A * exp( x = - ( par.sim[ , i ] - x0[ i ] ) ** 2 / 2 ) + 
             # runif( n = n, min = -0.5, max = 0.5 ) * noise
@@ -82,9 +82,9 @@ get_dataset_of_Gaussian_model  <-  function( d = 1, x0 = 3, r = range(0,10),
 #' @examples
 #' NULL
 Gauss_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0, 
-                              A = 1, sigma = 1, par.sim1 ){
+                              A = 1, sigma = 1, x ){
     
-    par.sim  =   as.numeric( par.sim1 )
+    par.sim  =   as.numeric( x )
     sim1  =  data.frame( matrix( NA, nrow = 1, ncol = d ) )
     names( sim1 )  =  paste0( 'Y', 1:d )
     for( i in 1:d ){
@@ -134,7 +134,7 @@ get_dataset_of_Linear_model  <-  function( d = 1, x0 = 3, r = range(0,10),
             prob  =  lapply( rnd, FUN = function( x ){ 
                 ( A[ i ] - Gauss_function( d = 1, x0 = x0[ i ], 
                                            r = r, noise = 0, A = A[ i ], sigma = (r[2]-r[1])/5, 
-                                           par.sim1 = as.data.frame(x) ) ) / A[ i ]
+                                           x = as.data.frame(x) ) ) / A[ i ]
             } )
             prob  =  unlist( prob )
         } else {
@@ -150,7 +150,7 @@ get_dataset_of_Linear_model  <-  function( d = 1, x0 = 3, r = range(0,10),
         stat.sim[ , i ]  = unlist( lapply( X = par.sim[ , i ], FUN = function( x ){ 
             Linear_function( d = 1, x0 = x0[ i ], 
                             r = r, noise = noise, A = A[ i ], 
-                            par.sim1 = x )
+                            x = x )
         } )   )
         # A * exp( x = - ( par.sim[ , i ] - x0[ i ] ) ** 2 / 2 ) + 
         # runif( n = n, min = -0.5, max = 0.5 ) * noise
@@ -177,9 +177,9 @@ get_dataset_of_Linear_model  <-  function( d = 1, x0 = 3, r = range(0,10),
 #' @examples
 #' NULL
 Linear_function  <-  function( d = 1, x0 = 3, r = range(0,10), noise = 0, 
-                              A = 1, par.sim1 ){
+                              A = 1, x ){
     if ( any(x0 == 0 ) )  stop( 'X0 parameters should be non-zeros for Linear model')
-    par.sim  =   as.numeric( par.sim1 )
+    par.sim  =   as.numeric( x )
     sim1  =  data.frame( matrix( NA, nrow = 1, ncol = d ) )
     names( sim1 )  =  paste0( 'Y', 1:d )
     for( i in 1:d ){

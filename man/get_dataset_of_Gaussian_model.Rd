@@ -16,15 +16,7 @@ get_dataset_of_Gaussian_model(
   n = 1000
 )
 
-Gauss_function(
-  d = 1,
-  x0 = 3,
-  r = range(0, 10),
-  noise = 0,
-  A = 1,
-  sigma = 1,
-  par.sim1
-)
+Gauss_function(d = 1, x0 = 3, r = range(0, 10), noise = 0, A = 1, sigma = 1, x)
 }
 \arguments{
 \item{d}{Dimension of the parameter and model space}

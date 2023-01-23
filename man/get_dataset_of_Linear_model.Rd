@@ -15,7 +15,7 @@ get_dataset_of_Linear_model(
   n = 1000
 )
 
-Linear_function(d = 1, x0 = 3, r = range(0, 10), noise = 0, A = 1, par.sim1)
+Linear_function(d = 1, x0 = 3, r = range(0, 10), noise = 0, A = 1, x)
 }
 \arguments{
 \item{d}{Dimension of the parameter and model space}
