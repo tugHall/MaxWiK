@@ -170,7 +170,7 @@ sampler_all_methods  <-  function( model_name, dimension, stochastic_term,
 #' number_of_iterations - number of iterations; \cr
 #' time - time of sampling in seconds.
 #' 
-#' 
+#' @export
 #'
 #' @examples
 #' NULL

@@ -1,6 +1,11 @@
 ### 
 ###  Pipeline to get parameter estimation based on sampling schemes
 
+
+
+# Input data --------------------------------------------------------------
+
+
 library('MaxWiK')
 library('randomcoloR')
 # DEfine the working folder:
@@ -160,6 +165,11 @@ if ( length( w ) == 0 ) stop( 'There is NO points closed to observation one!' )
 data_par_est  =  list( init  =  par.sim[ 1 : ( nrow( par.sim) - nmax ), ], w = w )
 data_MSE      =  data.frame( w = w )
 
+
+
+# Sampling on kernels -----------------------------------------------------
+
+
 ############### Start of a method
 
 Meth_Kern  =  data.frame( Method = c('K2-ABC', 'K2-ABC', 'K2-ABC', 
@@ -252,12 +262,7 @@ saveRDS( object = data_par_est,
 
 
 
-
-
-##### Sampling from EasyABC package and methods from it
-
-
-# 4.GET MAP based on SAMPLING ------------------------------------
+# Sampling from EasyABC package and methods from it ------------------------------------
 
 library( 'EasyABC' )
 
@@ -434,6 +439,25 @@ plot( x = MSE_samplings$ABC_Marjoram_original$n,
       y = MSE_samplings$ABC_Marjoram_original$MSE, 
       log  =  'y', ylim = c(0.1, 1E6) )
 
+
+
+
+
+
+# MaxWiK sampling ---------------------------------------------------------
+
+smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs, 
+                           stat.sim =  stat.sim, 
+                           par.sim  =  par.sim,  
+                           model    =  model_function, 
+                           arg0     =  model_par, 
+                           size     =  200, 
+                           psi_t    =  psi_t, 
+                           epsilon  =  1E-12, 
+                           nmax     =  30, 
+                           include_top  =  TRUE,
+                           slowly       =  TRUE, 
+                           rate         =  0.2  )
 
 
 
