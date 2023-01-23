@@ -296,18 +296,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
 }
 
 
-if ( FALSE ){
-    smpl_1  =  sampler_MaxWiK( stat.obs, stat.sim, par.sim,  model = model, 
-                                         arg0 = list(  name = c( 'Gauss', 'Linear' )[1],
-                                                       x0 = x0, 
-                                                       stat.obs = stat.obs, 
-                                                       noise = 0 ), 
-                                         size = 200, psi_t, epsilon = 1E-12, 
-                                         nmax = 30, include_top = TRUE,
-                                         slowly = TRUE, rate = rat[ r ] )
-    if ( r == 1 ){ smpl = smpl_1 } else { smpl = Map( c, smpl, smpl_1 ) }
-}
-
+# DRAFT -------------------------------------------------------------------
 
 
 
