@@ -150,16 +150,19 @@ sampler_all_methods  <-  function( model_name, dimension, stochastic_term,
 }
 
 
-#' Function to generate parameters and simulate a model based on MaxWiK algorithm 
+#' @describeIn Get_parameter Function to generate parameters and simulate a model based on MaxWiK algorithm 
 #'
 #' @param model Function to get output of simulation during sampling 
 #' @param arg0 List with arguments for a model function, so that arg0 is NOT changed during sampling
 #' @param size Number of points in the simulation based on MaxWiK algorithm 
 #' @param nmax Maximal number of iterations
+#' @param epsilon Criterion to stop simulation when \code{MSE_current - MSE_previous < epsilon}
 #' @param include_top Logical to include top points (network) from \code{spider_web()} function to simulate or do not
 #' @param slowly Logical for two algorithms: slow and fast seekers in sampling
 #' @param rate Rate value in the range \code{[0,1]} to define 
 #' the rate of changing in the original top of sampled points for slow scheme (if slowly = TRUE)
+#' @param n_simulation_stop Maximal number of simulations to stop sampling. 
+#' If \code{n_simulation_stop = NA} then there is no restriction (by default).
 #'
 #' @return \code{sampler_MaxWiK()} returns the list: \cr
 #' results - results of all the simulations; \cr 
@@ -177,7 +180,8 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                                              arg0 = list(),  size = 500, 
                                              psi_t, epsilon, nmax = 100, 
                                              include_top = FALSE,
-                                             slowly = FALSE, rate = 0.2 ){ 
+                                             slowly = FALSE, rate = 0.2, 
+                                             n_simulation_stop = NA ){ 
     # epsilon is a criterion to stop simulation
     # nmax is maximal number of iterations
     # psi_t is a data.frame of psi and t with top values of MSE of length 20
@@ -336,6 +340,9 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
         err       =  combine$mse[ 1 ]  #  minimum of MSE in accordance with sorting
         if ( abs(err - err_previous) < epsilon ) break 
         err_previous  =  err
+        if ( !is.na( n_simulation_stop ) & 
+             ( n_simulation_stop <= n_simulations ) ) break
+        
     }
     
     best  =  results[ which.min(results$mse ) , ]
