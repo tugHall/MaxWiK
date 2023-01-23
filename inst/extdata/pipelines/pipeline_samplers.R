@@ -131,6 +131,12 @@ utils::capture.output( hyper, file = 'HyperParameters.txt', append = FALSE )
 
 psi_t  =  hyper$iKernel$psi_t
 
+
+
+# Input extra data for sampling based on uniform prior --------------------
+
+
+
 # Maximal number of iteration in sampling for each method
 nmax  =  1000
 
@@ -451,7 +457,7 @@ smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs,
                            par.sim  =  par.sim,  
                            model    =  model_function, 
                            arg0     =  model_par, 
-                           size     =  2000, 
+                           size     =  20, 
                            psi_t    =  psi_t, 
                            epsilon  =  1E-12, 
                            nmax     =  30, 
