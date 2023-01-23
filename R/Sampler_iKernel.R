@@ -208,6 +208,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                          width = 50,   # Progress bar width. Defaults to getOption("width")
                          char = ":")   # Character used to create the bar
     
+    n_simulations  =  0
     for( i in 1:nmax ){
         
         # Progress BAR
@@ -225,6 +226,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
             res_1  =  web$par.best
             
             new_best.sim  =  do.call( what = model, args = c( arg0, list( par.sim1 =  web$par.best ) ) )
+            n_simulations  =  n_simulations  +  1
 
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim
             
@@ -289,6 +291,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                   MSE_min = err, 
                   number_of_iterations = i, 
                   time = as.numeric( difftime( end_time, start_time, units = "secs")[[1]] )
+                  n_simulations  =  n_simulations
                 ) )
 }
 
