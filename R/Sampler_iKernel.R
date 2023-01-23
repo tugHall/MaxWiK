@@ -152,21 +152,22 @@ sampler_all_methods  <-  function( model_name, dimension, stochastic_term,
 
 #' Function to generate parameters and simulate a model based on MaxWiK algorithm 
 #'
-#' @param model is a function to get output of simulation during sampling 
-#' @param arg0 is a list with arguments for a model function, so that arg0 is NOT changed during sampling
-#' @param size Number of point to restrict original dataset
-#' @param nmax is maximal number of iterations
-#' @param include_top Logical to include top points from \code{spider_web()} function to simulate or do not
+#' @param model Function to get output of simulation during sampling 
+#' @param arg0 List with arguments for a model function, so that arg0 is NOT changed during sampling
+#' @param size Number of points in the simulation based on MaxWiK algorithm 
+#' @param nmax Maximal number of iterations
+#' @param include_top Logical to include top points (network) from \code{spider_web()} function to simulate or do not
 #' @param slowly Logical for two algorithms: slow and fast seekers in sampling
 #' @param rate Rate value in the range \code{[0,1]} to define 
-#' the rate of changing in the original top of sampled points 
+#' the rate of changing in the original top of sampled points for slow scheme (if slowly = TRUE)
 #'
 #' @return \code{sampler_MaxWiK()} returns the list: \cr
-#' results - results of simulations; \cr 
+#' results - results of all the simulations; \cr 
 #' best - the best value of parameter; \cr
 #' MSE_min - minimum of MSE; \cr
 #' number_of_iterations - number of iterations; \cr
-#' time - time of sampling in seconds.
+#' time - time of sampling in seconds, \cr
+#' n_simulations - the total number of simulations.
 #' 
 #' @export
 #'

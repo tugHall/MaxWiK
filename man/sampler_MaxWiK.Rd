@@ -20,28 +20,29 @@ sampler_MaxWiK(
 )
 }
 \arguments{
-\item{model}{is a function to get output of simulation during sampling}
+\item{model}{Function to get output of simulation during sampling}
 
-\item{arg0}{is a list with arguments for a model function, so that arg0 is NOT changed during sampling}
+\item{arg0}{List with arguments for a model function, so that arg0 is NOT changed during sampling}
 
-\item{size}{Number of point to restrict original dataset}
+\item{size}{Number of points in the simulation based on MaxWiK algorithm}
 
-\item{nmax}{is maximal number of iterations}
+\item{nmax}{Maximal number of iterations}
 
-\item{include_top}{Logical to include top points from \code{spider_web()} function to simulate or do not}
+\item{include_top}{Logical to include top points (network) from \code{spider_web()} function to simulate or do not}
 
 \item{slowly}{Logical for two algorithms: slow and fast seekers in sampling}
 
 \item{rate}{Rate value in the range \code{[0,1]} to define
-the rate of changing in the original top of sampled points}
+the rate of changing in the original top of sampled points for slow scheme (if slowly = TRUE)}
 }
 \value{
 \code{sampler_MaxWiK()} returns the list: \cr
-results - results of simulations; \cr
+results - results of all the simulations; \cr
 best - the best value of parameter; \cr
 MSE_min - minimum of MSE; \cr
 number_of_iterations - number of iterations; \cr
-time - time of sampling in seconds.
+time - time of sampling in seconds, \cr
+n_simulations - the total number of simulations.
 }
 \description{
 Function to generate parameters and simulate a model based on MaxWiK algorithm

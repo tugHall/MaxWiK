@@ -452,14 +452,14 @@ plot( x = MSE_samplings$ABC_Marjoram_original$n,
 
 # MaxWiK sampling ---------------------------------------------------------
 
-smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs, 
+smpl_2  =  sampler_MaxWiK( stat.obs =  stat.obs, 
                            stat.sim =  stat.sim, 
                            par.sim  =  par.sim,  
                            model    =  model_function, 
                            arg0     =  model_par, 
                            size     =  500, 
                            psi_t    =  psi_t, 
-                           epsilon  =  1E-12, 
+                           epsilon  =  1E-6, 
                            nmax     =  30, 
                            include_top  =  TRUE,
                            slowly       =  TRUE, 
