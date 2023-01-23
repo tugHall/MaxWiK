@@ -290,7 +290,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                   best = best, 
                   MSE_min = err, 
                   number_of_iterations = i, 
-                  time = as.numeric( difftime( end_time, start_time, units = "secs")[[1]] )
+                  time = as.numeric( difftime( end_time, start_time, units = "secs")[[1]] ),
                   n_simulations  =  n_simulations
                 ) )
 }
