@@ -41,8 +41,7 @@ sampler_method  <-  function( stat.obs, stat.sim, par.sim, model,
                             kernel_name = kernel_name, 
                             stat.obs   =  stat.obs, 
                             stat.sim   =  stat.sim_itt, 
-                            par.sim    =  par.sim_itt, 
-                            par.truth = par.truth )
+                            par.sim    =  par.sim_itt )
         new_par$stat$iteration = itt
         res = rbind( res, new_par$stat )
         
@@ -66,7 +65,7 @@ sampler_method  <-  function( stat.obs, stat.sim, par.sim, model,
 }
 
 
-#' @describeIn Function to call all the methods to get estimation of parameter and MSE
+#' @describeIn sampler_method Function to call all the methods to get estimation of parameter and MSE
 #'
 #' @return \code{sampler_all_methods()} returns data.frame with MSE for all defined methods
 #' 
@@ -77,7 +76,7 @@ sampler_method  <-  function( stat.obs, stat.sim, par.sim, model,
 #' @examples
 #' NULL 
 sampler_all_methods  <-  function( model_name, dimension, stochastic_term, 
-                                    stat.obs, stat.sim, par.sim, G, par.truth,
+                                    stat.obs, stat.sim, par.sim, par.truth,
                                     cores = 4, nmax ){
     
     DF  =  NULL
@@ -114,7 +113,6 @@ sampler_all_methods  <-  function( model_name, dimension, stochastic_term,
                                         stat.obs   =  stat.obs, 
                                         stat.sim   =  stat.sim, 
                                         par.sim    =  par.sim, 
-                                        G          =  G, 
                                         par.truth  =  par.truth, 
                                         model      =  model, 
                                         arg0       =  arg0,  
