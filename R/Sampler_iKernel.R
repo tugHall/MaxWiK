@@ -208,26 +208,17 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                          width = 50,   # Progress bar width. Defaults to getOption("width")
                          char = ":")   # Character used to create the bar
     
-    n_simulations  =  0
-    for( i in 1:nmax ){
+    ############### Function to get data.frame of results:
+    make_res  =  function( web, use_network  =  FALSE, model, arg0 ){
         
-        # Progress BAR
-        setTxtProgressBar(pb, i)
+        results  =  NULL
         
-        results  =  data.frame( NULL )
-        
-        ### Get new parameters and corresponding results of simulations based on each set of psi and t
-        # source( './lib_iKernel.R' )
-        for ( j in 1:nrow( psi_t ) ){
-            
-            web = spiderweb_slow( param = par_sim, stat.sim = stat_sim, stat.obs = stat_obs, 
-                             psi = psi_t$psi[ j ], t = psi_t$t[ j ], talkative = FALSE )
-            
+        if ( !use_network ) {
             res_1  =  web$par.best
             
             new_best.sim  =  do.call( what = model, args = c( arg0, list( x =  web$par.best ) ) )
-            n_simulations  =  n_simulations  +  1
-
+            n_simulations  <<-  n_simulations  +  1
+            
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim
             
             mse_1   =  MSE_sim( stat.obs = stat.obs, stat.sim = new_best.sim )
@@ -236,9 +227,75 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
             
             res_1$mse    =  as.numeric( mse_1$mse )
             res_1$comm     =     'Best'
-
-
+            
             res_1$sim      =     web$sim.best
+            results  =  res_1
+        } else {
+            
+            for( i in 1:nrow( web$network ) ){
+                
+                res_1  =  web$network[ i, ]
+                
+                new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
+                n_simulations  <<-  n_simulations  +  1
+                
+                res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
+                
+                mse_1   =  MSE_sim( stat.obs = stat.obs, stat.sim = new.sim )
+                mse_1   =  as.data.frame( mse_1 )
+                names( mse_1)  = 'mse'
+                
+                res_1$mse    =  as.numeric( mse_1$mse )
+                res_1$comm     =     'Network'
+                
+                res_1$sim      =     web$sim_network
+                
+                results  =  rbind( results, res_1 )
+            }
+        }
+        
+        return( results )
+    }
+    
+    n_simulations  =  0
+    for( i in 1:nmax ){
+        
+        # Progress BAR
+        setTxtProgressBar(pb, i)
+        
+        results  =  data.frame( NULL )
+        
+        
+        ### Get new parameters and corresponding results of simulations based on each set of psi and t
+        # source( './lib_iKernel.R' )
+        for ( j in 1:nrow( psi_t ) ){
+            
+            web = spiderweb_slow( param = par_sim, stat.sim = stat_sim, stat.obs = stat_obs, 
+                             psi = psi_t$psi[ j ], t = psi_t$t[ j ], talkative = FALSE )
+            
+            res_1  =  make_res( web = web, 
+                                use_network  = include_top, 
+                                model =  model, 
+                                arg0  =  arg0 )
+            
+            if ( FALSE ){
+                        res_1  =  web$par.best
+                        
+                        new_best.sim  =  do.call( what = model, args = c( arg0, list( x =  web$par.best ) ) )
+                        n_simulations  =  n_simulations  +  1
+            
+                        res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim
+                        
+                        mse_1   =  MSE_sim( stat.obs = stat.obs, stat.sim = new_best.sim )
+                        mse_1   =  as.data.frame( mse_1 )
+                        names( mse_1)  = 'mse'
+                        
+                        res_1$mse    =  as.numeric( mse_1$mse )
+                        res_1$comm     =     'Best'
+            
+            
+                        res_1$sim      =     web$sim.best
+            }
 
             results  =  rbind( results, res_1 )
         }                
@@ -255,13 +312,13 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
         combine[ (row_res+1):(row_res+row_sim), 'comm'  ]  =  'previous'
         combine[ (row_res+1):(row_res+row_sim), 'sim'   ]  =  web$iKernelABC$similarity
         combine[ (row_res+1):(row_res+row_sim), 'mse'   ]  =  MSE_sim( stat.obs = stat_obs, stat.sim = stat_sim )    
+        
         # Make the sorting of data regarding MSE:
         combine   =   unique.data.frame( combine )
         combine   =   combine[ order( combine$mse , decreasing = FALSE), ]
         row.names( combine ) = 1:nrow( combine )
-        # Define new dataset for next step with a new sampling:
         
-        # slct      =  c( 1:round( 0.8*size ), ( nrow( combine ) - round( 0.2* size) + 1 ):nrow( combine ) )
+        # Define new dataset for next step with a new sampling:
         if ( !slowly ){
             slct      =  c( 1:round( size ) )
             par_sim   =  combine[ slct, 1:dim_par  ]
