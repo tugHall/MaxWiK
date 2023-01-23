@@ -248,7 +248,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                 res_1$mse    =  as.numeric( mse_1$mse )
                 res_1$comm     =     'Network'
                 
-                res_1$sim      =     web$sim_network
+                res_1$sim      =     web$sim_network[ i ]
                 
                 results  =  rbind( results, res_1 )
             }
