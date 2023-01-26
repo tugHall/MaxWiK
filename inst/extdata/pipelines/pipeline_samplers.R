@@ -23,8 +23,8 @@ check_packages()
 
 file_name   =  'output.txt'
 model       =  c( 'Gaussian', 'Linear' )[ 1 ]
-dimension   =  2
-stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 3 ]
+dimension   =  20
+stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 1 ]
 rng  =  c( 0, 1000 )   # range of parameters
 restrict_points_number  =  Number_of_points  =  500
 d = max( dimension )
@@ -124,7 +124,7 @@ psi_t  =  hyper$iKernel$psi_t
 
 
 # Maximal number of iteration in sampling for each method
-nmax  =  1000
+nmax  =  4500
 
 if ( model  == 'Gaussian' ){
     
@@ -240,8 +240,10 @@ clrs  =  randomColor(count = l,
 # palette.colors( n = l, palette = 'ggplot2' )  # as.vector( gen_colors( nm = l ) )
 
 plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
-               names = c( 'Iterations', 'log of MSE'), xr = c(500, 1500), 
-               yr = c(1E-1, 1E5), logscale = 'y', 
+               names = c( 'Iterations', 'log of MSE'), 
+               xr = c(1000, 5500), 
+               yr = c(5E6, 6E7), 
+               logscale = '', 
                col = clrs, 
                lwd = 2, lt = 1:l, cex = 1.5, 
                draw_key = TRUE )
@@ -262,7 +264,7 @@ toy_model  =  function( x ){
     
     cntr  <<-  cntr + 1
     
-    new_par  =  data.frame( matrix( x, nrow = 1 ) )
+    new_par  =  data.frame( matrix( as.numeric(x), nrow = 1 ) )
 
     model_par_all  =  c( model_par, list( x = new_par ) )
     
@@ -276,13 +278,15 @@ toy_model  =  function( x ){
 ### Results:
 MSE_samplings  =  list(  )
 
-toy_prior  =  list( c( "unif", model_par$r ), c( "unif", model_par$r ) )
+# toy_prior  =  list( c( "unif", model_par$r ), c( "unif", model_par$r ) )
+el  =  c( "unif", model_par$r )
+toy_prior  =  list( el )[ rep( 1, dimension ) ]
 sum_stat_obs  = as.numeric( stat.obs )  #  c( 100, 100 )
-set.seed(1)
+set.seed(1234)
 
 
 ############# REJECTION ABC
-n=1500
+n=2500
 cntr = 0
 ABC_rej  =  ABC_rejection( model = toy_model, prior = toy_prior,
                            nb_simul = n,
@@ -305,8 +309,8 @@ MaxWiK:: Get_MAP( DF = as.data.frame( ABC_rej$param ) )
 # Beaumont, M. A., Cornuet, J., Marin, J., and Robert, C. P. (2009)
 # Adaptive approximate Bayesian computation. Biometrika, 96, 983–990.
 
-tolerance  =  ( 20 : 1 )*0.02  # c( 4E-1, 1E-1, 4E-2 )
-n = 100
+tolerance  =  ( 20 : 1 )*0.025  # c( 4E-1, 1E-1, 4E-2 )
+n = 500
 cntr = 0
 ABC_Beaumont  =  ABC_sequential( method = "Beaumont",
                                  model  = toy_model,
@@ -314,7 +318,8 @@ ABC_Beaumont  =  ABC_sequential( method = "Beaumont",
                                  nb_simul = n,
                                  summary_stat_target = sum_stat_obs,
                                  tolerance_tab = tolerance,
-                                 verbose = TRUE )
+                                 verbose = TRUE,
+                                 progress_bar = TRUE )
 
 print( paste0( 'The number of simulations is ', cntr ) )
 
