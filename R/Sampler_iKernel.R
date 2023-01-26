@@ -1,6 +1,6 @@
 # This is a sampler for ABC method that based on maxima weighted isolation kernel method
 
-#' @describeIn Get_parameter Function to generate parameters and simulate a model based on MaxWiK algorithm 
+#' @describeIn Get_call Function to generate parameters and simulate a model based on MaxWiK algorithm 
 #'
 #' @param model is a function to get output of simulation during sampling 
 #' @param arg0 is a list with arguments for a model function, so that arg0 is NOT changed during sampling
@@ -65,7 +65,7 @@ sampler_method  <-  function( stat.obs, stat.sim, par.sim, model,
 }
 
 
-#' @describeIn sampler_method Function to call all the methods to get estimation of parameter and MSE
+#' @describeIn Get_call Function to call all the methods to get estimation of parameter and MSE
 #'
 #' @return \code{sampler_all_methods()} returns data.frame with MSE for all defined methods
 #' 
@@ -150,7 +150,7 @@ sampler_all_methods  <-  function( model_name, dimension, stochastic_term,
 }
 
 
-#' @describeIn Get_parameter Function to generate parameters and simulate a model based on MaxWiK algorithm 
+#' @describeIn Get_call Function to generate parameters and simulate a model based on MaxWiK algorithm 
 #'
 #' @param model Function to get output of simulation during sampling 
 #' @param arg0 List with arguments for a model function, so that arg0 is NOT changed during sampling
