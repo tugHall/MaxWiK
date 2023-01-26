@@ -255,7 +255,7 @@ clrs  =  randomColor(count = l,
 
 plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
                names = c( 'Iterations', 'log of MSE'), xr = c(500, 1500), 
-               yr = c(1E-5, 1E1), logscale = '', 
+               yr = c(1E-1, 1E5), logscale = 'y', 
                col = clrs, 
                lwd = 2, lt = 1:l, cex = 1.5, 
                draw_key = TRUE )
@@ -360,7 +360,7 @@ for (i in 1 : length( ABC_Beaumont$intermediary ) ){
 }
 
 plot(x = MSE_samplings$ABC_Beaumont$n_simul_tot, 
-     y = MSE_samplings$ABC_Beaumont$MSE, log = '', type = 'l' )
+     y = MSE_samplings$ABC_Beaumont$MSE, log = 'y', type = 'l' )
 
 ##### Sequential Monte-Carlo
 ### See:
@@ -463,18 +463,26 @@ smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs,
                            arg0     =  model_par, 
                            size     =  500, 
                            psi_t    =  psi_t, 
-                           epsilon  =  1E-6, 
+                           epsilon  =  1E-8, 
                            nmax     =  30, 
                            include_top  =  TRUE,
                            slowly       =  TRUE, 
                            rate         =  0.2, 
-                           n_simulation_stop = 400  )
+                           n_simulation_stop = 1000  )
+# Get correct MSE with noise = 0
+smpl_1$results$mse  =  sapply(  X = 1:nrow(smpl_1$results), 
+                                FUN = function( x ) Get_MSE(new_par = smpl_1$results[ x, c(1,2)], 
+                                                            model_par = model_par, 
+                                                            model_function = model_function, 
+                                                            stat.obs = stat.obs ) )
+
 
 MSE_samplings$kernels  =  data_MSE 
 MSE_samplings$MaxWiK   =  data.frame( n_sim_total  =  ( nrow(stat.sim) + 1 ) : ( nrow(stat.sim) + nrow( smpl_1$results ) ), 
                                       MSE          =  smpl_1$results$mse )
 
-plot( MSE_samplings$MaxWiK$n_sim_total, MSE_samplings$MaxWiK$MSE, type = 'l', log = 'y' )
+plot( MSE_samplings$MaxWiK$n_sim_total, 
+      MSE_samplings$MaxWiK$MSE, type = 'l', log = 'y' )
 
 
 ### Save all the data:
