@@ -309,8 +309,8 @@ MaxWiK:: Get_MAP( DF = as.data.frame( ABC_rej$param ) )
 # Beaumont, M. A., Cornuet, J., Marin, J., and Robert, C. P. (2009)
 # Adaptive approximate Bayesian computation. Biometrika, 96, 983–990.
 
-tolerance  =  ( 20 : 1 )*0.025  # c( 4E-1, 1E-1, 4E-2 )
-n = 500
+tolerance  =  ( 20 : 1 )*0.02  # c( 4E-1, 1E-1, 4E-2 )
+n = 100
 cntr = 0
 ABC_Beaumont  =  ABC_sequential( method = "Beaumont",
                                  model  = toy_model,
@@ -318,8 +318,7 @@ ABC_Beaumont  =  ABC_sequential( method = "Beaumont",
                                  nb_simul = n,
                                  summary_stat_target = sum_stat_obs,
                                  tolerance_tab = tolerance,
-                                 verbose = TRUE,
-                                 progress_bar = TRUE )
+                                 verbose = TRUE )
 
 print( paste0( 'The number of simulations is ', cntr ) )
 
