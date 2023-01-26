@@ -2,7 +2,6 @@
 ###  Pipeline to get parameter estimation based on sampling schemes
 
 
-
 # Input data --------------------------------------------------------------
 
 
@@ -21,19 +20,6 @@ if ( dir.exists( wd ) ) {
 
 ### Check installation of libraries:
 check_packages()
-
-
-
-### In order to understand procedure of execution all the method, please, see
-### the functions:
-###             *   sampler_all_methods    - to call all the methods, and
-###             *   sampler_method         - to call particular method with 
-###                                 fitting hyper parameters for each method
-
-### This pipeline is the content of the experiment_samplers() function,
-###      here you can change hyper parameters as well as the models' data like
-###      name, dimension and stochastic term.
-
 
 file_name   =  'output.txt'
 model       =  c( 'Gaussian', 'Linear' )[ 1 ]
