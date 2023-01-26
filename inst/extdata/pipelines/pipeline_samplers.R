@@ -38,7 +38,7 @@ check_packages()
 file_name   =  'output.txt'
 model       =  c( 'Gaussian', 'Linear' )[ 1 ]
 dimension   =  2
-stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 1 ]
+stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 3 ]
 rng  =  c( 0, 1000 )   # range of parameters
 restrict_points_number  =  Number_of_points  =  500
 d = max( dimension )
@@ -255,7 +255,7 @@ clrs  =  randomColor(count = l,
 
 plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
                names = c( 'Iterations', 'log of MSE'), xr = c(500, 1500), 
-               yr = c(1E-5, 1E6), logscale = 'y', 
+               yr = c(1E-5, 1E1), logscale = '', 
                col = clrs, 
                lwd = 2, lt = 1:l, cex = 1.5, 
                draw_key = TRUE )
@@ -296,7 +296,7 @@ set.seed(1)
 
 
 ############# REJECTION ABC
-n=1000
+n=1500
 cntr = 0
 ABC_rej  =  ABC_rejection( model = toy_model, prior = toy_prior,
                            nb_simul = n,
@@ -360,7 +360,7 @@ for (i in 1 : length( ABC_Beaumont$intermediary ) ){
 }
 
 plot(x = MSE_samplings$ABC_Beaumont$n_simul_tot, 
-     y = MSE_samplings$ABC_Beaumont$MSE, log = 'y', type = 'l' )
+     y = MSE_samplings$ABC_Beaumont$MSE, log = '', type = 'l' )
 
 ##### Sequential Monte-Carlo
 ### See:
@@ -368,9 +368,9 @@ plot(x = MSE_samplings$ABC_Beaumont$n_simul_tot,
 ###     An adaptive sequential Monte Carlo method for approximate Bayesian computation. 
 ###     Statistics and Computing, 22, 1009–1020.
 
-tolerance  =  0.5  # c( 4E-1, 1E-1, 4E-2 )
+tolerance  =  0.01  # c( 4E-1, 1E-1, 4E-2 )
 alpha_delmo  =  0.5
-n = 200
+n = 400
 cntr = 0
 ABC_Delmoral  =  ABC_sequential( method = "Delmoral",
                                  model  = toy_model,
@@ -398,8 +398,8 @@ for (i in 1 : length( ABC_Delmoral$intermediary ) ){
 }
 
 plot(x = MSE_samplings$Delmoral$n_simul_tot, 
-     y = MSE_samplings$Delmoral$MSE, log = 'y', type = 'p' , 
-     xlim = c( 0, 1000 ))
+     y = MSE_samplings$Delmoral$MSE, log = 'y', type = 'l' , 
+     xlim = c( 0, 3000 ))
 points(x = data_MSE$w, data_MSE$`K2-ABC_Laplacian`, pch = 16 )
 
 
@@ -452,6 +452,10 @@ plot( x = MSE_samplings$ABC_Marjoram_original$n,
 
 # MaxWiK sampling ---------------------------------------------------------
 
+# Restrict number of initial simulations
+stat.sim  =  stat.sim[ 1:500, ]
+par.sim   =  par.sim[ 1:500, ]
+
 smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs, 
                            stat.sim =  stat.sim, 
                            par.sim  =  par.sim,  
@@ -465,6 +469,19 @@ smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs,
                            slowly       =  TRUE, 
                            rate         =  0.2, 
                            n_simulation_stop = 400  )
+
+MSE_samplings$kernels  =  data_MSE 
+MSE_samplings$MaxWiK   =  data.frame( n_sim_total  =  ( nrow(stat.sim) + 1 ) : ( nrow(stat.sim) + nrow( smpl_1$results ) ), 
+                                      MSE          =  smpl_1$results$mse )
+
+plot( MSE_samplings$MaxWiK$n_sim_total, MSE_samplings$MaxWiK$MSE, type = 'l', log = 'y' )
+
+
+### Save all the data:
+
+saveRDS( object = MSE_samplings, 
+         file = paste0('RESULTS_dim_', dimension, '_noise_', stochastic_term, '.RDS' ))
+
 
 
 
