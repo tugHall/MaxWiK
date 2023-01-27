@@ -49,6 +49,12 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
     par_sim   =  par.sim      #  initial data for parameters of simulations
     stat_obs  =  stat.obs     #  
     
+    ### Restrict data size in accordance with size parameter:
+    rstrct  =  restrict_data( par.sim = par_sim, stat.sim = stat_sim, stat.obs = stat_obs, size = size )
+    stat_sim  =  rstrct$stat.sim     #  Restricted initial data for summary statistics of simulations
+    par_sim   =  rstrct$par.sim      #  Restricted initial data for parameters of simulations
+    
+    
     # Get dimensionalities of parameter and simulation datasets:
     dim_par  =  ncol( par_sim )
     dim_sim  =  ncol( stat_sim )

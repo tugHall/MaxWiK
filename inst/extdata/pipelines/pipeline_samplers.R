@@ -360,9 +360,9 @@ plot(x = MSE_samplings$ABC_Beaumont$n_simul_tot,
 
 tolerance  =  0.1  # c( 4E-1, 1E-1, 4E-2 )
 alpha_delmo  =  0.5
-n = 100
+n = 300
 cntr = 0
-ABC_Delmoral  =  ABC_sequential( method = "Delmoral",
+ABC_Delmoral_2  =  ABC_sequential( method = "Delmoral",
                                  model  = toy_model,
                                  prior  = toy_prior,
                                  nb_simul = n,
@@ -388,7 +388,7 @@ for (i in 1 : length( ABC_Delmoral$intermediary ) ){
 }
 
 plot(x = MSE_samplings$Delmoral$n_simul_tot, 
-     y = MSE_samplings$Delmoral$MSE, log = 'y', type = 'l' , 
+     y = MSE_samplings$Delmoral$MSE, log = '', type = 'l' , 
      xlim = c( 0, 7000 ))
 points(x = data_MSE$w, data_MSE$`K2-ABC_Laplacian`, pch = 16 )
 
@@ -453,15 +453,15 @@ smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs,
                            arg0     =  model_par, 
                            size     =  1000, 
                            psi_t    =  psi_t, 
-                           epsilon  =  1E-16, 
+                           epsilon  =  1E-8, 
                            nmax     =  30, 
                            include_top  =  TRUE,
                            slowly       =  TRUE, 
-                           rate         =  0.1, 
-                           n_simulation_stop = 8000  )
+                           rate         =  0.2, 
+                           n_simulation_stop = 3000  )
 # Get correct MSE with noise = 0
 smpl_1$results$mse  =  sapply(  X = 1:nrow(smpl_1$results), 
-                                FUN = function( x ) Get_MSE(new_par = smpl_1$results[ x, c(1,2)], 
+                                FUN = function( x ) Get_MSE(new_par = smpl_1$results[ x, 1:dimension ], 
                                                             model_par = model_par, 
                                                             model_function = model_function, 
                                                             stat.obs = stat.obs ) )
