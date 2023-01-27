@@ -309,7 +309,7 @@ MaxWiK:: Get_MAP( DF = as.data.frame( ABC_rej$param ) )
 # Beaumont, M. A., Cornuet, J., Marin, J., and Robert, C. P. (2009)
 # Adaptive approximate Bayesian computation. Biometrika, 96, 983–990.
 
-tolerance  =  ( 20 : 1 )*0.02  # c( 4E-1, 1E-1, 4E-2 )
+tolerance  =  ( 20 : 18 )*0.03  # c( 4E-1, 1E-1, 4E-2 )
 n = 100
 cntr = 0
 ABC_Beaumont  =  ABC_sequential( method = "Beaumont",
@@ -358,9 +358,9 @@ plot(x = MSE_samplings$ABC_Beaumont$n_simul_tot,
 ###     An adaptive sequential Monte Carlo method for approximate Bayesian computation. 
 ###     Statistics and Computing, 22, 1009–1020.
 
-tolerance  =  0.01  # c( 4E-1, 1E-1, 4E-2 )
+tolerance  =  0.1  # c( 4E-1, 1E-1, 4E-2 )
 alpha_delmo  =  0.5
-n = 400
+n = 100
 cntr = 0
 ABC_Delmoral  =  ABC_sequential( method = "Delmoral",
                                  model  = toy_model,
@@ -389,7 +389,7 @@ for (i in 1 : length( ABC_Delmoral$intermediary ) ){
 
 plot(x = MSE_samplings$Delmoral$n_simul_tot, 
      y = MSE_samplings$Delmoral$MSE, log = 'y', type = 'l' , 
-     xlim = c( 0, 3000 ))
+     xlim = c( 0, 7000 ))
 points(x = data_MSE$w, data_MSE$`K2-ABC_Laplacian`, pch = 16 )
 
 
@@ -433,7 +433,7 @@ for( i in 1:30 ){
 
 plot( x = MSE_samplings$ABC_Marjoram_original$n, 
       y = MSE_samplings$ABC_Marjoram_original$MSE, 
-      log  =  'y', ylim = c(0.1, 1E6) )
+      log  =  '', ylim = c(1E4, 3E7) )
 
 
 
@@ -443,22 +443,22 @@ plot( x = MSE_samplings$ABC_Marjoram_original$n,
 # MaxWiK sampling ---------------------------------------------------------
 
 # Restrict number of initial simulations
-stat.sim  =  stat.sim[ 1:500, ]
-par.sim   =  par.sim[ 1:500, ]
+stat.sim  =  stat.sim[ 1:1000, ]
+par.sim   =  par.sim[ 1:1000, ]
 
 smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs, 
                            stat.sim =  stat.sim, 
                            par.sim  =  par.sim,  
                            model    =  model_function, 
                            arg0     =  model_par, 
-                           size     =  500, 
+                           size     =  1000, 
                            psi_t    =  psi_t, 
-                           epsilon  =  1E-8, 
+                           epsilon  =  1E-16, 
                            nmax     =  30, 
                            include_top  =  TRUE,
                            slowly       =  TRUE, 
-                           rate         =  0.2, 
-                           n_simulation_stop = 1000  )
+                           rate         =  0.1, 
+                           n_simulation_stop = 8000  )
 # Get correct MSE with noise = 0
 smpl_1$results$mse  =  sapply(  X = 1:nrow(smpl_1$results), 
                                 FUN = function( x ) Get_MSE(new_par = smpl_1$results[ x, c(1,2)], 
