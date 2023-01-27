@@ -22,7 +22,7 @@
 #' time - time of sampling in seconds, \cr
 #' n_simulations - the total number of simulations.
 #' 
-#' 
+#' @export
 #'
 #' @examples
 #' NULL
