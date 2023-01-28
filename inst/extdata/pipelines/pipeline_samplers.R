@@ -23,10 +23,10 @@ check_packages()
 
 file_name   =  'output.txt'
 model       =  c( 'Gaussian', 'Linear' )[ 1 ]
-dimension   =  20
+dimension   =  8
 stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 1 ]
 rng  =  c( 0, 1000 )   # range of parameters
-restrict_points_number  =  Number_of_points  =  500
+restrict_points_number  =  Number_of_points  =  1500
 d = max( dimension )
 A      =  ( ( 1:d ) + 12 ) * 100  # Amplitude for Gauss function / Linear function
 sigma  =  rep( rng[2]/ 5, d )     # Sigma for Gauss function 
@@ -124,7 +124,7 @@ psi_t  =  hyper$iKernel$psi_t
 
 
 # Maximal number of iteration in sampling for each method
-nmax  =  4500
+nmax  =  2500
 
 if ( model  == 'Gaussian' ){
     
@@ -241,9 +241,9 @@ clrs  =  randomColor(count = l,
 
 plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
                names = c( 'Iterations', 'log of MSE'), 
-               xr = c(1000, 5500), 
-               yr = c(5E6, 6E7), 
-               logscale = '', 
+               xr = c(1500, 4000), 
+               yr = c(1E3, 1E7), 
+               logscale = 'y', 
                col = clrs, 
                lwd = 2, lt = 1:l, cex = 1.5, 
                draw_key = TRUE )
@@ -329,8 +329,9 @@ hist( ABC_Beaumont$param[, 1])
 hist( ABC_Beaumont$param[, 2])
 
 # Weighted estimations:
-sum( ABC_Beaumont$weights * ABC_Beaumont$param[ , 1 ] )
-sum( ABC_Beaumont$weights * ABC_Beaumont$param[ , 2 ] )
+    unlist(    sapply( X = 1:dimension, FUN = function( x )  
+                    sum( ABC_Beaumont$weights * ABC_Beaumont$param[ , x ] ) )  )
+
 
 MaxWiK:: Get_MAP( DF = as.data.frame( ABC_Beaumont$param ) )
 
@@ -362,14 +363,14 @@ tolerance  =  0.1  # c( 4E-1, 1E-1, 4E-2 )
 alpha_delmo  =  0.5
 n = 300
 cntr = 0
-ABC_Delmoral_2  =  ABC_sequential( method = "Delmoral",
+ABC_Delmoral  =  ABC_sequential( method = "Delmoral",
                                  model  = toy_model,
                                  prior  = toy_prior,
                                  nb_simul = n,
                                  summary_stat_target = sum_stat_obs,
                                  tolerance_target = tolerance, 
                                  alpha  =  alpha_delmo, 
-                                 verbose = TRUE )
+                                 verbose = FALSE )
 
 print( paste0( 'The number of simulations is ', cntr ) )
 
@@ -388,8 +389,9 @@ for (i in 1 : length( ABC_Delmoral$intermediary ) ){
 }
 
 plot(x = MSE_samplings$Delmoral$n_simul_tot, 
-     y = MSE_samplings$Delmoral$MSE, log = '', type = 'l' , 
-     xlim = c( 0, 7000 ))
+     y = MSE_samplings$Delmoral$MSE, log = 'y', type = 'l' , 
+     xlim = c( 0, 6000 ), 
+     ylim = c(1E1, 1E7) )
 points(x = data_MSE$w, data_MSE$`K2-ABC_Laplacian`, pch = 16 )
 
 
@@ -433,7 +435,7 @@ for( i in 1:30 ){
 
 plot( x = MSE_samplings$ABC_Marjoram_original$n, 
       y = MSE_samplings$ABC_Marjoram_original$MSE, 
-      log  =  '', ylim = c(1E4, 3E7) )
+      log  =  'y', ylim = c(1E-2, 3E6) )
 
 
 
@@ -443,22 +445,22 @@ plot( x = MSE_samplings$ABC_Marjoram_original$n,
 # MaxWiK sampling ---------------------------------------------------------
 
 # Restrict number of initial simulations
-stat.sim  =  stat.sim[ 1:1000, ]
-par.sim   =  par.sim[ 1:1000, ]
+stat.sim  =  stat.sim[ 1:2000, ]
+par.sim   =  par.sim[ 1:2000, ]
 
 smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs, 
                            stat.sim =  stat.sim, 
                            par.sim  =  par.sim,  
                            model    =  model_function, 
                            arg0     =  model_par, 
-                           size     =  1000, 
+                           size     =  500, 
                            psi_t    =  psi_t, 
-                           epsilon  =  1E-8, 
+                           epsilon  =  1E-18, 
                            nmax     =  30, 
                            include_top  =  TRUE,
                            slowly       =  TRUE, 
                            rate         =  0.2, 
-                           n_simulation_stop = 3000  )
+                           n_simulation_stop = 5000  )
 # Get correct MSE with noise = 0
 smpl_1$results$mse  =  sapply(  X = 1:nrow(smpl_1$results), 
                                 FUN = function( x ) Get_MSE(new_par = smpl_1$results[ x, 1:dimension ], 
@@ -479,4 +481,115 @@ plot( MSE_samplings$MaxWiK$n_sim_total,
 
 saveRDS( object = MSE_samplings, 
          file = paste0('RESULTS_dim_', dimension, '_noise_', stochastic_term, '.RDS' ))
+
+
+
+# PLOT RESULTS ------------------------------------------------------------
+
+
+RES  =  readRDS( file = './RESULTS_dim_20_noise_0.RDS' )
+
+Make_dataframe  =  function( RES ){
+    
+    make_min  =  function( DF_1 ){
+        
+        for( i in 2:nrow( DF_1 ) ){
+            
+            DF_1[ i, 'MSE' ]  =  min( DF_1$MSE[ 1:i ] )[ 1 ]
+        }
+        
+        return( DF_1 )
+    }
+    
+    DF  =  NULL
+    
+    # Beaumont
+    if ( 'ABC_Beaumont' %in% names(RES) ){
+        DF_1  =  data.frame( n_simulations = RES$ABC_Beaumont$n_simul_tot, 
+                             MSE = RES$ABC_Beaumont$MSE, 
+                             Method  =  'Beaumont')
+        DF_1  =  make_min( DF_1 )
+        DF    =  rbind( DF, DF_1 )
+    }
+    
+    # Del_Moral
+    if ( 'Delmoral' %in% names(RES) ){
+        DF_1  =  data.frame( n_simulations = RES$Delmoral$n_simul_tot,
+                             MSE = RES$Delmoral$MSE, 
+                             Method  =  'Del_Moral')
+        DF_1  =  make_min( DF_1 )
+        DF  =  rbind( DF, DF_1 )
+    }
+    
+    # Marjoram
+    if ( 'ABC_Marjoram_original' %in% names(RES) ){
+        DF_1  =  data.frame( n_simulations = RES$ABC_Marjoram_original$n,
+                             MSE = RES$ABC_Marjoram_original$MSE, 
+                             Method  =  'Marjoram')
+        DF_1  =  make_min( DF_1 )
+        DF  =  rbind( DF, DF_1 )
+    }
+
+    # MaxWiK
+    if ( 'MaxWiK' %in% names(RES) ){
+        DF_1  =  data.frame( n_simulations = RES$MaxWiK$n_sim_total,
+                             MSE = RES$MaxWiK$MSE, 
+                             Method  =  'MaxWiK')
+        DF_1  =  make_min( DF_1 )
+        DF  =  rbind( DF, DF_1 )
+    }
+    
+    # kernels methods:
+    if ( 'kernels' %in% names(RES) ){
+        for( mth  in names( RES$kernels )[ 2:8] ){
+            DF_1  =  data.frame( n_simulations = RES$kernels[ , 'w' ],
+                                 MSE = RES$kernels[ , mth ], 
+                                 Method  = mth  )
+            DF_1  =  make_min( DF_1 )
+            DF  =  rbind( DF, DF_1 )
+        }
+    }
+    DF[ which( DF$Method  ==  'Loclinear_' ), 'Method' ]  =  'Loclinear'
+    DF[ which( DF$Method  ==  'Rejection_' ), 'Method' ]  =  'Rejection'
+    
+    return( DF )
+}
+
+
+DF  =  Make_dataframe( RES = RES )
+
+
+library('ggplot2')
+library('scales')
+
+ggplot( DF, aes( n_simulations, MSE, 
+                 color = Method, 
+                 linetype = Method,
+                 group = Method )  ) + 
+    geom_tile(  ) + 
+    geom_line( size = 1.15 ) +
+    scale_y_continuous(trans='log10') +
+    scale_x_continuous(trans='log10') +
+    # scale_fill_manual(values=colors) +
+    xlab( 'Number of simulations' )  + 
+    ylab( 'Mean squared error' ) + 
+    scale_y_log10( labels = label_log( ) ) +
+    theme(
+        plot.title   = element_text(color="black", size=24, face="bold.italic" ),
+        axis.title.x = element_text(color="black", size=24, face="bold" ),
+        axis.title.y = element_text(color="black", size=24, face="bold" ),
+        axis.text.x  = element_text( color="black", size=14 ),
+        axis.text.y  = element_text( color="black", size=14 ),
+        legend.title = element_blank(),
+        legend.text = element_text( size=16, colour = "black", family = "Helvetica")
+    )
+
+
+
+
+
+
+
+
+
 
