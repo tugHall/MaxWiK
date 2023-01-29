@@ -2,6 +2,7 @@
 % Please edit documentation in R/Sampler_iKernel.R, R/experiments.R, R/methods.R
 \name{sampler_MaxWiK}
 \alias{sampler_MaxWiK}
+\alias{make_hypersurface}
 \alias{Get_call}
 \alias{Get_parameter}
 \alias{Get_call_all_methods}
@@ -21,8 +22,11 @@ sampler_MaxWiK(
   include_top = FALSE,
   slowly = FALSE,
   rate = 0.2,
-  n_simulation_stop = NA
+  n_simulation_stop = NA,
+  check_err = TRUE
 )
+
+make_hypersurface(stat.obs, stat.sim, par.sim, size)
 
 Get_call(
   method_name,
@@ -89,6 +93,8 @@ the rate of changing in the original top of sampled points for slow scheme (if s
 \item{n_simulation_stop}{Maximal number of simulations to stop sampling.
 If \code{n_simulation_stop = NA} then there is no restriction (by default).}
 
+\item{check_err}{Logical parameter to check epsilon or do not}
+
 \item{method_name}{Name of a method}
 
 \item{kernel_name}{Name of kernel function}
@@ -109,12 +115,16 @@ If \code{n_simulation_stop = NA} then there is no restriction (by default).}
 }
 \value{
 \code{sampler_MaxWiK()} returns the list: \cr
-results - results of all the simulations; \cr
-best - the best value of parameter; \cr
-MSE_min - minimum of MSE; \cr
-number_of_iterations - number of iterations; \cr
-time - time of sampling in seconds, \cr
-n_simulations - the total number of simulations.
+\itemize{
+\item results: results of all the simulations; \cr
+\item best: the best value of parameter; \cr
+\item MSE_min: minimum of MSE; \cr
+\item number_of_iterations: number of iterations; \cr
+\item time: time of sampling in seconds, \cr
+\item n_simulations: the total number of simulations.
+}
+
+\code{sampler_MaxWiK()} returns the list: \cr
 
 \code{Get_call()} returns the list: \cr
 method_name = method_name, \cr
@@ -138,11 +148,15 @@ method_name = method_name, \cr
 }
 }
 \description{
-Function to call a method to get a parameter estimation and MSE
+Function to make 'hypersurface' or data set reduced from the bigger one with
+selected points around observation point but
+the points are away from each other
 }
 \section{Functions}{
 \itemize{
 \item \code{sampler_MaxWiK()}: Function to generate parameters and simulate a model based on MaxWiK algorithm
+
+\item \code{make_hypersurface()}: Function to make hypersurface
 
 \item \code{Get_parameter()}: Function to get a parameter estimation using a method
 

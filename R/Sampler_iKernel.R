@@ -7,6 +7,7 @@
 #' @param size Number of points in the simulation based on MaxWiK algorithm 
 #' @param nmax Maximal number of iterations
 #' @param epsilon Criterion to stop simulation when \code{MSE_current - MSE_previous < epsilon}
+#' @param check_err Logical parameter to check epsilon or do not
 #' @param include_top Logical to include top points (network) from \code{spider_web()} function to simulate or do not
 #' @param slowly Logical for two algorithms: slow and fast seekers in sampling
 #' @param rate Rate value in the range \code{[0,1]} to define 
@@ -15,12 +16,12 @@
 #' If \code{n_simulation_stop = NA} then there is no restriction (by default).
 #'
 #' @return \code{sampler_MaxWiK()} returns the list: \cr
-#' results - results of all the simulations; \cr 
-#' best - the best value of parameter; \cr
-#' MSE_min - minimum of MSE; \cr
-#' number_of_iterations - number of iterations; \cr
-#' time - time of sampling in seconds, \cr
-#' n_simulations - the total number of simulations.
+#' - results: results of all the simulations; \cr 
+#' - best: the best value of parameter; \cr
+#' - MSE_min: minimum of MSE; \cr
+#' - number_of_iterations: number of iterations; \cr
+#' - time: time of sampling in seconds, \cr
+#' - n_simulations: the total number of simulations.
 #' 
 #' @export
 #'
@@ -31,7 +32,8 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                                              psi_t, epsilon, nmax = 100, 
                                              include_top = FALSE,
                                              slowly = FALSE, rate = 0.2, 
-                                             n_simulation_stop = NA ){ 
+                                             n_simulation_stop = NA, 
+                                             check_err  =  TRUE ){ 
     # epsilon is a criterion to stop simulation
     # nmax is maximal number of iterations
     # psi_t is a data.frame of psi and t with top values of MSE of length 20
@@ -40,6 +42,8 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
     
     # model is a function to get output of simulation during sampling 
     # arg0 is a list with arguments for a model function, so that arg0 is NOT changed during sampling
+    
+    rep_check  =  FALSE  # Logical check to repeat if err is same
     
     check_packages()
      
@@ -194,7 +198,12 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
         }
         
         err       =  combine$mse[ 1 ]  #  minimum of MSE in accordance with sorting
-        if ( abs(err - err_previous) < epsilon ) break 
+        if ( check_err & ( abs(err - err_previous) < epsilon ) ) {
+            if ( rep_check ){
+                break 
+            } else { rep_check  =  TRUE }
+        } else rep_check  =  FALSE
+            
         err_previous  =  err
         if ( !is.na( n_simulation_stop ) & 
              ( n_simulation_stop <= n_simulations ) ) break
@@ -216,3 +225,39 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                 ) )
 }
 
+
+
+
+
+#' @describeIn Get_call Function to make hypersurface 
+#' 
+#' @description Function to make 'hypersurface' or data set reduced from the bigger one with
+#' selected points around observation point but 
+#' the points are away from each other
+#'
+#' @return \code{sampler_MaxWiK()} returns the list: \cr
+
+
+make_hypersurface  <-  function(  stat.obs,
+                                  stat.sim,
+                                  par.sim, 
+                                  size      ){
+    
+    stp  =  round( nrow( par.sim ) / size )
+    if ( stp < 2 ) stop( 'Please, make the size less than dataset size at least two times.' )
+    
+    ### Make ordering in data sets from close to far points  to observation
+    rej      =  abc( target = stat.obs, param = par.sim, 
+                     sumstat = stat.sim, tol = 0.1, method = 'rejection' ) 
+    w   =   order(  rej$dist, decreasing = TRUE )
+    
+    stat_sim  =  stat.sim[ w, ] 
+    par_sim   =  par.sim[ w,  ]
+    
+    
+    
+    
+    
+    return( list( stat.sim =  stat.sim_red,
+                  par.sim  =  par.sim_red   ) )
+}
