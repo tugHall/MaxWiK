@@ -26,7 +26,7 @@ sampler_MaxWiK(
   check_err = TRUE
 )
 
-make_hypersurface(stat.obs, stat.sim, par.sim, size)
+make_hypersurface(stat.obs, stat.sim, par.sim, size, blend_part = 0.5)
 
 Get_call(
   method_name,
@@ -94,6 +94,9 @@ the rate of changing in the original top of sampled points for slow scheme (if s
 If \code{n_simulation_stop = NA} then there is no restriction (by default).}
 
 \item{check_err}{Logical parameter to check epsilon or do not}
+
+\item{blend_part}{Part of blended sets: the hypersurface set and
+set from rejection ABC}
 
 \item{method_name}{Name of a method}
 

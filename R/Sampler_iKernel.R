@@ -234,6 +234,9 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
 #' @description Function to make 'hypersurface' or data set reduced from the bigger one with
 #' selected points around observation point but 
 #' the points are away from each other
+#' 
+#' @param blend_part Part of blended sets: the hypersurface set and 
+#' set from rejection ABC 
 #'
 #' @return \code{sampler_MaxWiK()} returns the list: \cr
 
@@ -241,7 +244,8 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
 make_hypersurface  <-  function(  stat.obs,
                                   stat.sim,
                                   par.sim, 
-                                  size      ){
+                                  size, 
+                                  blend_part = 0.5 ){
     
     stp  =  round( nrow( par.sim ) / size )
     if ( stp < 2 ) stop( 'Please, make the size less than dataset size at least two times.' )
@@ -249,10 +253,10 @@ make_hypersurface  <-  function(  stat.obs,
     ### Make ordering in data sets from close to far points  to observation
     rej      =  abc( target = stat.obs, param = par.sim, 
                      sumstat = stat.sim, tol = 0.1, method = 'rejection' ) 
-    w   =   order(  rej$dist, decreasing = TRUE )
+    w2   =   order(  rej$dist, decreasing = FALSE )
     
-    stat_sim  =  stat.sim[ w, ] 
-    par_sim   =  par.sim[ w,  ]
+    stat_sim  =  stat.sim[ w2, ] 
+    par_sim   =  par.sim[ w2,  ]
     row.names( stat_sim )  =  1 : nrow( stat_sim )
     row.names( par_sim  )  =  1 : nrow( par_sim  )
     
@@ -274,14 +278,15 @@ make_hypersurface  <-  function(  stat.obs,
                                     sum( dst[ w , x ]  )
                         } )
             )
-        w_m  =   which.max( dstncs )[ 1 ]
-        w    =   c( w, w_m )
+        w_m   =   which.max( dstncs )[ 1 ]
+        w_mm  =   ( 1 : (i*stp) )[ -w ][ w_m ]
+        w     =   c( w, w_mm )
         
     }
     
     # Save to output:
-    stat.sim_red  =  stat.sim[ w, ]
-    par.sim_red   =  par.sim[  w, ]
+    stat.sim_red  =  stat_sim[ w, ]
+    par.sim_red   =  par_sim[  w, ]
     row.names( par.sim_red  )  =  1:nrow( par.sim_red  )
     row.names( stat.sim_red )  =  1:nrow( stat.sim_red )
     
