@@ -59,7 +59,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
     par_sim   =  rstrct$par.sim      #  Restricted initial data for parameters of simulations
     
     
-    # Get dimensionalities of parameter and simulation datasets:
+    # Get dimensions of parameter and simulation datasets:
     dim_par  =  ncol( par_sim )
     dim_sim  =  ncol( stat_sim )
     
@@ -253,10 +253,37 @@ make_hypersurface  <-  function(  stat.obs,
     
     stat_sim  =  stat.sim[ w, ] 
     par_sim   =  par.sim[ w,  ]
+    row.names( stat_sim )  =  1 : nrow( stat_sim )
+    row.names( par_sim  )  =  1 : nrow( par_sim  )
     
+    ### distances between all the points:
+    dst       =  as.matrix( dist( x = stat_sim ) )
     
+    # Choose the farest points from the previous points 
+    #######  to get maximal volume of hypersurface:
+    for( i in 1 : size ){
+        
+        if (i == 1 ) {
+            w = stp
+            next
+        }
+        
+        dstncs  =  unlist( 
+                sapply( X    =  ( 1 : (i*stp) )[ -w ], 
+                        FUN  =  function( x ){
+                                    sum( dst[ w , x ]  )
+                        } )
+            )
+        w_m  =   which.max( dstncs )[ 1 ]
+        w    =   c( w, w_m )
+        
+    }
     
-    
+    # Save to output:
+    stat.sim_red  =  stat.sim[ w, ]
+    par.sim_red   =  par.sim[  w, ]
+    row.names( par.sim_red  )  =  1:nrow( par.sim_red  )
+    row.names( stat.sim_red )  =  1:nrow( stat.sim_red )
     
     return( list( stat.sim =  stat.sim_red,
                   par.sim  =  par.sim_red   ) )
