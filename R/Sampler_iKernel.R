@@ -238,9 +238,12 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
 #' @param blend_part Part of blended sets: the hypersurface set and 
 #' set from rejection ABC 
 #'
-#' @return \code{sampler_MaxWiK()} returns the list: \cr
-
-
+#' @export
+#'
+#' @return \code{make_hypersurface()} returns the list: \cr
+#' - stat.sim  -  dataset of statistics of simulations;
+#' - par.sim  -  dataset of corresponding parameters of simulations.
+#' 
 make_hypersurface  <-  function(  stat.obs,
                                   stat.sim,
                                   par.sim, 
@@ -284,11 +287,20 @@ make_hypersurface  <-  function(  stat.obs,
         
     }
     
+    # Define indexes of dataset for output:
+    w3   =  (1:nrow( par_sim  ) )[ -w ]
+    prt  =  round( blend_part * size )
+    w3   =  w3[ 1 : prt ]
+    w    =  w[ 1  : (size  -  prt) ]
+    
+    w    =  c( w, w3 )
+    
     # Save to output:
     stat.sim_red  =  stat_sim[ w, ]
     par.sim_red   =  par_sim[  w, ]
     row.names( par.sim_red  )  =  1:nrow( par.sim_red  )
     row.names( stat.sim_red )  =  1:nrow( stat.sim_red )
+    
     
     return( list( stat.sim =  stat.sim_red,
                   par.sim  =  par.sim_red   ) )

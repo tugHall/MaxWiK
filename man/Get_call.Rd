@@ -127,7 +127,11 @@ set from rejection ABC}
 \item n_simulations: the total number of simulations.
 }
 
-\code{sampler_MaxWiK()} returns the list: \cr
+\code{make_hypersurface()} returns the list: \cr
+\itemize{
+\item stat.sim  -  dataset of statistics of simulations;
+\item par.sim  -  dataset of corresponding parameters of simulations.
+}
 
 \code{Get_call()} returns the list: \cr
 method_name = method_name, \cr
