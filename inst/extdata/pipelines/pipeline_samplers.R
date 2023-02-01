@@ -23,10 +23,10 @@ check_packages()
 
 file_name   =  'output.txt'
 model       =  c( 'Gaussian', 'Linear' )[ 1 ]
-dimension   =  8
+dimension   =  6
 stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 1 ]
 rng  =  c( 0, 1000 )   # range of parameters
-restrict_points_number  =  Number_of_points  =  1500
+restrict_points_number  =  Number_of_points  =  2000
 d = max( dimension )
 A      =  ( ( 1:d ) + 12 ) * 100  # Amplitude for Gauss function / Linear function
 sigma  =  rep( rng[2]/ 5, d )     # Sigma for Gauss function 
@@ -124,7 +124,7 @@ psi_t  =  hyper$iKernel$psi_t
 
 
 # Maximal number of iteration in sampling for each method
-nmax  =  2500
+nmax  =  4000
 
 if ( model  == 'Gaussian' ){
     
@@ -226,7 +226,7 @@ for( j in 1:length( Meth_Kern$Method ) ){
     
 }   # End of loop for all the methods
 
-nl  =  c(2:8 ) # 8:10)
+nl  =  c(2:7 ) # 8:10)
 l   =  length( nl )
 
 hue = c(" ", "random", "red", "orange", "yellow",
@@ -241,9 +241,9 @@ clrs  =  randomColor(count = l,
 
 plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
                names = c( 'Iterations', 'log of MSE'), 
-               xr = c(1500, 4000), 
-               yr = c(1E3, 1E7), 
-               logscale = 'y', 
+               xr = c(1500, 5500), 
+               yr = c(1E7, 1E8), 
+               logscale = '', 
                col = clrs, 
                lwd = 2, lt = 1:l, cex = 1.5, 
                draw_key = TRUE )
@@ -404,9 +404,9 @@ points(x = data_MSE$w, data_MSE$`K2-ABC_Laplacian`, pch = 16 )
 # n  =  20
 n_between_sampling  =  10
 MSE_samplings$ABC_Marjoram_original  =  data.frame( n = NA, MSE = NA )
-for( i in 1:30 ){
+for( i in 1:3 ){
 
-    n  =  20 * i
+    n  =  200 * i
     ABC_Marjoram_original  =  ABC_mcmc( method="Marjoram_original",
                                     model=toy_model,
                                     prior=toy_prior,
@@ -435,7 +435,7 @@ for( i in 1:30 ){
 
 plot( x = MSE_samplings$ABC_Marjoram_original$n, 
       y = MSE_samplings$ABC_Marjoram_original$MSE, 
-      log  =  'y', ylim = c(1E-2, 3E6) )
+      log  =  '' ) # , ylim = c(1E-2, 3E6) )
 
 
 
@@ -445,22 +445,33 @@ plot( x = MSE_samplings$ABC_Marjoram_original$n,
 # MaxWiK sampling ---------------------------------------------------------
 
 # Restrict number of initial simulations
-stat.sim  =  stat.sim[ 1:2000, ]
-par.sim   =  par.sim[ 1:2000, ]
+sz  =  500
+hp  =  make_hypersurface( stat.obs   =  stat.obs, 
+                          stat.sim   =  stat.sim, 
+                          par.sim    =  par.sim, 
+                          size       =  sz, 
+                          blend_part =  0 )
+
+par_red  =  hp$par.sim
+stat_red = hp$stat.sim
+
+plot( x = par_red$X1, y = par_red$X2, xlim = rng, ylim = rng )
+points( par.truth[ 1 ], par.truth[ 2 ], col = 'red')
 
 smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs, 
-                           stat.sim =  stat.sim, 
-                           par.sim  =  par.sim,  
+                           stat.sim =  stat_red, 
+                           par.sim  =  par_red,  
                            model    =  model_function, 
                            arg0     =  model_par, 
-                           size     =  500, 
+                           size     =  sz, 
                            psi_t    =  psi_t, 
-                           epsilon  =  1E-18, 
+                           epsilon  =  1E-10, 
+                           check_err  =  FALSE, 
                            nmax     =  30, 
                            include_top  =  TRUE,
                            slowly       =  TRUE, 
                            rate         =  0.2, 
-                           n_simulation_stop = 5000  )
+                           n_simulation_stop = 8000  )
 # Get correct MSE with noise = 0
 smpl_1$results$mse  =  sapply(  X = 1:nrow(smpl_1$results), 
                                 FUN = function( x ) Get_MSE(new_par = smpl_1$results[ x, 1:dimension ], 
