@@ -266,7 +266,7 @@ make_hypersurface  <-  function(  stat.obs,
     ### distances between all the points:
     dst       =  as.matrix( dist( x = stat_sim ) )
     
-    # Choose the farest points from the previous points 
+    # Choose the farthest points from the previous points 
     #######  to get maximal volume of hypersurface:
     for( i in 1 : size ){
         
