@@ -270,6 +270,16 @@ adjust_ABC_tolerance  <-  function( tolerance = c(0.001, 0.002, 0.005, (0.01 * 1
 #' NULL
 Get_hyperparameters  <-  function( stat.obs, stat.sim, par.sim, par.truth ){
     
+    if ( nrow( stat.sim) > 2000 ){
+        
+        new_data  =  restrict_data( par.sim = par.sim, stat.sim = stat.sim, 
+                                    stat.obs = stat.obs, size = 2000 )
+        
+        par.sim    =  new_data$par.sim
+        stat.sim   =  new_data$stat.sim
+    }
+    
+    
     kernel_names = c( 'Gaussian', 'Laplacian', 'iKernel' )
     
     hyper  =  list(  )
