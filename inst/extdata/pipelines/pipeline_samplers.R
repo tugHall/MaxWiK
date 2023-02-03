@@ -23,10 +23,10 @@ check_packages()
 
 file_name   =  'output.txt'
 model       =  c( 'Gaussian', 'Linear' )[ 1 ]
-dimension   =  20
+dimension   =  2
 stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 1 ]
 rng  =  c( 0, 1000 )   # range of parameters
-restrict_points_number  =  Number_of_points  =  3000
+restrict_points_number  =  Number_of_points  =  1000
 d = max( dimension )
 A      =  ( ( 1:d ) + 12 ) * 100  # Amplitude for Gauss function / Linear function
 sigma  =  rep( rng[2]/ 5, d )     # Sigma for Gauss function 

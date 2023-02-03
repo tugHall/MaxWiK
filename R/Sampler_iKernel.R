@@ -13,7 +13,8 @@
 #' @param rate Rate value in the range \code{[0,1]} to define 
 #' the rate of changing in the original top of sampled points for slow scheme (if slowly = TRUE)
 #' @param n_simulation_stop Maximal number of simulations to stop sampling. 
-#' If \code{n_simulation_stop = NA} then there is no restriction (by default).
+#' If \code{n_simulation_stop = NA} then there is no restriction (by default)
+#' @param include_web_rings Logical to include or do not include the cobweb rings to the simulations
 #'
 #' @return \code{sampler_MaxWiK()} returns the list: \cr
 #' - results: results of all the simulations; \cr 
@@ -33,7 +34,8 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                                              include_top = FALSE,
                                              slowly = FALSE, rate = 0.2, 
                                              n_simulation_stop = NA, 
-                                             check_err  =  TRUE ){ 
+                                             check_err  =  TRUE, 
+                                             include_web_rings  =  TRUE ){ 
     # epsilon is a criterion to stop simulation
     # nmax is maximal number of iterations
     # psi_t is a data.frame of psi and t with top values of MSE of length 20
@@ -122,6 +124,48 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
         return( results )
     }
     
+    make_web_rings  =  function( web, model, arg0, number_of_nodes  =  1 ){
+        
+        results  =  NULL
+        
+        res_net  =  web$network
+        dst    =  as.matrix( dist( x = res_net ) )
+        
+        for( i in 1:( nrow( web$network ) - 2 ) ){
+            
+            pnt_1  =  web$network[ i, ]
+            dst_1  =  dst[ -1,    ]
+            dst    =  dst[ -1, -1 ]
+            res_net  =  res_net[ -1, ]
+            pnt_2  =  res_net[ as.integer( which.min( dst_1[ , 1 ] )[ 1 ] ), ]
+
+            pnts  =  generate_points_between_two_points( pair = rbind( pnt_1, pnt_2 ), n = number_of_nodes + 2 )
+            pnts  =  pnts[ -1, ]
+            pnts  =  pnts[ -nrow( pnts ), ]
+            
+            for( j in 1:nrow( pnts ) ){
+                
+                res_1    =   pnts[ j, ]
+            
+                new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
+                n_simulations  <<-  n_simulations  +  1
+                
+                res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
+                
+                mse_1   =  MSE_sim( stat.obs = stat.obs, stat.sim = new.sim )
+                mse_1   =  as.data.frame( mse_1 )
+                names( mse_1)  = 'mse'
+                
+                res_1$mse    =  as.numeric( mse_1$mse )
+                res_1$comm     =     'Cobweb_Ring'
+                
+                res_1$sim      =     web$sim_network[ i ]
+                
+                results  =  rbind( results, res_1 )
+            }
+        }
+    }
+    
     n_simulations  =  0
     for( i in 1:nmax ){
         
@@ -143,6 +187,12 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                                 model =  model, 
                                 arg0  =  arg0 )
             
+            if ( include_top & include_web_rings ) {
+                res_2  =  make_web_rings( web    =  web, 
+                                          model  =  model, 
+                                          arg0   =  arg0  )
+            } else res_2  =  NULL
+            
             if ( FALSE ){
                         res_1  =  web$par.best
                         
@@ -162,7 +212,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                         res_1$sim      =     web$sim.best
             }
 
-            results  =  rbind( results, res_1 )
+            results  =  rbind( results, res_1, res_2 )
         }                
         
         results_ALL  =  rbind( results_ALL, results )
