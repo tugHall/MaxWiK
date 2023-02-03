@@ -23,10 +23,10 @@ check_packages()
 
 file_name   =  'output.txt'
 model       =  c( 'Gaussian', 'Linear' )[ 1 ]
-dimension   =  6
+dimension   =  20
 stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 1 ]
 rng  =  c( 0, 1000 )   # range of parameters
-restrict_points_number  =  Number_of_points  =  2000
+restrict_points_number  =  Number_of_points  =  3000
 d = max( dimension )
 A      =  ( ( 1:d ) + 12 ) * 100  # Amplitude for Gauss function / Linear function
 sigma  =  rep( rng[2]/ 5, d )     # Sigma for Gauss function 
@@ -226,7 +226,7 @@ for( j in 1:length( Meth_Kern$Method ) ){
     
 }   # End of loop for all the methods
 
-nl  =  c(2:7 ) # 8:10)
+nl  =  c(2:8 ) # 8:10)
 l   =  length( nl )
 
 hue = c(" ", "random", "red", "orange", "yellow",
@@ -241,9 +241,9 @@ clrs  =  randomColor(count = l,
 
 plot_2D_lines( x = data_MSE$w, DF = data_MSE, nl = nl, 
                names = c( 'Iterations', 'log of MSE'), 
-               xr = c(1500, 5500), 
-               yr = c(1E7, 1E8), 
-               logscale = '', 
+               xr = c(2000, 6000), 
+               yr = c(1E3, 1E7), 
+               logscale = 'y', 
                col = clrs, 
                lwd = 2, lt = 1:l, cex = 1.5, 
                draw_key = TRUE )
@@ -370,7 +370,7 @@ ABC_Delmoral  =  ABC_sequential( method = "Delmoral",
                                  summary_stat_target = sum_stat_obs,
                                  tolerance_target = tolerance, 
                                  alpha  =  alpha_delmo, 
-                                 verbose = FALSE )
+                                 verbose = TRUE )
 
 print( paste0( 'The number of simulations is ', cntr ) )
 
@@ -445,19 +445,39 @@ plot( x = MSE_samplings$ABC_Marjoram_original$n,
 # MaxWiK sampling ---------------------------------------------------------
 
 # Restrict number of initial simulations
-sz  =  500
+
+nmax  =  8000
+
+if ( model  == 'Gaussian' ){
+    
+    input  =  get_dataset_of_Gaussian_model( d = dimension, 
+                                             x0 = model_par$x0, 
+                                             r = model_par$r, 
+                                             noise = model_par$noise, 
+                                             A = model_par$A, 
+                                             sigma = model_par$sigma, 
+                                             probability = FALSE, 
+                                             n = nmax )
+}
+
+par.sim   =  rbind( par.sim,  input$par.sim )
+stat.sim  =  rbind( stat.sim, input$stat.sim )
+rm( input )
+
+
+sz  =  1500
 hp  =  make_hypersurface( stat.obs   =  stat.obs, 
                           stat.sim   =  stat.sim, 
                           par.sim    =  par.sim, 
                           size       =  sz, 
-                          blend_part =  0 )
+                          blend_part =  0.5 )
 
 par_red  =  hp$par.sim
 stat_red = hp$stat.sim
 
-plot( x = par_red$X1, y = par_red$X2, xlim = rng, ylim = rng )
-points( par.truth[ 1 ], par.truth[ 2 ], col = 'red')
-
+plot( x = par_red$X19, y = par_red$X20, xlim = rng, ylim = rng )
+points( par.truth[ 19 ], par.truth[ 20 ], col = 'red')
+sz = 1000
 smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs, 
                            stat.sim =  stat_red, 
                            par.sim  =  par_red,  
@@ -467,11 +487,11 @@ smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs,
                            psi_t    =  psi_t, 
                            epsilon  =  1E-10, 
                            check_err  =  FALSE, 
-                           nmax     =  30, 
+                           nmax     =  60, 
                            include_top  =  TRUE,
                            slowly       =  TRUE, 
                            rate         =  0.2, 
-                           n_simulation_stop = 8000  )
+                           n_simulation_stop = 28000  )
 # Get correct MSE with noise = 0
 smpl_1$results$mse  =  sapply(  X = 1:nrow(smpl_1$results), 
                                 FUN = function( x ) Get_MSE(new_par = smpl_1$results[ x, 1:dimension ], 
@@ -486,6 +506,13 @@ MSE_samplings$MaxWiK   =  data.frame( n_sim_total  =  ( nrow(stat.sim) + 1 ) : (
 
 plot( MSE_samplings$MaxWiK$n_sim_total, 
       MSE_samplings$MaxWiK$MSE, type = 'l', log = 'y' )
+
+for( i in 1:dimension ){
+    
+    hist( smpl_1$results[ , i ], xlim = rng )
+    lines( c(par.truth[ i ], par.truth[ i ] ), c( 0, 1000 ), col = 'red', lwd = 1.6 )
+    
+}
 
 
 ### Save all the data:
@@ -573,18 +600,21 @@ DF  =  Make_dataframe( RES = RES )
 library('ggplot2')
 library('scales')
 
-ggplot( DF, aes( n_simulations, MSE, 
+ggplot( DF[-c(1,2,3), ], aes( n_simulations, MSE, 
                  color = Method, 
-                 linetype = Method,
-                 group = Method )  ) + 
+                 # linetype = Method,
+                 group = Method 
+                 )  ) + 
     geom_tile(  ) + 
-    geom_line( size = 1.15 ) +
+    geom_line( size = 0.75 ) +
     scale_y_continuous(trans='log10') +
-    scale_x_continuous(trans='log10') +
+    # scale_x_continuous(trans='log10') +
     # scale_fill_manual(values=colors) +
     xlab( 'Number of simulations' )  + 
     ylab( 'Mean squared error' ) + 
     scale_y_log10( labels = label_log( ) ) +
+    xlim( 2000, 4000) +
+    guides(color = guide_legend(override.aes = list(fill = "#EEEEEE"))) + 
     theme(
         plot.title   = element_text(color="black", size=24, face="bold.italic" ),
         axis.title.x = element_text(color="black", size=24, face="bold" ),
