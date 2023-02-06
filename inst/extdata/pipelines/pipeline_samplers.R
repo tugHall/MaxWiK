@@ -493,7 +493,8 @@ smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs,
                            slowly       =  TRUE, 
                            rate         =  0.05, 
                            n_simulation_stop = 20000,
-                           include_web_rings = TRUE  )
+                           include_web_rings = TRUE,
+                           number_of_nodes_in_ring = 4  )
 
 # Get correct MSE with noise = 0
 smpl_1$results$mse  =  sapply(  X = 1:nrow(smpl_1$results), 
