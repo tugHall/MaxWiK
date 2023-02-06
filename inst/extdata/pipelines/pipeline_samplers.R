@@ -23,12 +23,12 @@ check_packages()
 
 file_name   =  'output.txt'
 model       =  c( 'Gaussian', 'Linear' )[ 1 ]
-dimension   =  2
+dimension   =  20
 stochastic_term   =   c( 0, 0.1, 0.5, 1, 2 )[ 1 ]
 rng  =  c( 0, 1000 )   # range of parameters
-restrict_points_number  =  Number_of_points  =  1000
+restrict_points_number  =  Number_of_points  =  4000
 d = max( dimension )
-A      =  ( ( 1:d ) + 12 ) * 100  # Amplitude for Gauss function / Linear function
+A      =  rep( 2250, d )  #   ( ( 1:d ) + 12 ) * 100  # Amplitude for Gauss function / Linear function
 sigma  =  rep( rng[2]/ 5, d )     # Sigma for Gauss function 
 
 if ( model == 'Gaussian' ) {
@@ -446,7 +446,7 @@ plot( x = MSE_samplings$ABC_Marjoram_original$n,
 
 # Restrict number of initial simulations
 
-nmax  =  8000
+nmax  =  4000
 
 if ( model  == 'Gaussian' ){
     
@@ -465,19 +465,20 @@ stat.sim  =  rbind( stat.sim, input$stat.sim )
 rm( input )
 
 
-sz  =  1500
+sz  =  1600
 hp  =  make_hypersurface( stat.obs   =  stat.obs, 
                           stat.sim   =  stat.sim, 
                           par.sim    =  par.sim, 
                           size       =  sz, 
-                          blend_part =  0.5 )
+                          blend_part =  0.2 )
 
 par_red  =  hp$par.sim
 stat_red = hp$stat.sim
 
-plot( x = par_red$X19, y = par_red$X20, xlim = rng, ylim = rng )
-points( par.truth[ 19 ], par.truth[ 20 ], col = 'red')
-sz = 1000
+plot( x = par_red$X1, y = par_red$X2, xlim = rng, ylim = rng, cex = 0.1 )
+
+points( par.truth[ 1 ], par.truth[ 2 ], col = 'red', cex = 1.5, lw = 2.5 )
+# sz = 1000
 smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs, 
                            stat.sim =  stat_red, 
                            par.sim  =  par_red,  
@@ -490,8 +491,10 @@ smpl_1  =  sampler_MaxWiK( stat.obs =  stat.obs,
                            nmax     =  60, 
                            include_top  =  TRUE,
                            slowly       =  TRUE, 
-                           rate         =  0.2, 
-                           n_simulation_stop = 28000  )
+                           rate         =  0.05, 
+                           n_simulation_stop = 20000,
+                           include_web_rings = TRUE  )
+
 # Get correct MSE with noise = 0
 smpl_1$results$mse  =  sapply(  X = 1:nrow(smpl_1$results), 
                                 FUN = function( x ) Get_MSE(new_par = smpl_1$results[ x, 1:dimension ], 
@@ -505,11 +508,11 @@ MSE_samplings$MaxWiK   =  data.frame( n_sim_total  =  ( nrow(stat.sim) + 1 ) : (
                                       MSE          =  smpl_1$results$mse )
 
 plot( MSE_samplings$MaxWiK$n_sim_total, 
-      MSE_samplings$MaxWiK$MSE, type = 'l', log = 'y' )
+      MSE_samplings$MaxWiK$MSE, type = 'l', log = 'y') # , ylim = c(1E3, 1E7) )
 
 for( i in 1:dimension ){
     
-    hist( smpl_1$results[ , i ], xlim = rng )
+    hist( smpl_1$results[ 8000:8459, i ], xlim = rng, breaks = 20 )
     lines( c(par.truth[ i ], par.truth[ i ] ), c( 0, 1000 ), col = 'red', lwd = 1.6 )
     
 }
