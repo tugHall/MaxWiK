@@ -15,6 +15,7 @@
 #' @param n_simulation_stop Maximal number of simulations to stop sampling. 
 #' If \code{n_simulation_stop = NA} then there is no restriction (by default)
 #' @param include_web_rings Logical to include or do not include the cobweb rings to the simulations
+#' @param number_of_nodes_in_ring Number of points/nodes between two points in the web ring. By default \code{number_of_nodes_in_ring = 2}
 #'
 #' @return \code{sampler_MaxWiK()} returns the list: \cr
 #' - results: results of all the simulations; \cr 
@@ -35,7 +36,8 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                                              slowly = FALSE, rate = 0.2, 
                                              n_simulation_stop = NA, 
                                              check_err  =  TRUE, 
-                                             include_web_rings  =  TRUE ){ 
+                                             include_web_rings  =  TRUE,
+                                             number_of_nodes_in_ring = 2 ){ 
     # epsilon is a criterion to stop simulation
     # nmax is maximal number of iterations
     # psi_t is a data.frame of psi and t with top values of MSE of length 20
@@ -190,7 +192,8 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
             if ( include_top & include_web_rings ) {
                 res_2  =  make_web_rings( web    =  web, 
                                           model  =  model, 
-                                          arg0   =  arg0  )
+                                          arg0   =  arg0, 
+                                          number_of_nodes = number_of_nodes_in_ring )
             } else res_2  =  NULL
             
             if ( FALSE ){

@@ -24,7 +24,8 @@ sampler_MaxWiK(
   rate = 0.2,
   n_simulation_stop = NA,
   check_err = TRUE,
-  include_web_rings = TRUE
+  include_web_rings = TRUE,
+  number_of_nodes_in_ring = 2
 )
 
 make_hypersurface(stat.obs, stat.sim, par.sim, size, blend_part = 0.5)
@@ -97,6 +98,8 @@ If \code{n_simulation_stop = NA} then there is no restriction (by default)}
 \item{check_err}{Logical parameter to check epsilon or do not}
 
 \item{include_web_rings}{Logical to include or do not include the cobweb rings to the simulations}
+
+\item{number_of_nodes_in_ring}{Number of points/nodes between two points in the web ring. By default \code{number_of_nodes_in_ring = 2}}
 
 \item{blend_part}{Part of blended sets: the hypersurface set and
 set from rejection ABC}
