@@ -163,7 +163,7 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
         return( web )
     } 
     # for( j in 1:nrow( psi_t ) ){
-    webnet  =  mclapply( 1:nrow( psi_t ) , FUN = SIM, mc.cores = cores )
+    webnet  =  lapply( 1:nrow( psi_t ) , FUN = SIM )
 
     
     simnet  =  list(  stat.sim_origin  =  stat.sim_origin, 

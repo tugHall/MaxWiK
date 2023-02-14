@@ -699,15 +699,14 @@ adjust_psi_t  <-  function(par.sim, stat.sim, stat.obs, talkative = FALSE, check
     
     psi_t$dlt = 0
     
-    dlt  =  mclapply( 1:nrow( psi_t ), FUN = function(i){
+    dlt  =  lapply( 1:nrow( psi_t ), FUN = function(i){
                             get_dlt( psi = psi_t$psi[ i ], 
                                      t = psi_t$t[ i ], 
                                      par.sim  = par.sim[-id, ], 
                                      stat.sim = x, 
                                      stat.obs = y, 
                                      par.truth = par.truth,
-                                     talkative = talkative, check_pos_def = check_pos_def  )}, 
-                      mc.cores = cores )
+                                     talkative = talkative, check_pos_def = check_pos_def  )} )
     
     for( i in 1:nrow( psi_t ) ){
         if(FALSE){
@@ -1389,7 +1388,7 @@ get_Spider_MAP  <-  function( stat.sim, par.sim, stat.obs,
         return( web )
     } 
     
-    webnet  =  mclapply( 1:nrow( psi_t ) , FUN = SIM, mc.cores = cores )
+    webnet  =  lapply( 1:nrow( psi_t ) , FUN = SIM )
     
     simnet  =  list(  stat.obs  =  stat.obs, 
                       stat.sim  =  stat.sim,

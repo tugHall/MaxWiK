@@ -16,7 +16,6 @@ Imports:
     utils,
     scales,
     bayestestR,
-    parallel,
     plotly,
     kernlab,
     abc,

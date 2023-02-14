@@ -187,7 +187,7 @@ Get_call_all_methods  <-  function( dimension, iterations, stat.obs, stat.sim,
                               )
     
     for( mk in 1:nrow(Meth_Kern) ){
-         DF_1  =  mclapply( iterations, FUN = function( x ){     
+         DF_1  =  lapply( iterations, FUN = function( x ){     
                         Get_call(  method_name =  as.character( Meth_Kern$Method[mk] ), 
                                    kernel_name =  as.character( Meth_Kern$Kernel[mk] ),
                                    dimension   =  dimension, 
@@ -200,7 +200,7 @@ Get_call_all_methods  <-  function( dimension, iterations, stat.obs, stat.sim,
                                    model_par  =  model_par, 
                                    hyper      =  hyper
                                 )
-        }, mc.cores  =  cores )
+        } )
         # Check an error
         bad   =  sapply( DF_1, inherits, what = "try-error" )
         # If NO errors:

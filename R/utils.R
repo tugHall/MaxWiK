@@ -110,7 +110,6 @@ check_packages  <-  function( pkgs = NULL ){
                         kernlab       =  c( 'kernelMatrix', 'laplacedot', 'rbfdot' ),
                         magrittr      =  '%>%',
                         methods       =  'new',
-                        parallel      =  'mclapply',
                         plotly        =  c( 'plot_ly', 'add_trace', 'add_surface' ),
                         randomcoloR   =  'randomColor',
                         scales        =  'alpha',
