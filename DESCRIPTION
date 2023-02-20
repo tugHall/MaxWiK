@@ -6,7 +6,7 @@ Authors@R:
 Description: This software is a package named **MaxWiK** contains Approximate Bayesian Computation method to choose a single parameter for a single observation point. The method involves the transformation of row data to a Hilbert space (mapping) and the measurement of the similarity between simulated points and maxima weighted Isolation Kernel mapping related to the observation point. We also design a heuristic algorithm for parameter estimation that requires no calculation and is dimension independent. 
 License: AGPL (>= 3)
 Depends: 
-    R (>= 3.6.0)
+    R (>= 3.3.0)
 Imports:
     graphics,
     grDevices,

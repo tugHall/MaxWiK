@@ -304,8 +304,11 @@ make_hypersurface  <-  function(  stat.obs,
                                   blend_part = 0.5 ){
     
     stp  =  round( nrow( par.sim ) / size )
-    if ( stp < 2 ) stop( 'Please, make the size less than dataset size at least two times.' )
-    
+    if ( stp < 2 ) {
+        print( 'The size is similar to the dataset size, so return whole dataset.' )
+        return( list( stat.sim =  stat.sim,
+                      par.sim  =  par.sim  ) )
+    }
     ### Make ordering in data sets from close to far points  to observation
     rej      =  abc( target = stat.obs, param = par.sim, 
                      sumstat = stat.sim, tol = 0.1, method = 'rejection' ) 
