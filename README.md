@@ -27,10 +27,10 @@ To install, please, use the archive file 'MaxWiK_1.0.0.tar.gz':
 
     utils::install.packages("./MaxWiK_1.0.0.tar.gz", repos = NULL, type = "source")
 
-To see how it works, please, be kind use the pipelines. To get pipelines, please, use command:
+To see how it works, please, be kind use the templates. To get templates, please, use command:
 
-    copy_pipelines( dir = './' )   
-    # dir can be any working folder where pipeline will be copied
+    copy_templates( dir = './' )   
+    # dir can be any working folder where template will be copied
 
 
 ## Cite package MaxWiK

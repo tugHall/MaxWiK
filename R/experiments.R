@@ -1,5 +1,5 @@
 
-### File to organize toy experiments which code is presented in pipeline_ABC.R 
+### File to organize toy experiments which code is presented in template_ABC.R 
 
 
 #' Function to call a method to get a parameter estimation and MSE

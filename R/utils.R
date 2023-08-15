@@ -129,7 +129,7 @@ check_packages  <-  function( pkgs = NULL ){
 
 
 
-#' Function to copy the pipelines from extdata folder in the library to /Pipelines/ folder in the working directory
+#' Function to copy the templates from extdata folder in the library to /Templates/ folder in the working directory
 #'
 #' @param dir Folder to where files should be save, by default dir = './'
 #'
@@ -137,13 +137,13 @@ check_packages  <-  function( pkgs = NULL ){
 #' @export
 #'
 #' @examples
-#' copy_pipelines( dir = 'Input' )
-copy_pipelines  <-  function( dir = './' ){
+#' copy_templates( dir = 'Input' )
+copy_templates  <-  function( dir = './' ){
     
-    dir_pck =  system.file('extdata', 'pipelines', package = 'MaxWiK', mustWork = TRUE )
+    dir_pck =  system.file('extdata', 'templates', package = 'MaxWiK', mustWork = TRUE )
     files  =  list.files( dir_pck )
     fls  =  lapply( X = files,
-                    FUN = function( x ) system.file('extdata/pipelines', x, package = 'MaxWiK', mustWork = TRUE ) )
+                    FUN = function( x ) system.file('extdata/templates', x, package = 'MaxWiK', mustWork = TRUE ) )
     
     if ( !file.exists( dir ) ) dir.create( dir )
     lapply( X = 1:length( fls ) , FUN = function( x ){
