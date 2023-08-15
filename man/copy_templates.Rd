@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{copy_templates}
 \alias{copy_templates}
-\title{Function to copy the templates from extdata folder in the library to /Pipelines/ folder in the working directory}
+\title{Function to copy the templates from extdata folder in the library to /Templates/ folder in the working directory}
 \usage{
 copy_templates(dir = "./")
 }
@@ -13,7 +13,7 @@ copy_templates(dir = "./")
 List of logic numbers for each copied file, TRUE - success, FALSE - not success
 }
 \description{
-Function to copy the templates from extdata folder in the library to /Pipelines/ folder in the working directory
+Function to copy the templates from extdata folder in the library to /Templates/ folder in the working directory
 }
 \examples{
 copy_templates( dir = 'Input' )
