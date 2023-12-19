@@ -11,7 +11,7 @@
 #' @param header Logical type to read or do not read head of a file
 #'
 #' @return data.frame of data from a file
-#' @export
+#' 
 #'
 #' @examples
 #' # fl = system.file('extdata/Input', 'gene_map.txt',package = 'tugHall.3', mustWork = TRUE )
@@ -32,7 +32,7 @@ read_file  <-  function( file_name = '', stringsAsFactors = FALSE, header = TRUE
 #'
 #' @return Vector of colors with length more than nm
 #'
-#' @export
+#' 
 #' @examples
 #' clrs = gen_colors( nm = 120 )
 gen_colors  <-  function(nm = 12){
@@ -78,7 +78,7 @@ gen_colors  <-  function(nm = 12){
 #'
 #' @return if the package is installed then it returns NULL else it returns error message
 #'
-#' @export
+#' 
 #' @examples
 #' check_pkg( pkg = 'grDevices' )
 check_pkg  <-  function( pkg ){
@@ -95,7 +95,7 @@ check_pkg  <-  function( pkg ){
 #' 
 #' @return if the packages are installed then it returns NULL else it returns error message
 #'
-#' @export
+#' 
 #' 
 #' @examples
 #' check_packages(  )

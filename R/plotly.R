@@ -7,7 +7,7 @@
 #' @param n Integer number of points for each axes to get net for plotly 3D graph
 #'
 #' @return Plot of 3D to show the similarity of each point of the parameter space
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -99,7 +99,7 @@ plot_3d_similarities  <-  function( sim, r = range(0, 10), n = 12 ){
 #' @return Many 3D plots to show the similarity of each point of the parameter space
 #' for each set of hyperparameters psi and t 
 #' 
-#' @export
+#' 
 #'
 #' @examples
 #' NULL

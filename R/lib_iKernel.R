@@ -6,7 +6,6 @@
 #' @param x numeric vector
 #'
 #' @return The squared root of sum of squared elements of the vector x or Euclid length of the vector x
-#' @export
 #'
 #' @examples
 #' norm_vec(c(3,4)) # that returns 5
@@ -19,7 +18,7 @@ norm_vec     <-  function(x) {
 #' @describeIn norm_vec The squared norm or the sum of squared elements of the vector x
 #' @return The squared Euclid norm or the sum of squared elements of the vector x
 #' 
-#' @export
+#' 
 #' @examples
 #' norm_vec_sq(c(3,4)) # that returns 25
 #' norm_vec_sq(c(12,5)) # that returns 169
@@ -34,7 +33,7 @@ norm_vec_sq  <-  function(x) {
 #' @param l DATA.FRAME that should have data of numeric type
 #'
 #' @return TRUE if data.frame has ONLY numeric data and FALSE vice verse  
-#' @export
+#' 
 #'
 #' @examples
 #' \dontrun{
@@ -75,7 +74,7 @@ check_numeric_format  <-  function( l ) {
 #' @param Matrix_Voronoi Matrix of Voronoi diagrams that is used only if new = FALSE
 #'
 #' @return Feature representation in RKHS based on Voronoi diagram for WHOLE dataset
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -139,7 +138,7 @@ get_voronoi_feature  <-  function( psi = 40, t = 350, data, talkative = FALSE,
 #' @param nr Integer number of rows in matrix of distances (dissim) and also the size of dataset
 #'
 #' @return RKHS mapping for a new point based on Isolation Kernel mapping
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -181,7 +180,7 @@ add_new_point_iKernel  <-  function( data, d1, Matrix_Voronoi, dissim, t, psi, n
 #' @param pnts Integer vector of indexes of columns of the data_set
 #'
 #' @return Subset of data_set with columns pnts
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -205,7 +204,7 @@ GET_SUBSET  <-  function( data_set, pnts ){
 #' @param t is a number of columns of Matrix_iKernel or dimension of Matrix_iKernel (corresponding to the number of trees t)
 #' 
 #' @return The function \code{iKernel()} returns a value of similarity or Isolation KERNEL for TWO points
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -228,7 +227,7 @@ iKernel  <-  function( Matrix_iKernel, pnt_1, pnt_2, t ){
 #' @param nr is number of rows in Matrix_iKernel or size of dataset
 #' 
 #' @return The function \code{iKernel_point_dataset()} returns a value of Isolation Kernel between a new point and dataset represented via Matrix_iKernel
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -257,7 +256,7 @@ iKernel_point_dataset  <-  function( Matrix_iKernel, t, nr, iFeature_point ){
 #'
 #' @return The function \code{get_weights_iKernel()} returns the 
 #' list of weights for RKHS space and weights of similarity for iFeature_point
-#' @export 
+#' 
 #'
 #' @examples
 #' NULL 
@@ -287,7 +286,7 @@ get_weights_iKernel   <-   function( GI, Matrix_iKernel, t, nr, iFeature_point )
 #' 
 #' @return List of three matrices: Matrix_Voronoi, Matrix_iKernel and dissim
 #' 
-#' @export
+#' 
 #' 
 #' @examples
 #' NULL
@@ -342,7 +341,8 @@ get_voronoi_feature_PART_dataset  <-  function( data, talkative = FALSE, start_r
 #'
 #' @return Maxima weighted kernel mean mapping in the form of integer vector with length t (number of trees). 
 #' Each element of the vector is index of Voronoi cell with maximal weight in the Voronoi diagram 
-#' @export
+#' 
+#' 
 #'
 #' @examples
 #' NULL
@@ -381,7 +381,7 @@ get_kernel_mean_embedding  <-  function( parameters_Matrix_iKernel, Hilbert_weig
 #'
 #' @return The subset of dtst that has points 
 #' extracted with feature mapping of an observation point (iFeature_point)
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -412,7 +412,7 @@ get_subset_of_feature_map   <-   function(dtst, Matrix_Voronoi, iFeature_point )
 #' @param check_pos_def Logical parameter to check the Gram matrix is positive definite or do not check
 #'
 #' @return  The function \code{GRAM_iKernel()} returns Gram matrix of Isolation Kernel
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -445,7 +445,7 @@ GRAM_iKernel    <-  function( Matrix_iKernel, check_pos_def = FALSE ){
 #'
 #' @return Function \code{get_inverse_GRAM()} returns the inverse Gram matrix 
 #' based on the given positive regularization constant lambda l
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -476,7 +476,7 @@ get_inverse_GRAM  <-  function( G, l = 1E-6, check_pos_def = FALSE ){
 #'
 #' @return Function \code{check_positive_definite()} returns logical value: \cr 
 #' TRUE if Gram matrix is positive definite, and FALSE if it is not
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -658,7 +658,7 @@ Get_iKernel_estimation  <-  function( iKernelABC, par.sim, stat.sim, stat.obs ){
 #' 
 #' @return \code{adjust_psi_t() } returns adjusted hyper parameters \code{psi} and \code{t} as a data.frame with set of pair \code{psi_t} 
 #' 
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -759,7 +759,7 @@ adjust_psi_t  <-  function(par.sim, stat.sim, stat.obs, talkative = FALSE, check
 #' - similarity_to_mean that is numeric vector of similarities of all the tracers points.
 #' 
 #' 
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -814,7 +814,7 @@ sudoku  <-  function( DT , iKernelABC, n_bullets = 20, n_best = 10, halfwidth = 
 #' and this part is corresponding also to Voronoi sites/seeds
 #'
 #' @return The function \code{get_pairs_of_data_frame()} returns the list of the pairs of points
-#' @export
+#' 
 #'
 #' @examples
 #' NULL 
@@ -847,7 +847,7 @@ get_pairs_of_data_frame  <-  function( DF ){
 #' returns data frame of generated points between two given points, 
 #' including given points as the first and the last rows
 #' 
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -875,7 +875,7 @@ generate_points_between_two_points  <-  function( pair, n = 10 ){
 #' @param n_bullets Integer number of tracer points between each pair of points from DF
 #'
 #' @return The function \code{get_tracer_bullets()} returns data frame of generated tracer points
-#' @export
+#' 
 #'
 #' @examples
 #' NULL 

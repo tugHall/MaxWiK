@@ -22,7 +22,7 @@
 #' @param change_par Indicator to change par() or not for a plot. By default change_par = TRUE, after plot it will be returned to initial values
 #'
 #' @return NULL, making 2D plot using points
-#' @export
+#' 
 #'
 #' @examples
 #' plot_2D( x=-5:5, y=-3:7 )
@@ -73,7 +73,7 @@ plot_2D   <-  function( x, y, names = c( 'X', 'Y' ), pch = 18, col = 'blue', cex
 #' @param change_par Indicator to change par() or not for a plot. By default change_par = TRUE, after plot it will be returned to initial values
 #'
 #' @return NULL, making 2D plot using lines
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
@@ -160,7 +160,7 @@ plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
 #'
 #' @return Plot all the results of \code{sudoku()} function 
 #' 
-#' @export
+#' 
 #' 
 #' @examples
 #' NULL
@@ -226,7 +226,7 @@ plot_sudoku_2D   <-  function( stat.sim, par.sim, par.truth, iKernelABC, rslt,
 #'
 #' @return The function \code{plot_web_2D()} draws all the results of the function \code{spiderweb()}
 #' 
-#' @export
+#' 
 #'
 #' @examples
 #' NULL
