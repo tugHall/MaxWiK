@@ -95,7 +95,7 @@ check_pkg  <-  function( pkg ){
 #' 
 #' @return if the packages are installed then it returns NULL else it returns error message
 #'
-#' 
+#' @export
 #' 
 #' @examples
 #' check_packages(  )
