@@ -658,7 +658,7 @@ Get_iKernel_estimation  <-  function( iKernelABC, par.sim, stat.sim, stat.obs ){
 #' 
 #' @return \code{adjust_psi_t() } returns adjusted hyper parameters \code{psi} and \code{t} as a data.frame with set of pair \code{psi_t} 
 #' 
-#' 
+#' @export
 #'
 #' @examples
 #' NULL
