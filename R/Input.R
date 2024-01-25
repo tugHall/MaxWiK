@@ -9,6 +9,7 @@
 #' par.sim - restricted parameters which are close to observation point \cr
 #' stat.sim - restricted stat.sim which are close to observation point
 #' 
+#' @export
 #'
 #' @examples
 #' NULL
