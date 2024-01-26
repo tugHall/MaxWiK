@@ -2,7 +2,15 @@
 # Define global variables:
 # utils::globalVariables( c( 'var1', 'Var2' ) )
 
-
+#' Environment of the package 'MaxWiK' to store all the common objects of a simulation
+#'
+#' @description \code{MaxWiK.env} is environment of the package 'MaxWiK'
+#' where all the common objects of a simulation are stored and used
+#'
+#' @export
+#'
+MaxWiK.env = new.env( parent = emptyenv() )
+attr( MaxWiK.env, "name" ) = "MaxWiK.Environment"
 
 #' Function to read file
 #'

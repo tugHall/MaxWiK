@@ -2,6 +2,7 @@
 
 export(Get_MAP)
 export(Get_iKernel_estimation)
+export(MaxWiK.env)
 export(adjust_psi_t)
 export(check_packages)
 export(copy_templates)

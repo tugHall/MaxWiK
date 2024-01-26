@@ -313,7 +313,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
     rep_check  =  FALSE  # Logical check to repeat if err is same
     
     check_packages()
-    
+    MaxWiK.env$n_simulations  <-  0
     start_time = Sys.time()
     # Redefine input:
     stat_sim  =  stat.sim     #  initial data for summary statistics of simulations
@@ -349,7 +349,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             res_1  =  web$par.best
             
             new_best.sim  =  do.call( what = model, args = c( arg0, list( x =  web$par.best ) ) )
-            n_simulations  <<-  n_simulations  +  1
+            MaxWiK.env$n_simulations  <- MaxWiK.env$n_simulations  + 1   # n_simulations  <<-  n_simulations  +  1
             
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim
             
@@ -372,7 +372,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                     res_1  =  web$network[ i, ]
                     
                     new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
-                    n_simulations  <<-  n_simulations  +  1
+                    MaxWiK.env$n_simulations  <- MaxWiK.env$n_simulations  + 1     # n_simulations  <<-  n_simulations  +  1
                     
                     res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
                     
@@ -409,11 +409,11 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
         res_net  =  web$network
         dst    =  as.matrix( dist( x = res_net ) )
         
-        model_par  =  function( j, pnts, model, arg0, stat.obs ){
+        model_paral  =  function( j, pnts, model, arg0, stat.obs ){
             res_1    =   pnts[ j, ]
             
             new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
-            n_simulations  <<-  n_simulations  +  1
+            MaxWiK.env$n_simulations  <- MaxWiK.env$n_simulations  + 1   # n_simulations  <<-  n_simulations  +  1
             
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
             
@@ -427,7 +427,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             res_1$sim      =     web$sim_network[ i ]
             return( res_1 )
         }
-        model_par_run  =  function( x ) model_par( j = x, pnts = pnts, 
+        model_paral_run  =  function( x ) model_paral( j = x, pnts = pnts, 
                                                model = model, arg0 = arg0, 
                                                stat.obs = stat.obs ) 
         for( i in 1:( nrow( web$network ) - 2 ) ){
@@ -445,7 +445,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             ### Parallel implementation:
             results_list  =  mclapply( 
                 X = 1:nrow( pnts ), 
-                FUN =  model_par_run, 
+                FUN =  model_paral_run, 
                 mc.cores = cores 
                 )
 
