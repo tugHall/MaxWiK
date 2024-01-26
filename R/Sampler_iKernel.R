@@ -393,7 +393,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                                                     arg0 = arg0, stat.obs = stat.obs )
               
               results_list   =  mclapply( X = 1:nrow( web$network ), 
-                                          FUN = fun_par_run( x ), 
+                                          FUN = fun_par_run, 
                                           mc.cores = cores )
               results  =  as.data.frame( do.call( rbind, results_list ) )
             ##############
@@ -445,7 +445,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             ### Parallel implementation:
             results_list  =  mclapply( 
                 X = 1:nrow( pnts ), 
-                FUN =  model_par_run( x ), 
+                FUN =  model_par_run, 
                 mc.cores = cores 
                 )
 
