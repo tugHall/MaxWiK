@@ -1,3 +1,5 @@
+
+
 #' Example of simulation for lazy start
 #'
 #' @param verbose Logical type to show or do not show messages during execution

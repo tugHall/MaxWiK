@@ -1,6 +1,6 @@
 
 
-#' @describeIn simulation_example Function to plot whole space of parameters 
+#' Function to plot whole space of parameters 
 #' related to similarity of the observation point:
 #'
 #' @param sim Results of the function \code{simulation_example}
@@ -91,7 +91,7 @@ plot_3d_similarities  <-  function( sim, r = range(0, 10), n = 12 ){
 
 
 
-#' @describeIn simulation_example Function to plot whole space of parameters 
+#' Function to plot whole space of parameters 
 #' related to similarity of the observation point for each set of hyperparameters psi and t 
 #' 
 #' @param simnet Results of the function \code{simulation_example_many_psi_t}

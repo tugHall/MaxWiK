@@ -1344,7 +1344,7 @@ spiderweb_slow  <-  function( psi = 4, t = 35, param = param,
 # GET_Spider_MAP ---------------------------------------------------------
 
 
-#' @describeIn simulation_example  Function to get MAP of SpiderWeb algorithm based on different psi / t hyperparameters
+#' Function to get MAP of SpiderWeb algorithm based on different psi / t hyperparameters
 #'
 #' @param cores Number of cores for parallel calculation
 #' @param par.sim - data frame of parameters of the model

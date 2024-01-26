@@ -1,6 +1,6 @@
 # This is a sampler for ABC method that based on maxima weighted isolation kernel method
 
-#' @describeIn Function to generate parameters and simulate a model based on MaxWiK algorithm 
+#' Function to generate parameters and simulate a model based on MaxWiK algorithm 
 #'
 #' @param model Function to get output of simulation during sampling 
 #' @param arg0 List with arguments for a model function, so that arg0 is NOT changed during sampling
@@ -388,11 +388,12 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                     return( res_1 )
                     #  results  =  rbind( results, res_1 )
             }
-            
+              fun_par_run =  function( x ) fun_par( i = x, web = web, 
+                                                    model = model, 
+                                                    arg0 = arg0, stat.obs = stat.obs )
+              
               results_list   =  mclapply( X = 1:nrow( web$network ), 
-                                          FUN = fun_par(i = x, web = web, 
-                                                        model = model, arg0 = arg0, 
-                                                        stat.obs = stat.obs ), 
+                                          FUN = fun_par_run( x ), 
                                           mc.cores = cores )
               results  =  as.data.frame( do.call( rbind, results_list ) )
             ##############
@@ -426,7 +427,9 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             res_1$sim      =     web$sim_network[ i ]
             return( res_1 )
         }
-        
+        model_par_run  =  function( x ) model_par( j = x, pnts = pnts, 
+                                               model = model, arg0 = arg0, 
+                                               stat.obs = stat.obs ) 
         for( i in 1:( nrow( web$network ) - 2 ) ){
             
             pnt_1  =  web$network[ i, ]
@@ -442,10 +445,9 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             ### Parallel implementation:
             results_list  =  mclapply( 
                 X = 1:nrow( pnts ), 
-                FUN =  model_par( j = x, pnts = pnts, 
-                                  model = model, arg0 = arg0, 
-                                  stat.obs = stat.obs ), 
-                                  mc.cores = cores )
+                FUN =  model_par_run( x ), 
+                mc.cores = cores 
+                )
 
             results  =  as.data.frame( do.call( rbind, results_list ) )
             ### 
