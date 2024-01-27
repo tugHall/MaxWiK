@@ -313,8 +313,15 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
     rep_check  =  FALSE  # Logical check to repeat if err is same
     
     check_packages()
-    n_simulations  <-  0
-    assign("n_simulations", n_simulations, envir = .GlobalEnv )
+    
+    w.env <- new.env()
+    w.env$n_simulations  <-  0
+    
+    update_n <- function( x ) {
+        # Here we need to modify n_simulations
+        w.env$n_simulations  = w.env$n_simulations + 1
+    }
+    
     start_time = Sys.time()
     # Redefine input:
     stat_sim  =  stat.sim     #  initial data for summary statistics of simulations
@@ -350,7 +357,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             res_1  =  web$par.best
             
             new_best.sim  =  do.call( what = model, args = c( arg0, list( x =  web$par.best ) ) )
-            .GlobalEnv$n_simulations  <- .GlobalEnv$n_simulations  + 1   # n_simulations  <<-  n_simulations  +  1
+            update_n( 1 )
             
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim
             
@@ -373,7 +380,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                     res_1  =  web$network[ i, ]
                     
                     new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
-                    .GlobalEnv$n_simulations  <- .GlobalEnv$n_simulations  + 1     # n_simulations  <<-  n_simulations  +  1
+                    update_n( 1 )
                     
                     res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
                     
@@ -414,7 +421,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             res_1    =   pnts[ j, ]
             
             new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
-            .GlobalEnv$n_simulations  <- .GlobalEnv$n_simulations  + 1   # n_simulations  <<-  n_simulations  +  1
+            update_n( 1 )
             
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
             
@@ -489,7 +496,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                 res_1  =  web$par.best
                 
                 new_best.sim  =  do.call( what = model, args = c( arg0, list( x =  web$par.best ) ) )
-                .GlobalEnv$n_simulations  =  .GlobalEnv$n_simulations  +  1
+                update_n( 1 )
                 
                 res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim
                 
@@ -548,7 +555,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
         
         err_previous  =  err
         if ( !is.na( n_simulation_stop ) & 
-             ( n_simulation_stop <= .GlobalEnv$n_simulations ) ) break
+             ( n_simulation_stop <= w.env$n_simulations ) ) break
         
     }
     
@@ -563,7 +570,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                   MSE_min = err, 
                   number_of_iterations = i, 
                   time = as.numeric( difftime( end_time, start_time, units = "secs")[[1]] ),
-                  n_simulations  =  .GlobalEnv$n_simulations
+                  n_simulations  =  w.env$n_simulations
     ) )
 }
 
