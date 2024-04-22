@@ -124,6 +124,31 @@ check_packages  <-  function( pkgs = NULL ){
 
 
 
+#' Function to check DATA.FRAME 
+#'
+#' Check that DATA.FRAME has numeric format for ALL the columns and it has NO 'NA' values
+#' @param l DATA.FRAME that should have data of numeric type
+#'
+#' @return TRUE if data.frame has ONLY numeric data and FALSE vice verse  
+#' 
+#'
+#' @examples
+#' \dontrun{
+#' check_numeric_format( data.frame( A= c(9,0), B = c(4,6)) )  # TRUE
+#' check_numeric_format( data.frame( A= c(9,0), B = c(4,NA)) )  # Error due to NA value
+#' check_numeric_format( data.frame( A= c(9,'0'), B = c(4,6)) ) # Error due to character in the data
+#' }
+check_numeric_format  <-  function( l ) {
+    
+    if ( all(!is.na( l ) )  & all( sapply(l, is.numeric) ) & is.data.frame( l ) ) return( TRUE )
+    msg  =  NULL
+    if ( !all(!is.na( l )) )     msg = paste0( msg, ' - input data has NA value(s);\n')
+    if ( !is.data.frame( l ) )   msg = paste0( msg, ' - input data should be TYPE of data frame;\n')
+    if ( !all( sapply(l, is.numeric) ) )  msg = paste0( msg, ' - input data should has ONLY NUMERIC TYPE for ALL columns;\n')
+    msg    =    paste0( substr(msg,1,nchar(msg)-2), '.') 
+    stop( msg )
+}
+
 
 #' Function to copy the templates from extdata folder in the library to /Templates/ folder in the working directory
 #'
