@@ -231,3 +231,33 @@ MSE_parameters   <-   function( par.truth, par.top = NULL, par.best ){
 
 
 
+#' Function to read hyperparameters and their values from the file
+#'
+#' @param input File name to input 
+#'
+#' @return Parameters and their values
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+read_hyperparameters  <- function( input ){
+    
+    check_packages()
+    input.table <- read.table( input, header=F, sep="\t" )
+    
+    suppressWarnings( expr = {
+        for( ii in 1:nrow( input.table ) ) {
+            V1 <- input.table[ ii, 1 ]
+            V2 <- input.table[ ii, 2 ]
+            
+            # add quotes to string 
+            if ( is.na( as.numeric( V2 ) ) & 
+                 is.na( as.logical( V2 ) ) &
+                 V2 != 'list()'
+            ) V2 <- paste("\'", V2, "\'", sep='')
+            text <- paste( V1, ' <<- ', V2, sep='' )
+            eval( parse( text = text ) )
+    }
+    }, classes = "warning" )
+}
