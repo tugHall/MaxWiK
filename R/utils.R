@@ -22,51 +22,6 @@ read_file  <-  function( file_name = '', stringsAsFactors = FALSE, header = TRUE
 }
 
 
-#' Function to make a large number of colors
-#'
-#' @param nm Number of colors
-#'
-#' @return Vector of colors with length more than nm
-#'
-#' 
-#' @examples
-#' clrs = gen_colors( nm = 120 )
-gen_colors  <-  function(nm = 12){
-    # nm is a number of colors
-    w <- (nm^(1/3)) %/% 1 +1
-
-    st <-  w^3 %/% nm
-
-    sq <- seq(0,1-1/w,1/w)
-
-    cr <- 1:nm
-
-    l <- 0
-    R <- 1:(w^3)
-    G <- R
-    B <- R
-
-    for (i in 1:w) {
-        for (j in 1:w) {
-            for (k in 1:w) {
-                l <- l+1
-                R[l] <- sq[i]
-                G[l] <- sq[j]
-                B[l] <- sq[k]
-            }
-        }
-    }
-
-    # seq(1,w^3,st) # is consequence of each color to make a high diversity of colors
-    jColor <- data.frame( number = 1:length( seq( 1,w^3, st ) ),
-                          color  = rgb( R[seq( 1, w^3, st ) ], G[seq( 1, w^3, st)],
-                                        B[seq( 1, w^3, st ) ] ), stringsAsFactors = FALSE )
-
-    return(jColor)
-
-}
-
-
 
 #' Check the installation of a package for some functions
 #'
@@ -148,6 +103,39 @@ check_numeric_format  <-  function( l ) {
     msg    =    paste0( substr(msg,1,nchar(msg)-2), '.') 
     stop( msg )
 }
+
+
+
+
+#' Function to restrict data in the size to accelerate the calculations 
+#' 
+#' @description \code{restrict_data()} is based on rejection ABC method to restrict original dataset
+#'
+#' @param size Integer number of points to leave from original dataset
+#' @param par.sim Data frame of parameters
+#' @param stat.sim Data frame of outputs of simulations
+#' @param stat.obs Data frame of observation point
+#'
+#' @return \code{restrict_data()} returns the list of: \cr
+#' par.sim - restricted parameters which are close to observation point \cr
+#' stat.sim - restricted stat.sim which are close to observation point
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+restrict_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
+    l  =  nrow( par.sim )
+    if ( l != nrow( stat.sim ) ) stop( "The parameters and statistics of simulations have different number of rows" )
+    rej_abc  =  abc( target = stat.obs, param = par.sim, sumstat = stat.sim, 
+                     tol = size / l, method = 'rejection' )
+    # rej_abc$region
+    new_par  =   par.sim[ rej_abc$region, ]
+    new_sim  =  stat.sim[ rej_abc$region, ]
+    return( list( par.sim   =  new_par, 
+                  stat.sim  =  new_sim ) )
+}
+
 
 
 #' Function to copy the templates from extdata folder in the library to /Templates/ folder in the working directory
