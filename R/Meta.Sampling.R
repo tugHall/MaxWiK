@@ -229,6 +229,8 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
             gen_tr  =  get_tracer_bullets( DF = tracers, n_bullets = n_bullets )
             
             tracers  =  rbind( tracers, gen_tr )
+            
+            tracers  =  unique.data.frame( tracers )
         }
         
         ### calculate the similarity for all the new points:
