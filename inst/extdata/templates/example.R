@@ -157,7 +157,7 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
     SIM  =  function( j ){
         psi =  psi_t$psi[ j ]
         t   =  psi_t$t[ j ]
-        web  =  spiderweb_slow( psi = psi, t = t, param = par.sim_origin, 
+        web  =  meta_sampling( psi = psi, t = t, param = par.sim_origin, 
                                 stat.sim = stat.sim_origin, stat.obs = stat.obs, 
                                 talkative = TRUE, check_pos_def = FALSE ,
                                 n_bullets = 5, n_best = 20, halfwidth = 0.5, 

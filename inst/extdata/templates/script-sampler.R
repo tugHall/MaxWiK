@@ -154,7 +154,7 @@ get_Spider_MAP  <-  function( stat.sim, par.sim, stat.obs,
     SIM  =  function( j ){
         psi =  psi_t$psi[ j ]
         t   =  psi_t$t[ j ]
-        web  =  spiderweb_slow( psi = psi, t = t, param = par.sim, 
+        web  =  meta_sampling( psi = psi, t = t, param = par.sim, 
                                 stat.sim = stat.sim, stat.obs = stat.obs, 
                                 talkative = FALSE, check_pos_def = FALSE ,
                                 n_bullets = 10, n_best = 20, halfwidth = 0.5, 

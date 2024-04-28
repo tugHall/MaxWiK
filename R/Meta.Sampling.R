@@ -281,7 +281,7 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
 #' @describeIn iKernelABC The function to get the best value of parameter corresponding to 
 #' Maxima Weighted Isolation Kernel mapping which is related to an observation point
 #' 
-#' @description The function \code{spiderweb_slow()} itteratively generates tracer points gotten 
+#' @description The function \code{meta_sampling()} itteratively generates tracer points gotten 
 #' from \code{sudoku()} algorithm, based on the simple procedure: \cr
 #' - making a reflection of the top points from the best point, \cr 
 #' - and then generating the point tracers between them, \cr
@@ -303,7 +303,7 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
 #' 
 #' @examples
 #' NULL
-spiderweb_slow  <-  function( psi = 4, t = 35, param = param, 
+meta_sampling  <-  function( psi = 4, t = 35, param = param, 
                               stat.sim = stat.sim, stat.obs = stat.obs, 
                               talkative = FALSE, check_pos_def = FALSE ,
                               n_bullets = 16, n_best = 10, halfwidth = 0.5, 

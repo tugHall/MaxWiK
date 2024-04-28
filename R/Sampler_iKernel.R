@@ -181,7 +181,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
         # source( './lib_iKernel.R' )
         for ( j in 1:nrow( psi_t ) ){
             
-            web = spiderweb_slow( param = par_sim, stat.sim = stat_sim, stat.obs = stat_obs, 
+            web = meta_sampling( param = par_sim, stat.sim = stat_sim, stat.obs = stat_obs, 
                              psi = psi_t$psi[ j ], t = psi_t$t[ j ], talkative = FALSE )
             
             res_1  =  make_res( web = web, 
@@ -481,7 +481,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
         # source( './lib_iKernel.R' )
         for ( j in 1:nrow( psi_t ) ){
             
-            web = spiderweb_slow( param = par_sim, stat.sim = stat_sim, stat.obs = stat_obs, 
+            web = meta_sampling( param = par_sim, stat.sim = stat_sim, stat.obs = stat_obs, 
                                   psi = psi_t$psi[ j ], t = psi_t$t[ j ], talkative = FALSE )
             
             res_1  =  make_res( web = web, 
