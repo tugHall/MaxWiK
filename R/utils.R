@@ -246,6 +246,7 @@ read_hyperparameters  <- function( input ){
     check_packages()
     input.table <- read.table( input, header=F, sep="\t" )
     
+    out = list()
     suppressWarnings( expr = {
         for( ii in 1:nrow( input.table ) ) {
             V1 <- input.table[ ii, 1 ]
@@ -256,8 +257,12 @@ read_hyperparameters  <- function( input ){
                  is.na( as.logical( V2 ) ) &
                  V2 != 'list()'
             ) V2 <- paste("\'", V2, "\'", sep='')
-            text <- paste( V1, ' <<- ', V2, sep='' )
+            text <- paste( 'out$', V1, ' <- ', V2, sep='' )
             eval( parse( text = text ) )
     }
     }, classes = "warning" )
+    
+    # out  =  sapply(ls(),function(x)get(x),simplify=F,USE.NAMES=T)
+    
+    return( out )
 }
