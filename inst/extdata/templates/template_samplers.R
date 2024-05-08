@@ -188,7 +188,7 @@ for( j in 1:length( Meth_Kern$Method ) ){
     
         # G = NULL
         if ( FALSE & method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
-                ikern  =  get.iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
+                ikern  =  get.MaxWiK( psi = psi_t$psi[1], t = psi_t$t[1], 
                                       param = par.sim[1:x, ], 
                                       stat.sim = stat.sim[1:x, ], 
                                       stat.obs = stat.obs, 

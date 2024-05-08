@@ -16,9 +16,9 @@ MSE_parameters(par.truth, par.top = NULL, par.best)
 
 \item{par.truth}{The truth parameter}
 
-\item{par.top}{Parameters from the top of similarities of \code{get.iKernelABC()} algorithm}
+\item{par.top}{Parameters from the top of similarities of \code{get.MaxWiK()} algorithm}
 
-\item{par.best}{The best parameter from \code{get.iKernelABC()} algorithm}
+\item{par.best}{The best parameter from \code{get.MaxWiK()} algorithm}
 }
 \value{
 The function \code{MSE_sim()} returns numeric vector of

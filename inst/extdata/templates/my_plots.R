@@ -143,7 +143,7 @@ plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
 #' @param par.sim Data frame of parameters of the model
 #' @param par.truth Truth value of the parameter corresponding to observation point (if known)
 #' @param iKernelABC Result of calculations based on Isolation Kernel ABC 
-#' that can be gotten by the function \code{get.iKernelABC()}
+#' that can be gotten by the function \code{get.MaxWiK()}
 #' @param rslt Results of function \code{sudoku()}
 #' @param ind_X Column index of the par.sim data frame to plot as X axes 
 #' @param ind_Y Column index of the par.sim data frame to plot as Y axes 

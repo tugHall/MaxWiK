@@ -2,7 +2,7 @@
 
 # SPIDERWEB algorithm -----------------------------------------------------
 
-#' @describeIn get.iKernelABC The function to get the best value of parameter corresponding to 
+#' @describeIn get.MaxWiK The function to get the best value of parameter corresponding to 
 #' Maxima Weighted Isolation Kernel mapping which is related to an observation point
 #' 
 #' @description The function \code{spiderweb()} itteratively generates tracer points gotten 
@@ -29,7 +29,7 @@
 #' - sim.best that is numeric value of the similarity of the best tracer point;
 #' tracers_all that is data frame of all the generated tracer points; 
 #' - sim.tracers_all that is numeric vector of similarities of all the generated tacer points;
-#' - iKernelABC that is result of the function \code{get.iKernelABC()} given on \code{input parameters}.
+#' - iKernelABC that is result of the function \code{get.MaxWiK()} given on \code{input parameters}.
 #' 
 #' 
 #' 
@@ -47,7 +47,7 @@ spiderweb_old  <-  function( psi = 4, t = 35, param = param,
                                n_bullets = n_bullets, n_best = n_best, 
                                halfwidth = halfwidth, epsilon = epsilon )
     
-    iKernelABC  = get.iKernelABC( psi = psi, t = t, param = param, 
+    iKernelABC  = get.MaxWiK( psi = psi, t = t, param = param, 
                                     stat.sim = stat.sim, stat.obs = stat.obs, 
                                     talkative = talkative, check_pos_def = check_pos_def )
     
@@ -116,7 +116,7 @@ spiderweb_old  <-  function( psi = 4, t = 35, param = param,
                   sim.tracers_all = sim.tracers_all, iKernelABC = iKernelABC ) )
 }
 
-#' @describeIn get.iKernelABC The function to get the best value of parameter corresponding to 
+#' @describeIn get.MaxWiK The function to get the best value of parameter corresponding to 
 #' Maxima Weighted Isolation Kernel mapping which is related to an observation point
 #' 
 #' @description The function \code{spiderweb()} itteratively generates tracer points gotten 
@@ -145,7 +145,7 @@ spiderweb_old  <-  function( psi = 4, t = 35, param = param,
 #' - network that is network points when algorithm stopped;
 #' - par.best that is data frame of one point that is the best from all the generated tracer points;
 #' - sim.best that is numeric value of the similarity of the best tracer point;
-#' - iKernelABC that is result of the function \code{get.iKernelABC()} given on \code{input parameters};
+#' - iKernelABC that is result of the function \code{get.MaxWiK()} given on \code{input parameters};
 #' - spiderweb that is the list of all the networks during the meta-sampling.
 #' 
 #' 
@@ -166,7 +166,7 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
                                halfwidth = halfwidth, epsilon = epsilon, rate = rate,
                                max_iteration = max_iteration, save_web = save_web )
     
-    iKernelABC  = get.iKernelABC( psi = psi, t = t, param = param, 
+    iKernelABC  = get.MaxWiK( psi = psi, t = t, param = param, 
                                     stat.sim = stat.sim, stat.obs = stat.obs, 
                                     talkative = talkative, check_pos_def = check_pos_def )
     
@@ -280,7 +280,7 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
                   spiderweb = spiderweb ) )
 }
 
-#' @describeIn get.iKernelABC The function to get the best value of parameter corresponding to 
+#' @describeIn get.MaxWiK The function to get the best value of parameter corresponding to 
 #' Maxima Weighted Isolation Kernel mapping which is related to an observation point
 #' 
 #' @description The function \code{meta_sampling()} itteratively generates tracer points gotten 
@@ -298,7 +298,7 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
 #' - network that is network points when algorithm stopped;
 #' - par.best that is data frame of one point that is the best from all the generated tracer points;
 #' - sim.best that is numeric value of the similarity of the best tracer point;
-#' - iKernelABC that is result of the function \code{get.iKernelABC()} given on \code{input parameters};
+#' - iKernelABC that is result of the function \code{get.MaxWiK()} given on \code{input parameters};
 #' - spiderweb that is the list of all the networks during the meta-sampling.
 #' 
 #' @export
@@ -320,7 +320,7 @@ meta_sampling  <-  function( psi = 4, t = 35, param = param,
                                halfwidth = halfwidth, epsilon = epsilon, rate = rate,
                                max_iteration = max_iteration, save_web = save_web )
     if ( is.na( use.iKernelABC )[1] ){
-        data.iKernelABC  = get.iKernelABC( psi = psi, t = t, param = param, 
+        data.iKernelABC  = get.MaxWiK( psi = psi, t = t, param = param, 
                                            stat.sim = stat.sim, stat.obs = stat.obs, 
                                             talkative = talkative, check_pos_def = check_pos_def )
     } else {

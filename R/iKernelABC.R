@@ -2,11 +2,11 @@
 
 #' Function to get Approximate Bayesian Computation based on Maxima Weighted Isolation Kernel mapping
 #'
-#' @description The function \code{get.iKernelABC()} is used to get Approximate Bayesian Computation 
+#' @description The function \code{get.MaxWiK()} is used to get Approximate Bayesian Computation 
 #' based on Maxima Weighted Isolation Kernel mapping.
 #' On given data frame of parameters, statistics of the simulations and an observation, 
 #' using the internal parameters psi and t, 
-#' the function \code{get.iKernelABC()} returns the estimation of a parameter corresponding to
+#' the function \code{get.MaxWiK()} returns the estimation of a parameter corresponding to
 #' Maxima weighted Isolation Kernel ABC method. 
 #'
 #' @param psi Integer number. Size of each Voronoi diagram or number of areas/points in the Voronoi diagrams
@@ -17,7 +17,7 @@
 #' @param talkative Logical parameter to print or do not print messages
 #' @param check_pos_def Logical parameter to check the Gram matrix is positive definite or do not check
 #' 
-#' @return The function \code{get.iKernelABC()} returns the list of :
+#' @return The function \code{get.MaxWiK()} returns the list of :
 #' - kernel_mean_embedding is a maxima weighted kernel mean embedding (mapping) related to the observation point;
 #' - parameters_Matrix_Voronoi is a matrix of information about Voronoi trees (rows - trees, columns - Voronoi points/areas IDs) for parameters data set;
 #' - parameters_Matrix_iKernel is a matrix of of all points of PARAMETERS in a Hilbert space (rows - points, columns - isolation trees);
@@ -33,7 +33,7 @@
 #'
 #' @examples
 #' NULL
-get.iKernelABC  <-  function( psi = 40, t = 350, param, 
+get.MaxWiK  <-  function( psi = 40, t = 350, param, 
                           stat.sim, stat.obs, talkative = FALSE, check_pos_def = TRUE ){
     ### Input parameters
     ### psi is number of points in a subsets 

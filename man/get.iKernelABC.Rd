@@ -4,7 +4,7 @@
 \alias{spiderweb_old}
 \alias{spiderweb}
 \alias{meta_sampling}
-\alias{get.iKernelABC}
+\alias{get.MaxWiK}
 \title{Function to get Approximate Bayesian Computation based on Maxima Weighted Isolation Kernel mapping}
 \usage{
 spiderweb_old(
@@ -56,7 +56,7 @@ meta_sampling(
   use.iKernelABC = NA
 )
 
-get.iKernelABC(
+get.MaxWiK(
   psi = 40,
   t = 350,
   param,
@@ -109,7 +109,7 @@ The function \code{spiderweb()} returns the list of the next objects:
 \item sim.best that is numeric value of the similarity of the best tracer point;
 tracers_all that is data frame of all the generated tracer points;
 \item sim.tracers_all that is numeric vector of similarities of all the generated tacer points;
-\item iKernelABC that is result of the function \code{get.iKernelABC()} given on \code{input parameters}.
+\item iKernelABC that is result of the function \code{get.MaxWiK()} given on \code{input parameters}.
 }
 
 The function \code{spiderweb()} returns the list of the next objects:
@@ -119,7 +119,7 @@ The function \code{spiderweb()} returns the list of the next objects:
 \item network that is network points when algorithm stopped;
 \item par.best that is data frame of one point that is the best from all the generated tracer points;
 \item sim.best that is numeric value of the similarity of the best tracer point;
-\item iKernelABC that is result of the function \code{get.iKernelABC()} given on \code{input parameters};
+\item iKernelABC that is result of the function \code{get.MaxWiK()} given on \code{input parameters};
 \item spiderweb that is the list of all the networks during the meta-sampling.
 }
 
@@ -130,11 +130,11 @@ The function \code{spiderweb()} returns the list of the next objects:
 \item network that is network points when algorithm stopped;
 \item par.best that is data frame of one point that is the best from all the generated tracer points;
 \item sim.best that is numeric value of the similarity of the best tracer point;
-\item iKernelABC that is result of the function \code{get.iKernelABC()} given on \code{input parameters};
+\item iKernelABC that is result of the function \code{get.MaxWiK()} given on \code{input parameters};
 \item spiderweb that is the list of all the networks during the meta-sampling.
 }
 
-The function \code{get.iKernelABC()} returns the list of :
+The function \code{get.MaxWiK()} returns the list of :
 \itemize{
 \item kernel_mean_embedding is a maxima weighted kernel mean embedding (mapping) related to the observation point;
 \item parameters_Matrix_Voronoi is a matrix of information about Voronoi trees (rows - trees, columns - Voronoi points/areas IDs) for parameters data set;
@@ -179,11 +179,11 @@ from \code{sudoku()} algorithm, based on the simple procedure: \cr
 \code{abs( min( sim_tracers ) - sim_previous ) < epsilon }
 }
 
-The function \code{get.iKernelABC()} is used to get Approximate Bayesian Computation
+The function \code{get.MaxWiK()} is used to get Approximate Bayesian Computation
 based on Maxima Weighted Isolation Kernel mapping.
 On given data frame of parameters, statistics of the simulations and an observation,
 using the internal parameters psi and t,
-the function \code{get.iKernelABC()} returns the estimation of a parameter corresponding to
+the function \code{get.MaxWiK()} returns the estimation of a parameter corresponding to
 Maxima weighted Isolation Kernel ABC method.
 }
 \section{Functions}{

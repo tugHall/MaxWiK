@@ -15,7 +15,7 @@
 #' 
 #' @param DT Whole dataset of parameters
 #' @param iKernelABC Result of calculations based on Isolation Kernel ABC 
-#' that can be gotten by the function \code{get.iKernelABC()}
+#' that can be gotten by the function \code{get.MaxWiK()}
 #' @param n_bullets Integer number of tracer bullets / additional points between the TWO most distant points
 #' @param n_best Integer number of the best tracer bullets / points 
 #' to consider them at the next algorithmic step

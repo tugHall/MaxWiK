@@ -1,6 +1,6 @@
-#' @describeIn get.iKernelABC  function to get parameter estimation based on isolation kernel
+#' @describeIn get.MaxWiK  function to get parameter estimation based on isolation kernel
 #'
-#' @param iKernelABC Result of function \code{get.iKernelABC}
+#' @param iKernelABC Result of function \code{get.MaxWiK}
 #'
 #' @return \code{Get_iKernel_estimation()} returns list of: \cr
 #' - iKernel_ABC - parameter estimation based on isolation kernel / weighted sum; \cr
@@ -33,7 +33,7 @@ Get_iKernel_estimation  <-  function( iKernelABC, par.sim, stat.sim, stat.obs ){
 }
 
 
-#' @describeIn get.iKernelABC Function to adjust hyper parameters \code{psi} and \code{t} for isolation kernel ABC
+#' @describeIn get.MaxWiK Function to adjust hyper parameters \code{psi} and \code{t} for isolation kernel ABC
 #'
 #' @param psi_t Initial data.frame of  \code{psi} and \code{t}, by default \cr
 #' \code{psi_t = data.frame( psi = as.numeric( sapply( X = c(2:8)*2, FUN = function( x ) rep(x, 8) ) ), t = rep( c(4,6,8,10,12,14,16,20), 7) )}
@@ -55,7 +55,7 @@ adjust_psi_t  <-  function(par.sim, stat.sim, stat.obs, talkative = FALSE, check
     get_dlt  =  function( psi, t, par.sim, stat.sim, stat.obs, par.truth,
                           talkative = talkative, check_pos_def = check_pos_def  ){
         
-        iKernABC  =  get.iKernelABC( psi = psi, t = t, param = par.sim, stat.sim = stat.sim, 
+        iKernABC  =  get.MaxWiK( psi = psi, t = t, param = par.sim, stat.sim = stat.sim, 
                                         stat.obs = stat.obs, talkative = talkative, 
                                         check_pos_def = check_pos_def )
         ### Isolation kernel estimation:
@@ -188,7 +188,7 @@ get_Spider_MAP  <-  function( stat.sim, par.sim, stat.obs,
 #' that was calculated with \code{KernelABC()} function that represents Isolation Kernel ABC method 
 #' 
 #' @param param Data frame of parameters
-#' @param sm Numeric vector of weights gotten from \code{get.iKernelABC()} function
+#' @param sm Numeric vector of weights gotten from \code{get.MaxWiK()} function
 #' 
 #' @return The function \code{Mean_iKernel_parameters()} returns the weighted mean of the parameter 
 #' 
