@@ -319,7 +319,7 @@ meta_sampling  <-  function( psi = 4, t = 35, param = param,
                                n_bullets = n_bullets, n_best = n_best, 
                                halfwidth = halfwidth, epsilon = epsilon, rate = rate,
                                max_iteration = max_iteration, save_web = save_web )
-    if ( is.na( use.iKernelABC ) ){
+    if ( is.na( use.iKernelABC )[1] ){
         data.iKernelABC  = get.iKernelABC( psi = psi, t = t, param = param, 
                                            stat.sim = stat.sim, stat.obs = stat.obs, 
                                             talkative = talkative, check_pos_def = check_pos_def )
