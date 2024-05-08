@@ -63,7 +63,8 @@ get.MaxWiK(
   stat.sim,
   stat.obs,
   talkative = FALSE,
-  check_pos_def = TRUE
+  check_pos_def = TRUE,
+  Matrix_Voronoi = NULL
 )
 }
 \arguments{
@@ -98,6 +99,9 @@ or part of changing of network during meta-sampling}
 \item{max_iteration}{Maximal number of iteration in the function}
 
 \item{save_web}{Logical to save or do not save network during meta-sampling}
+
+\item{Matrix_Voronoi}{is a predefined matrix of information about Voronoi trees
+(rows - trees, columns - Voronoi points/areas IDs). By default it is NULL and is generated randomly.}
 }
 \value{
 The function \code{spiderweb()} returns the list of the next objects:
