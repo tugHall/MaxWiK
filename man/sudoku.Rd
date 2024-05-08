@@ -19,7 +19,7 @@ get_tracer_bullets(DF, n_bullets = 20)
 \item{DT}{Whole dataset of parameters}
 
 \item{iKernelABC}{Result of calculations based on Isolation Kernel ABC
-that can be gotten by the function \code{iKernelABC()}}
+that can be gotten by the function \code{get.iKernelABC()}}
 
 \item{n_bullets}{Integer number of tracer points between each pair of points from DF}
 
