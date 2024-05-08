@@ -59,7 +59,7 @@ get_voronoi_feature  <-  function( psi = 40, t = 350, data, talkative = FALSE,
     ### new is the logical parameter - Is Matrix_Voronoi new ?
     ### if new = FALSE then you should define Matrix_Voronoi
     
-    if ( is.null(Matrix_Voronoi) ) new = TRUE
+    new = is.null(Matrix_Voronoi)
     
     ### Check the data format:
     if (talkative ) print( 'Check the data format')
