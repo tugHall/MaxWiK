@@ -16,6 +16,8 @@
 #' @param stat.obs Summary statistics of the observation point
 #' @param talkative Logical parameter to print or do not print messages
 #' @param check_pos_def Logical parameter to check the Gram matrix is positive definite or do not check
+#' @param Matrix_Voronoi is a predefined matrix of information about Voronoi trees 
+#' (rows - trees, columns - Voronoi points/areas IDs). By default it is NULL and is generated randomly.
 #' 
 #' @return The function \code{get.MaxWiK()} returns the list of :
 #' - kernel_mean_embedding is a maxima weighted kernel mean embedding (mapping) related to the observation point;
@@ -34,7 +36,8 @@
 #' @examples
 #' NULL
 get.MaxWiK  <-  function( psi = 40, t = 350, param, 
-                          stat.sim, stat.obs, talkative = FALSE, check_pos_def = TRUE ){
+                          stat.sim, stat.obs, talkative = FALSE, 
+                          check_pos_def = TRUE, Matrix_Voronoi = NULL ){
     ### Input parameters
     ### psi is number of points in a subsets 
     ### t is number of trees or Voronoi diagrams 
@@ -50,7 +53,7 @@ get.MaxWiK  <-  function( psi = 40, t = 350, param,
     if ( talkative & check_numeric_format(stat.sim) ) print( 'OK' )
     
     Voron  =  get_voronoi_feature( psi = psi, t = t, data = stat.sim, 
-                                   talkative = talkative, new = TRUE, Matrix_Voronoi = NULL )
+                                   talkative = talkative, new = TRUE, Matrix_Voronoi = Matrix_Voronoi )
     
     Matrix_iKernel = Voron[['M_iKernel']]
     Matrix_Voronoi = Voron[['M_Voronoi']]
