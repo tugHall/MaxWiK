@@ -10,7 +10,6 @@ get_voronoi_feature(
   t = 350,
   data,
   talkative = FALSE,
-  new = TRUE,
   Matrix_Voronoi = NULL
 )
 
@@ -25,9 +24,7 @@ add_new_point_iKernel(data, d1, Matrix_Voronoi, dissim, t, psi, nr)
 
 \item{talkative}{logical. If TRUE then print messages, FALSE for the silent execution}
 
-\item{new}{logical. Is Matrix_Voronoi new ? If TRUE then function will calculate Matrix_Voronoi, if FALSE function will use input Matrix_Voronoi.}
-
-\item{Matrix_Voronoi}{Matrix of Voronoi diagrams that is used only if new = FALSE}
+\item{Matrix_Voronoi}{Matrix of Voronoi diagrams, if it is NULL then the function will calculate Matrix_Voronoi}
 
 \item{d1}{Data point - usually it is an observation data point}
 

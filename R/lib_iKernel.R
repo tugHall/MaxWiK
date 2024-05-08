@@ -42,9 +42,8 @@ norm_vec_sq  <-  function(x) {
 #' @param psi Integer number related to the size of each Voronoi diagram
 #' @param t Integer number of trees in Isolation Kernel or dimension of RKHS
 #' @param data dataset of points, rows - points, columns - dimensions of a point
-#' @param talkative logical. If TRUE then print messages, FALSE for the silent execution 
-#' @param new logical. Is Matrix_Voronoi new ? If TRUE then function will calculate Matrix_Voronoi, if FALSE function will use input Matrix_Voronoi.
-#' @param Matrix_Voronoi Matrix of Voronoi diagrams that is used only if new = FALSE
+#' @param talkative logical. If TRUE then print messages, FALSE for the silent execution
+#' @param Matrix_Voronoi Matrix of Voronoi diagrams, if it is NULL then the function will calculate Matrix_Voronoi
 #'
 #' @return Feature representation in RKHS based on Voronoi diagram for WHOLE dataset
 #' 
@@ -52,13 +51,15 @@ norm_vec_sq  <-  function(x) {
 #' @examples
 #' NULL
 get_voronoi_feature  <-  function( psi = 40, t = 350, data, talkative = FALSE, 
-                                   new = TRUE,  Matrix_Voronoi = NULL ){
+                                   Matrix_Voronoi = NULL ){
     ### Input parameters
     ### psi is number of points in a subset / dimension of RKHS 
     ### psi is also number of areas in any Voronoi diagram
     ### t is number of trees or number of Voronoi diagrams
     ### new is the logical parameter - Is Matrix_Voronoi new ?
     ### if new = FALSE then you should define Matrix_Voronoi
+    
+    if ( is.null(Matrix_Voronoi) ) new = TRUE
     
     ### Check the data format:
     if (talkative ) print( 'Check the data format')

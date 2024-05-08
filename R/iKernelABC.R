@@ -53,7 +53,7 @@ get.MaxWiK  <-  function( psi = 40, t = 350, param,
     if ( talkative & check_numeric_format(stat.sim) ) print( 'OK' )
     
     Voron  =  get_voronoi_feature( psi = psi, t = t, data = stat.sim, 
-                                   talkative = talkative, new = TRUE, Matrix_Voronoi = Matrix_Voronoi )
+                                   talkative = talkative, Matrix_Voronoi = Matrix_Voronoi )
     
     Matrix_iKernel = Voron[['M_iKernel']]
     Matrix_Voronoi = Voron[['M_Voronoi']]
