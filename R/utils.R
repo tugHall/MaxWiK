@@ -196,8 +196,8 @@ MSE_sim   <-   function( stat.obs, stat.sim ){
 #' @description The function \code{MSE_parameters()} allows to get MSE for parameters if the truth parameter is known
 #'
 #' @param par.truth The truth parameter
-#' @param par.top Parameters from the top of similarities of \code{iKernelABC()} algorithm
-#' @param par.best The best parameter from \code{iKernelABC()} algorithm
+#' @param par.top Parameters from the top of similarities of \code{get.iKernelABC()} algorithm
+#' @param par.best The best parameter from \code{get.iKernelABC()} algorithm
 #'
 #' @return The function \code{MSE_parameters()} returns list of two numbers: \cr
 #' - mean of MSE values for all the points from par.top; \cr

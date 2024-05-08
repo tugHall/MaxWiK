@@ -55,9 +55,9 @@ adjust_psi_t  <-  function(par.sim, stat.sim, stat.obs, talkative = FALSE, check
     get_dlt  =  function( psi, t, par.sim, stat.sim, stat.obs, par.truth,
                           talkative = talkative, check_pos_def = check_pos_def  ){
         
-        iKernABC  =  iKernelABC( psi = psi, t = t, param = par.sim, stat.sim = stat.sim, 
-                                 stat.obs = stat.obs, talkative = talkative, 
-                                 check_pos_def = check_pos_def )
+        iKernABC  =  get.iKernelABC( psi = psi, t = t, param = par.sim, stat.sim = stat.sim, 
+                                        stat.obs = stat.obs, talkative = talkative, 
+                                        check_pos_def = check_pos_def )
         ### Isolation kernel estimation:
         wghts  =  as.numeric( iKernABC$similarity )
         sum_wghts  = sum( wghts )
@@ -188,7 +188,7 @@ get_Spider_MAP  <-  function( stat.sim, par.sim, stat.obs,
 #' that was calculated with \code{KernelABC()} function that represents Isolation Kernel ABC method 
 #' 
 #' @param param Data frame of parameters
-#' @param sm Numeric vector of weights gotten from \code{iKernelABC()} function
+#' @param sm Numeric vector of weights gotten from \code{get.iKernelABC()} function
 #' 
 #' @return The function \code{Mean_iKernel_parameters()} returns the weighted mean of the parameter 
 #' 

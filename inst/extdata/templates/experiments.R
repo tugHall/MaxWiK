@@ -99,10 +99,10 @@ Get_parameter  <-  function( method_name, kernel_name = '',
     
     if ( method_name == 'K2-ABC' & kernel_name == 'iKernel' ){
         
-        ikern  =  iKernelABC( psi = hyper$iKernel$psi_t$psi[ 1 ], 
-                              t   = hyper$iKernel$psi_t$t[ 1 ], 
-                              param = par.sim, 
-                              stat.sim = stat.sim, 
+        ikern  =  get.iKernelABC( psi = hyper$iKernel$psi_t$psi[ 1 ], 
+                                    t   = hyper$iKernel$psi_t$t[ 1 ], 
+                                    param = par.sim, 
+                                    stat.sim = stat.sim, 
                               stat.obs = stat.obs, 
                               talkative = FALSE, 
                               check_pos_def = FALSE )

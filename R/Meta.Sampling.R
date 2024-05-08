@@ -29,7 +29,7 @@
 #' - sim.best that is numeric value of the similarity of the best tracer point;
 #' tracers_all that is data frame of all the generated tracer points; 
 #' - sim.tracers_all that is numeric vector of similarities of all the generated tacer points;
-#' - iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters}.
+#' - iKernelABC that is result of the function \code{get.iKernelABC()} given on \code{input parameters}.
 #' 
 #' 
 #' 
@@ -47,9 +47,9 @@ spiderweb_old  <-  function( psi = 4, t = 35, param = param,
                                n_bullets = n_bullets, n_best = n_best, 
                                halfwidth = halfwidth, epsilon = epsilon )
     
-    iKernelABC  = iKernelABC( psi = psi, t = t, param = param, 
-                              stat.sim = stat.sim, stat.obs = stat.obs, 
-                              talkative = talkative, check_pos_def = check_pos_def )
+    iKernelABC  = get.iKernelABC( psi = psi, t = t, param = param, 
+                                    stat.sim = stat.sim, stat.obs = stat.obs, 
+                                    talkative = talkative, check_pos_def = check_pos_def )
     
     ### The function to apply SUDOKU algorithm to get the best tracer bullets
     rslt  =  sudoku( DT = param , iKernelABC = iKernelABC, 
@@ -145,7 +145,7 @@ spiderweb_old  <-  function( psi = 4, t = 35, param = param,
 #' - network that is network points when algorithm stopped;
 #' - par.best that is data frame of one point that is the best from all the generated tracer points;
 #' - sim.best that is numeric value of the similarity of the best tracer point;
-#' - iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters};
+#' - iKernelABC that is result of the function \code{get.iKernelABC()} given on \code{input parameters};
 #' - spiderweb that is the list of all the networks during the meta-sampling.
 #' 
 #' 
@@ -166,9 +166,9 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
                                halfwidth = halfwidth, epsilon = epsilon, rate = rate,
                                max_iteration = max_iteration, save_web = save_web )
     
-    iKernelABC  = iKernelABC( psi = psi, t = t, param = param, 
-                              stat.sim = stat.sim, stat.obs = stat.obs, 
-                              talkative = talkative, check_pos_def = check_pos_def )
+    iKernelABC  = get.iKernelABC( psi = psi, t = t, param = param, 
+                                    stat.sim = stat.sim, stat.obs = stat.obs, 
+                                    talkative = talkative, check_pos_def = check_pos_def )
     
     ### The function to apply SUDOKU algorithm to get the best tracer bullets
     rslt  =  sudoku( DT = param , iKernelABC = iKernelABC, 
@@ -298,7 +298,7 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
 #' - network that is network points when algorithm stopped;
 #' - par.best that is data frame of one point that is the best from all the generated tracer points;
 #' - sim.best that is numeric value of the similarity of the best tracer point;
-#' - iKernelABC that is result of the function \code{iKernelABC()} given on \code{input parameters};
+#' - iKernelABC that is result of the function \code{get.iKernelABC()} given on \code{input parameters};
 #' - spiderweb that is the list of all the networks during the meta-sampling.
 #' 
 #' @export
@@ -310,7 +310,8 @@ meta_sampling  <-  function( psi = 4, t = 35, param = param,
                               talkative = FALSE, check_pos_def = FALSE ,
                               n_bullets = 16, n_best = 10, halfwidth = 0.5, 
                               epsilon = 0.001, rate = 0.1, 
-                              max_iteration = 15, save_web = TRUE ){
+                              max_iteration = 15, save_web = TRUE, 
+                              use.iKernelABC = NA ){
     
     input.parameters  =  list( psi = psi, t = t, param = param, 
                                stat.sim = stat.sim, stat.obs = stat.obs, 
@@ -318,19 +319,21 @@ meta_sampling  <-  function( psi = 4, t = 35, param = param,
                                n_bullets = n_bullets, n_best = n_best, 
                                halfwidth = halfwidth, epsilon = epsilon, rate = rate,
                                max_iteration = max_iteration, save_web = save_web )
-    
-    iKernelABC  = iKernelABC( psi = psi, t = t, param = param, 
-                              stat.sim = stat.sim, stat.obs = stat.obs, 
-                              talkative = talkative, check_pos_def = check_pos_def )
-    
+    if ( is.na( use.iKernelABC ) ){
+        data.iKernelABC  = get.iKernelABC( psi = psi, t = t, param = param, 
+                                           stat.sim = stat.sim, stat.obs = stat.obs, 
+                                            talkative = talkative, check_pos_def = check_pos_def )
+    } else {
+        data.iKernelABC  =  use.iKernelABC
+    }
     ### The function to apply SUDOKU algorithm to get the best tracer bullets
-    rslt  =  sudoku( DT = param , iKernelABC = iKernelABC, 
+    rslt  =  sudoku( DT = param , iKernelABC = data.iKernelABC, 
                      n_bullets = n_bullets, n_best = n_best, halfwidth = halfwidth )
     
     ### Get subset of parameters of Voronoi sites corresponding to an observation point
     network  =  get_subset_of_feature_map( dtst  =  param, 
-                                           Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi, 
-                                           iFeature_point = iKernelABC$kernel_mean_embedding )
+                                           Matrix_Voronoi = data.iKernelABC$parameters_Matrix_Voronoi, 
+                                           iFeature_point = data.iKernelABC$kernel_mean_embedding )
     network  =  unique.data.frame( network )
     
     # Number of Voronoi sites and number of rows for pool of points for network
@@ -377,11 +380,11 @@ meta_sampling  <-  function( psi = 4, t = 35, param = param,
         ### calculate the similarity for all the new points:
         feature_tracers  =  get_voronoi_feature_PART_dataset( data = rbind( param, tracers ), 
                                                               talkative = talkative, start_row = nrow( param ) + 1 ,  
-                                                              Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi )
+                                                              Matrix_Voronoi = data.iKernelABC$parameters_Matrix_Voronoi )
         
         sim_tracers  =  iKernel_point_dataset( Matrix_iKernel = feature_tracers$M_iKernel, 
-                                               t = iKernelABC$t, nr = nrow( feature_tracers$M_iKernel ), 
-                                               iFeature_point = iKernelABC$kernel_mean_embedding )
+                                               t = data.iKernelABC$t, nr = nrow( feature_tracers$M_iKernel ), 
+                                               iFeature_point = data.iKernelABC$kernel_mean_embedding )
         
         # new best point and top points (the cut tracers)
         rdr  =  order( sim_tracers, decreasing = TRUE )
@@ -393,11 +396,11 @@ meta_sampling  <-  function( psi = 4, t = 35, param = param,
         ## 1. Get similarities for network dataset
         feature_network  =  get_voronoi_feature_PART_dataset( data = rbind( param, network ), 
                                                               talkative = talkative, start_row = nrow( param ) + 1 ,  
-                                                              Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi )
+                                                              Matrix_Voronoi = data.iKernelABC$parameters_Matrix_Voronoi )
         
         sim_network  =  iKernel_point_dataset( Matrix_iKernel = feature_network$M_iKernel, 
-                                               t = iKernelABC$t, nr = nrow( feature_network$M_iKernel ), 
-                                               iFeature_point = iKernelABC$kernel_mean_embedding )
+                                               t = data.iKernelABC$t, nr = nrow( feature_network$M_iKernel ), 
+                                               iFeature_point = data.iKernelABC$kernel_mean_embedding )
         
         rdr  =  order( sim_network, decreasing = TRUE )[1:N_Voronoi]
         network   =    network[ rdr , ]  #  Cut and remove the n_add worst rows
@@ -416,11 +419,11 @@ meta_sampling  <-  function( psi = 4, t = 35, param = param,
     ### Calculate similarities of final network:
     feature_network  =  get_voronoi_feature_PART_dataset( data = rbind( param, network ), 
                                                           talkative = talkative, start_row = nrow( param ) + 1 ,  
-                                                          Matrix_Voronoi = iKernelABC$parameters_Matrix_Voronoi )
+                                                          Matrix_Voronoi = data.iKernelABC$parameters_Matrix_Voronoi )
     
     sim_network  =  iKernel_point_dataset( Matrix_iKernel = feature_network$M_iKernel, 
-                                           t = iKernelABC$t, nr = nrow( feature_network$M_iKernel ), 
-                                           iFeature_point = iKernelABC$kernel_mean_embedding )
+                                           t = data.iKernelABC$t, nr = nrow( feature_network$M_iKernel ), 
+                                           iFeature_point = data.iKernelABC$kernel_mean_embedding )
     
     return( list( input.parameters = input.parameters, 
                   iteration  =  iteration, 
@@ -428,7 +431,7 @@ meta_sampling  <-  function( psi = 4, t = 35, param = param,
                   sim_network  =  sim_network,
                   par.best = par.best,
                   sim.best = sim.best, 
-                  iKernelABC = iKernelABC, 
+                  iKernelABC = data.iKernelABC, 
                   spiderweb = spiderweb ) )
 }
 

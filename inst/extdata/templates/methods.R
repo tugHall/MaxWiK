@@ -306,12 +306,12 @@ Get_hyperparameters  <-  function( stat.obs, stat.sim, par.sim, par.truth ){
                                     check_pos_def = FALSE, 
                                     n_best = 12, cores = 4 )
             
-            ikern  =  iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
-                                  param = par.sim, 
-                                  stat.sim = stat.sim, 
-                                  stat.obs = stat.obs, 
-                                  talkative = FALSE, 
-                                  check_pos_def = FALSE )
+            ikern  =  get.iKernelABC( psi = psi_t$psi[1], t = psi_t$t[1], 
+                                        param = par.sim, 
+                                        stat.sim = stat.sim, 
+                                        stat.obs = stat.obs, 
+                                        talkative = FALSE, 
+                                        check_pos_def = FALSE )
             
             G = matrix( data = ikern$similarity, ncol = 1 )
             
