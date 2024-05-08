@@ -1,6 +1,6 @@
-#' @describeIn iKernelABC  function to get parameter estimation based on isolation kernel
+#' @describeIn get.iKernelABC  function to get parameter estimation based on isolation kernel
 #'
-#' @param iKernelABC Result of function \code{iKernelABC}
+#' @param iKernelABC Result of function \code{get.iKernelABC}
 #'
 #' @return \code{Get_iKernel_estimation()} returns list of: \cr
 #' - iKernel_ABC - parameter estimation based on isolation kernel / weighted sum; \cr
@@ -33,7 +33,7 @@ Get_iKernel_estimation  <-  function( iKernelABC, par.sim, stat.sim, stat.obs ){
 }
 
 
-#' @describeIn iKernelABC Function to adjust hyper parameters \code{psi} and \code{t} for isolation kernel ABC
+#' @describeIn get.iKernelABC Function to adjust hyper parameters \code{psi} and \code{t} for isolation kernel ABC
 #'
 #' @param psi_t Initial data.frame of  \code{psi} and \code{t}, by default \cr
 #' \code{psi_t = data.frame( psi = as.numeric( sapply( X = c(2:8)*2, FUN = function( x ) rep(x, 8) ) ), t = rep( c(4,6,8,10,12,14,16,20), 7) )}

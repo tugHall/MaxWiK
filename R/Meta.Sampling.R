@@ -2,7 +2,7 @@
 
 # SPIDERWEB algorithm -----------------------------------------------------
 
-#' @describeIn iKernelABC The function to get the best value of parameter corresponding to 
+#' @describeIn get.iKernelABC The function to get the best value of parameter corresponding to 
 #' Maxima Weighted Isolation Kernel mapping which is related to an observation point
 #' 
 #' @description The function \code{spiderweb()} itteratively generates tracer points gotten 
@@ -116,7 +116,7 @@ spiderweb_old  <-  function( psi = 4, t = 35, param = param,
                   sim.tracers_all = sim.tracers_all, iKernelABC = iKernelABC ) )
 }
 
-#' @describeIn iKernelABC The function to get the best value of parameter corresponding to 
+#' @describeIn get.iKernelABC The function to get the best value of parameter corresponding to 
 #' Maxima Weighted Isolation Kernel mapping which is related to an observation point
 #' 
 #' @description The function \code{spiderweb()} itteratively generates tracer points gotten 
@@ -280,7 +280,7 @@ spiderweb  <-  function( psi = 4, t = 35, param = param,
                   spiderweb = spiderweb ) )
 }
 
-#' @describeIn iKernelABC The function to get the best value of parameter corresponding to 
+#' @describeIn get.iKernelABC The function to get the best value of parameter corresponding to 
 #' Maxima Weighted Isolation Kernel mapping which is related to an observation point
 #' 
 #' @description The function \code{meta_sampling()} itteratively generates tracer points gotten 
