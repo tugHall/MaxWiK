@@ -80,7 +80,7 @@ get.MaxWiK  <-  function( psi = 40, t = 350, param,
     
     if (talkative ) print( 'Transform the parameters data set to Hilbert space' )
     param_Voron  =  get_voronoi_feature( psi = psi, t = t, data = par.sim, talkative = talkative, 
-                                         new = FALSE, Matrix_Voronoi = Matrix_Voronoi )
+                                         Matrix_Voronoi = Matrix_Voronoi )
     parameters_Matrix_iKernel = param_Voron[['M_iKernel']]
     parameters_Matrix_Voronoi = param_Voron[['M_Voronoi']]
     
