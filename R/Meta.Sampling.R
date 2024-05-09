@@ -24,7 +24,7 @@
 #' @param save_web Logical to save all the generated points (web net)
 #' @param use.iKernelABC The iKernelABC object to use for meta-sampling. By default it is NULL and is generated.
 #' 
-#' @return The function \code{spiderweb()} returns the list of the next objects:
+#' @return The function \code{meta_sampling()} returns the list of the next objects:
 #' - input.parameters that is the list of all the input parameters for Isolation Kernel ABC method;
 #' - iteration that is iteration value when algorithm stopped;
 #' - network that is network points when algorithm stopped;
@@ -37,8 +37,8 @@
 #' 
 #' @examples
 #' NULL
-meta_sampling  <-  function( psi = 4, t = 35, param = param, 
-                              stat.sim = stat.sim, stat.obs = stat.obs, 
+meta_sampling  <-  function(  psi = 4, t = 35, 
+                              param, stat.sim, stat.obs, 
                               talkative = FALSE, check_pos_def = FALSE ,
                               n_bullets = 16, n_best = 10, halfwidth = 0.5, 
                               epsilon = 0.001, rate = 0.1, 
@@ -175,13 +175,7 @@ meta_sampling  <-  function( psi = 4, t = 35, param = param,
 #'
 #' @describeIn get.MaxWiK The function to get the prediction of output based on a new parameter and MaxWiK
 #' 
-#' @description The function \code{MaxWiK.predictor()} itteratively generates tracer points gotten 
-#' from \code{sudoku()} algorithm, based on the simple procedure: \cr
-#' - making a reflection of the top points from the best point, \cr 
-#' - and then generating the point tracers between them, \cr
-#' - finally, the algorithm chooses again the top points and the best point (\code{sudoku()} function is used),
-#' - repeat all the steps until condition to be \code{TRUE}: \cr
-#' \code{abs( min( sim_tracers ) - sim_previous ) < epsilon }
+#' @description The function \code{MaxWiK.predictor()} uses the meta-sampling for a prediction
 #'
 #' @return The function \code{MaxWiK.predictor()} returns the list of the next objects:
 #' - input.parameters that is the list of all the input parameters for Isolation Kernel ABC method;
@@ -196,25 +190,48 @@ meta_sampling  <-  function( psi = 4, t = 35, param = param,
 #' 
 #' @examples
 #' NULL
-MaxWiK.predictor  <-  function( psi = 4, t = 35, param = param, 
-                                stat.sim = stat.sim, stat.obs = stat.obs, 
+MaxWiK.predictor  <-  function( psi = 4, t = 35, 
+                                param, stat.sim, new.param, 
                                 talkative = FALSE, check_pos_def = FALSE ,
                                 n_bullets = 16, n_best = 10, halfwidth = 0.5, 
                                 epsilon = 0.001, rate = 0.1, 
                                 max_iteration = 15, save_web = TRUE, 
                                 use.iKernelABC = NULL ){
 
-
+    input.parameters  =  list( psi = psi, t = t, param = param, 
+                               stat.sim = stat.sim, new.param = new.param, 
+                               talkative = talkative, check_pos_def = check_pos_def,
+                               n_bullets = n_bullets, n_best = n_best, 
+                               halfwidth = halfwidth, epsilon = epsilon, rate = rate,
+                               max_iteration = max_iteration, save_web = save_web,
+                               use.iKernelABC = use.iKernelABC )
+    
+    # !!! Replace the parameters and simulation output to use the same meta-sampling algorithm
+    meta.sampling  =  meta_sampling( psi           = psi, 
+                                     t             = t, 
+                                     param         = stat.sim, 
+                                     stat.sim      = param, 
+                                     stat.obs      = new.param, 
+                                     talkative     = talkative, 
+                                     check_pos_def = check_pos_def,
+                                     n_bullets     = n_bullets, 
+                                     n_best        = n_best, 
+                                     halfwidth     = halfwidth, 
+                                     epsilon       = epsilon, 
+                                     rate          = rate, 
+                                     max_iteration = max_iteration, 
+                                     save_web      = save_web, 
+                                    use.iKernelABC = use.iKernelABC 
+                                    )
 
     
-    res.MaxWik  =  get.MaxWiK( 
-                                psi = hyper$psi, 
-                                t   = hyper$t, 
-                                param = par.sim, 
-                                stat.sim = stat.sim, 
-                                stat.obs = as.data.frame( t( obs$A ) ), 
-                                talkative = TRUE, 
-                                check_pos_def = TRUE, 
-                                Matrix_Voronoi = Matrix.Voronoi
-                            )
+    return( list( input.parameters = input.parameters, 
+                  iteration    = meta.sampling$iteration, 
+                  network      = meta.sampling$network, 
+                  sim_network  = meta.sampling$sim_network,
+                  prediction.best     = meta.sampling$par.best,
+                  sim.best     = meta.sampling$sim.best, 
+                  iKernelABC   = meta.sampling$iKernelABC, 
+                  spiderweb    = meta.sampling$spiderweb ) )
 }
+
