@@ -2,6 +2,7 @@
 
 export(MSE_parameters)
 export(MSE_sim)
+export(MaxWiK.predictor)
 export(check_packages)
 export(copy_templates)
 export(get.MaxWiK)
