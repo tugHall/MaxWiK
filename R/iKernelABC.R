@@ -116,3 +116,6 @@ get.MaxWiK  <-  function( psi = 40, t = 350, param,
                   psi = psi )  )
 }
 
+
+
+
