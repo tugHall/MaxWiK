@@ -1,22 +1,39 @@
 ---
-title: "User-Guide"
-output: rmarkdown::html_vignette
+title: "**MaxWiK**"
+subtitle: "--**Max**ima **W**eighted **i**solation **K**ernel machine learning method--"
+date: "`r format(Sys.time(), '%Y/%m/%d')`"
+output:
+  pdf_document: 
+    toc: true
+    number_sections: true
+    highlight: tango
+  html_document: 
+    toc: true
+    number_sections: true
 vignette: >
-  %\VignetteIndexEntry{User-Guide}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+\newpage
+
+```{r, child = '01_Input.Rmd'}
 ```
 
-```{r setup}
-library(MaxWiK)
+```{r, child = '02_Output.Rmd'}
 ```
 
+```{r, child = '03_ABC.Rmd'}
+```
 
+```{r, child = '04_Metasampling.Rmd'}
+```
 
+```{r, child = '05_Sampling.Rmd'}
+```
+
+```{r, child = '06_Predictor.Rmd'}
+```
+
+```{r, child = '99_References.Rmd'}
+```

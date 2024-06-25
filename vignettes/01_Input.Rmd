@@ -1,0 +1,48 @@
+---
+title: "Input"
+output:
+  pdf_document: 
+    fig_caption: yes
+    highlight: tango
+  html_document:
+    df_print: paged
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Input data
+
+## Load data
+
+Please run the following commands.
+
+> library(tugHall.3)
+>
+> copy_test_data()
+>
+> setwd("./Test1/")
+
+Alternatively, you can `q()` after `copy_test_data()`. Then, after moving the test directory on your OS,
+
+`Rscript --vanilla --slave test1.R`
+
+## test1.R
+
+Please see test1.R, and edit it when you understand.
+
+### Simulation
+
+        start_simulation(   input_files = 'Input/DATA/FILES.txt', 
+                            saveTo      = 'Output/Results.sim.01.RDS', 
+                            seed        = NA
+                        )
+
+This command starts a simulation. Input data are defined through option `input_files`. Please see the section of Input data for the details of input data. RDS data are saved to `saveTo` for the second simulation, where usually drug intervention is performed. Drug intervention is explained below. You can change the random seed through `seed`.
