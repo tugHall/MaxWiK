@@ -98,6 +98,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
             res_1$comm     =     'Best'
             
             res_1$sim      =     web$sim.best
+            res_1$sim_ID   =     n_simulations
             results  =  res_1
         } else {
             
@@ -118,6 +119,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                 res_1$comm     =     'Network'
                 
                 res_1$sim      =     web$sim_network[ i ]
+                res_1$sim_ID   =     n_simulations
                 
                 results  =  rbind( results, res_1 )
             }
@@ -162,10 +164,13 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                 res_1$comm     =     'Cobweb_Ring'
                 
                 res_1$sim      =     web$sim_network[ i ]
+                res_1$sim_ID   =     n_simulations
                 
                 results  =  rbind( results, res_1 )
             }
         }
+        
+        return( results )
     }
     
     n_simulations  =  0
@@ -194,7 +199,9 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                                           model  =  model, 
                                           arg0   =  arg0, 
                                           number_of_nodes = number_of_nodes_in_ring )
-            } else res_2  =  NULL
+            } else { 
+                res_2  =  NULL
+            }
             
             if ( FALSE ){
                         res_1  =  web$par.best
@@ -210,6 +217,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                         
                         res_1$mse    =  as.numeric( mse_1$mse )
                         res_1$comm     =     'Best'
+                        res_1$sim_ID   =     n_simulations
             
             
                         res_1$sim      =     web$sim.best
