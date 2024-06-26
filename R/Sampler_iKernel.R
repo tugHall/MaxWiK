@@ -135,6 +135,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
         res_net  =  web$network
         dst    =  as.matrix( dist( x = res_net ) )
         
+        if ( nrow( web$network ) < 2 ) return( NULL )
         for( i in 1:( nrow( web$network ) - 2 ) ){
             
             pnt_1  =  web$network[ i, ]
@@ -449,6 +450,8 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
         model_paral_run  =  function( x ) model_paral( j = x, pnts = pnts, 
                                                model = model, arg0 = arg0, 
                                                stat.obs = stat.obs ) 
+        
+        if ( nrow( web$network ) < 2 ) return( NULL )
         for( i in 1:( nrow( web$network ) - 2 ) ){
             
             pnt_1  =  web$network[ i, ]
