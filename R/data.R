@@ -23,4 +23,4 @@
 #'   \item{running_time}{ Running time in seconds }
 #'   \item{iteration}{ Iteration number }
 #' }
-'Results_toy_experiments'
+'Data.2D'
