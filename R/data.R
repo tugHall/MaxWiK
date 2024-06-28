@@ -1,4 +1,4 @@
-#' List of the 2D example for MaxWiK methods}
+#' List of the 2D example for MaxWiK methods
 #'
 #' A list containing input and output data for 2D example for Approximate Bayesian Computation,
 #' including sampling scheme, meta-sampling, and prediction. To understand all details of the dataset, please, 

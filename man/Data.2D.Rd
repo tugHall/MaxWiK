@@ -3,35 +3,27 @@
 \docType{data}
 \name{Data.2D}
 \alias{Data.2D}
-\title{Data frame with results of function \code{experiment_models()}}
+\title{List of the 2D example for MaxWiK methods}
 \format{
-A data frame with 12960 rows and 8 variables:
+A list of:
 \describe{
-\item{method_name}{ Name of a method for calculation }
-\item{kernel_name}{ Name of using kerel or '' if not applicapable }
-\item{model_name}{ Name of a model, can be 'Gaussian' or 'Linear' }
-\item{dimension}{ Dimension of the toy task }
-\item{stochastic_term}{ Stochastic term in a function of a model }
-\item{MSE}{ Mean square error }
-\item{running_time}{ Running time in seconds }
-\item{iteration}{ Iteration number }
+\item{X}{ Input data frame of the model }
+\item{Y}{ Ouput data frame of the model }
+\item{observation}{ Data frame with observation info }
+\item{ABC}{ List of hyperparameters, the matrix of Voronoi sites, posteriori distribution, and results of MaxWiK algorithm }
+\item{metasampling}{ List of results of meta-sampling algorithm, and the network of points during meta-sampling }
+\item{sampling}{ List of object which are necessary for sampling algorithm like
+function for simulation, parameters of the model, MSE (mean squared error), and X12 - generated points }
+\item{predictor}{ List of object which are necessary for predictor algorithm like
+posteriori.MaxWiK, result of the algorithm, and network of points during meta-sampling }
 }
 }
 \usage{
 Data.2D
 }
 \description{
-A dataset containing results of function \code{experiment_models()} with next input: \cr
-\code{ Results_toy_experiments  =  experiment_models( file_name = '../Results_ALL.txt', } \cr
-\code{                           models = c( 'Gaussian', 'Linear' ), } \cr
-\code{                           dimensions = (1:10)*2, } \cr
-\code{                           stochastic_terms  =  c( 0, 1, 5, 10, 20, 30 ), } \cr
-\code{                           rng  =  c( 0,10 ), } \cr
-\code{                           restrict_points_number = 300 ) ) } \cr
-Please, pay attention it will take 4-6 hours for 4 cores. \cr
-\cr
-To analyze these data, please, use: \cr
-\code{ RES_methods = analyze_experiments( Results_toy_experiments, file_to_save = '../ggplot.pdf'  ) } \cr
-that gives the best methods for each case and statistical data of simulations
+A list containing input and output data for 2D example for Approximate Bayesian Computation,
+including sampling scheme, meta-sampling, and prediction. To understand all details of the dataset, please,
+be kind to see vignette of the package. \cr
 }
 \keyword{datasets}
