@@ -3,7 +3,7 @@
 \docType{data}
 \name{Data.2D}
 \alias{Data.2D}
-\title{List of the 2D example for MaxWiK methods}
+\title{List of the objects for the 2D example of the MaxWiK methods usage}
 \format{
 A list of:
 \describe{
