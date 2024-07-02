@@ -13,10 +13,11 @@
 #' @param lw Line widths
 #' @param lt Line types
 #'
-#' @return
+#' @return Make ggplot of the densities of the data frames 
 #' @export
 #'
 #' @examples
+#' NULL
 my.ggplot.density  <-  function( title = '', datafr1, datafr2, var.df, 
                                  obs.true = NULL, 
                                  best.sim = NULL,  
