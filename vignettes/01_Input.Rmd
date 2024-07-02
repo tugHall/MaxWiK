@@ -44,3 +44,9 @@ ggplot(data = df, mapping = aes( x = par.sim.X1, y = par.sim.X2) ) +
     annotate('point', x= obs[1], y = obs[2] , colour="blue", shape = 4, size = 4)
 
 ```
+
+## Input for Approximate Bayesian Computation and metasampling algorithm
+
+Input for Approximate Bayesian Computation and metasampling algorithm are same. It includes parameters dataset, dataset of statistics of simulations, statistics of observation, and hyperparameters like $t$ and $\psi$.
+
+## Input for sampling algorithm

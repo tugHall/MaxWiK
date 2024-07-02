@@ -20,20 +20,32 @@ vignette: >
 ```{r, child = '01_Input.Rmd'}
 ```
 
+\newpage
+
 ```{r, child = '02_Output.Rmd'}
 ```
+
+\newpage
 
 ```{r, child = '03_ABC.Rmd'}
 ```
 
+\newpage
+
 ```{r, child = '04_Metasampling.Rmd'}
 ```
+
+\newpage
 
 ```{r, child = '05_Sampling.Rmd'}
 ```
 
+\newpage
+
 ```{r, child = '06_Predictor.Rmd'}
 ```
+
+\newpage
 
 ```{r, child = '99_References.Rmd'}
 ```

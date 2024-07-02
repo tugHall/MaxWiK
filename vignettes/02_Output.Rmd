@@ -85,13 +85,16 @@ The metasampling algorithm has several features, because it iteratively generate
 
 To get all the unique points from the 'spiderweb' list, one can run:
 
+        network  = unique.data.frame( do.call(rbind.data.frame, meta.sampling$spiderweb ) )
+
 ```{r, include = TRUE}
 library('ggplot2')
 meta.sampling  =  MaxWiK::Data.2D$metasampling$result
 network  = unique.data.frame( do.call(rbind.data.frame, meta.sampling$spiderweb ) )
 obs = MaxWiK::Data.2D$observation
-posteriori.MaxWiK = MaxWiK::Data.2D$X[ which(MaxWiK::Data.2D$metasampling$result$iKernelABC$similarity > 0), ]
-my.ggplot.density( title = ' Posteriori distribution of X1 parameter', 
+w = which(MaxWiK::Data.2D$metasampling$result$iKernelABC$similarity > 0)
+posteriori.MaxWiK = MaxWiK::Data.2D$X[ w, ]
+MaxWiK::my.ggplot.density( title = ' Posteriori distribution of X1 parameter', 
                    datafr1 = posteriori.MaxWiK, 
                    datafr2 = network, 
                    var.df  = 'par.sim.X1', 
