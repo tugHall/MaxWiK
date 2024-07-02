@@ -20,29 +20,27 @@ knitr::opts_chunk$set(
 
 # Input data
 
-## Load data
+## Data format
 
-Please run the following commands.
+The data format of input should be numerical only in the form of data frame, for example:
 
-> library(tugHall.3)
->
-> copy_test_data()
->
-> setwd("./Test1/")
+```{r, include = TRUE}
+MaxWiK::Data.2D$X[1:4, ]
+str(MaxWiK::Data.2D$X)
+```
 
-Alternatively, you can `q()` after `copy_test_data()`. Then, after moving the test directory on your OS,
+If you need use a matrix, please, transform it into the data frame first. If some columns have non-numerical type, please, transform them into numerical type using factors.
 
-`Rscript --vanilla --slave test1.R`
+## Specificity of the data
 
-## test1.R
+The method is mostly appropriate for specific data which has sparse regions of interest. The package dataset `Data.2D` has an example where the lack of data points at the region of the interest (blue cross):
 
-Please see test1.R, and edit it when you understand.
+```{r, include = TRUE, fig.height=4, fig.width=4}
+library('ggplot2')
+df = MaxWiK::Data.2D$X; th = MaxWiK::Data.2D$sampling$theme.ggplot
+obs = MaxWiK::Data.2D$observation$x0
+ggplot(data = df, mapping = aes( x = par.sim.X1, y = par.sim.X2) ) +
+    geom_point(size = 0.3) + th + 
+    annotate('point', x= obs[1], y = obs[2] , colour="blue", shape = 4, size = 4)
 
-### Simulation
-
-        start_simulation(   input_files = 'Input/DATA/FILES.txt', 
-                            saveTo      = 'Output/Results.sim.01.RDS', 
-                            seed        = NA
-                        )
-
-This command starts a simulation. Input data are defined through option `input_files`. Please see the section of Input data for the details of input data. RDS data are saved to `saveTo` for the second simulation, where usually drug intervention is performed. Drug intervention is explained below. You can change the random seed through `seed`.
+```

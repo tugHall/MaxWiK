@@ -1,0 +1,103 @@
+---
+title: "Output"
+output:
+  pdf_document: 
+    fig_caption: yes
+    highlight: tango
+  html_document:
+    df_print: paged
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Output data
+
+## Output of MaxWiK algorithm
+
+### Voronoi matrix
+
+The Voronoi matrix is a matrix of information about Voronoi sites for each tree in the isolation forest algorithm (rows - trees, columns - Voronoi sites IDs) for parameters data set:
+
+```{r, include = TRUE}
+cols = c(1:4, 9:16)
+df = as.data.frame( MaxWiK::Data.2D$ABC$Matrix.Voronoi[ , cols ] )
+names( df ) = cols
+print( df )
+
+```
+
+### The kernel mean embedding
+
+The kernel_mean_embedding is a kernel mean embedding of observation point in the form of the vector of IDs of the Voronoi sites in the Voronoi matrix for each tree:
+
+```{r, include = TRUE}
+MaxWiK::Data.2D$ABC$result.MaxWiK$kernel_mean_embedding
+
+```
+
+In this example, the kernel mean embedding has 8 IDs for 8 trees where each ID is a column number of Voronoi matrix, tree ID corresponds to the row of Voronoi matrix.
+
+### Similarity
+
+The similarity vector is the similarity measured by using isolation kernel, and it shows how each data point similar to the observation one, for example for the first points:
+
+```{r, include = TRUE}
+MaxWiK::Data.2D$ABC$result.MaxWiK$similarity[1:20]
+
+```
+
+### Matrix_iKernel
+
+The Matrix_iKernel is the matrix of Voronoi sites for each data point in the form of Hilbert representation, for example, for the first 5 data points:
+
+```{r, include = TRUE}
+MaxWiK::Data.2D$ABC$result.MaxWiK$Matrix_iKernel[1:5,]
+
+```
+
+### Other data
+
+Other data like hyperparameters, $t$, $\psi$, etc., can be found in the description of the related functions, or intuitively understandable.
+
+## Output of metasampling algorithm
+
+The metasampling algorithm has several features, because it iteratively generates the data points in the space of parameters and selects the points with higher similarity. The result has the next issues:
+
+-   input.parameters is just all the input parameters of the function **meta_sampling()**;
+
+-   iteration is a number of iterations during metasampling;
+
+-   iKernelABC is the list of output from **get.MaxWiK()** function;
+
+-   par.best is the best parameter found at the end of metasampling;
+
+-   sim.best is the similarity corresponing to the par.best point;
+
+-   spiderweb is the list of the generated data points for each iteration, the name 'spiderweb' used because of algorithmic feature which generates data points closer and cloaser to the observation like spider makes a web.
+
+To get all the unique points from the 'spiderweb' list, one can run:
+
+```{r, include = TRUE}
+library('ggplot2')
+meta.sampling  =  MaxWiK::Data.2D$metasampling$result
+network  = unique.data.frame( do.call(rbind.data.frame, meta.sampling$spiderweb ) )
+obs = MaxWiK::Data.2D$observation
+posteriori.MaxWiK = MaxWiK::Data.2D$X[ which(MaxWiK::Data.2D$metasampling$result$iKernelABC$similarity > 0), ]
+my.ggplot.density( title = ' Posteriori distribution of X1 parameter', 
+                   datafr1 = posteriori.MaxWiK, 
+                   datafr2 = network, 
+                   var.df  = 'par.sim.X1', 
+                   obs.true = obs$x0[ 1 ], 
+                   best.sim = as.numeric( meta.sampling$par.best[ 1 ] )
+)
+```
+
+The red line is a true value, dotted is the best simulation, the red area is metasampling generated points, and the green area is the points taken from isolation kernel algorithm with similarity more than 0.
