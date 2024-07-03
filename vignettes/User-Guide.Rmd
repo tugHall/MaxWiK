@@ -1,18 +1,18 @@
 ---
-title: "**MaxWiK**"
+title: '**MaxWiK**'
 subtitle: "--**Max**ima **W**eighted **i**solation **K**ernel machine learning method--"
 date: "`r format(Sys.time(), '%Y/%m/%d')`"
 output:
-  html_document: 
-    toc: true
-    number_sections: true
-  pdf_document: 
-    toc: true
-    number_sections: true
+  pdf_document:
+    toc: yes
+    number_sections: yes
     highlight: tango
-vignette: >
-  %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
+  word_document:
+    toc: yes
+  html_document:
+    toc: yes
+    number_sections: yes
+vignette: "%\\VignetteEncoding{UTF-8} %\\VignetteEngine{knitr::rmarkdown}\n"
 ---
 
 \newpage
