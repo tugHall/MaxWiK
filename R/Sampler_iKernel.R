@@ -272,7 +272,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
         
     }
     
-    best  =  results[ which.min(results$mse ) , ]
+    best  =  results_ALL[ which.min(results_ALL$mse ) , ]
     end_time = Sys.time()
     
     #Stop progress BAR:
@@ -576,7 +576,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
         
     }
     
-    best  =  results[ which.min(results$mse ) , ]
+    best  =  results_ALL[ which.min(results_ALL$mse ) , ]
     end_time = Sys.time()
     
     #Stop progress BAR:
