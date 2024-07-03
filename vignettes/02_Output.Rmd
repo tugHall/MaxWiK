@@ -87,8 +87,9 @@ To get all the unique points from the 'spiderweb' list, one can run:
 
         network  = unique.data.frame( do.call(rbind.data.frame, meta.sampling$spiderweb ) )
 
-```{r, echo=FALSE, include = TRUE, fig.height=5, fig.width=8}
+```{r, echo=FALSE, include = TRUE, fig.height=3, fig.width=5}
 library('ggplot2')
+th = MaxWiK::Data.2D$sampling$theme.ggplot
 meta.sampling  =  MaxWiK::Data.2D$metasampling$result
 network  = unique.data.frame( do.call(rbind.data.frame, meta.sampling$spiderweb ) )
 obs = MaxWiK::Data.2D$observation
@@ -125,4 +126,46 @@ str(MaxWiK::Data.2D$sampling$MaxWiK$best)
 
 -   n_simulations - the total number of simulations;
 
--   number_of_iterations - the number of iterations, each iteration includes several simulations, and number of simulations in each iteration depends on hyperparameters;
+-   number_of_iterations - the number of iterations, each iteration includes several simulations, and number of simulations in each iteration depends on hyperparameters.
+
+So, using results data frame, one can plot MSE of the sampling:
+
+```{r, echo=FALSE, include = TRUE, fig.height=3, fig.width=4.5}
+library('ggplot2')
+th = MaxWiK::Data.2D$sampling$theme.ggplot
+th$axis.title.x$size = th$axis.title.y$size = 12
+th$axis.text$size = 10
+smpl_1 = MaxWiK::Data.2D$sampling$MaxWiK
+MSE  =  data.frame( x = smpl_1$results$sim_ID, y = smpl_1$results$mse )
+ggplot(data = MSE, aes( x, y ) ) + 
+    geom_line( linewidth = 0.7 )  +  scale_y_log10() + 
+    geom_smooth(method = "lm", alpha = .5, formula= y~x ) + 
+    ylab("Mean Squared Error") + xlab("Number of simulations") + th
+```
+
+Also, the data generation can be visualized like for 2D example:
+
+```{r, echo=FALSE, include = TRUE, fig.height=3, fig.width=4.5}
+library('ggplot2')
+th = MaxWiK::Data.2D$sampling$theme.ggplot
+th$axis.title.x$size = th$axis.title.y$size = 12
+th$axis.text$size = 10
+smpl_1 = MaxWiK::Data.2D$sampling$MaxWiK
+X12 = data.frame( i  = smpl_1$results$sim_ID, 
+                  x1 = smpl_1$results$par.sim.X1,  
+                  x2 = smpl_1$results$par.sim.X2 )
+ggplot(data = X12, aes( i ) ) + 
+    geom_line(aes(y = x1 ), linewidth = 0.5 ) +
+    geom_line(aes(y = x2 ), linewidth = 0.5 ) + 
+    geom_hline( aes(yintercept= obs$x0[1]),   
+                color='red', linetype=2, linewidth=0.4) +
+    geom_hline( aes(yintercept= obs$x0[2]),   
+                color='red', linetype=2, linewidth=0.4) +
+    ylab("Parameters X1 and X2") + xlab("Number of simulations") + th
+```
+
+Here the red dashed lines are truth values of the observation.
+
+## Output of predictor
+
+The output format of predictor is almost same as for metasampling algorithm, for details, please, see manual.

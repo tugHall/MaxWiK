@@ -1,11 +1,11 @@
 ---
 title: "Input"
 output:
+  html_document:
+    df_print: paged
   pdf_document: 
     fig_caption: yes
     highlight: tango
-  html_document:
-    df_print: paged
 vignette: >
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,7 +14,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>", 
+  fig.align='center'
 )
 ```
 
@@ -35,14 +36,13 @@ If you need use a matrix, please, transform it into the data frame first. If som
 
 The method is mostly appropriate for specific data which has sparse regions of interest. The package dataset `Data.2D` has an example where the lack of data points at the region of the interest (blue cross):
 
-```{r, echo=FALSE, include = TRUE, fig.height=4, fig.width=4}
-library('ggplot2')
+```{r, echo=FALSE, include = TRUE, fig.height=4, fig.width=4 }
+library(ggplot2)
 df = MaxWiK::Data.2D$X; th = MaxWiK::Data.2D$sampling$theme.ggplot
 obs = MaxWiK::Data.2D$observation$x0
 ggplot(data = df, mapping = aes( x = par.sim.X1, y = par.sim.X2) ) +
     geom_point(size = 0.3) + th + 
     annotate('point', x= obs[1], y = obs[2] , colour="blue", shape = 4, size = 4)
-
 ```
 
 ## Input for Approximate Bayesian Computation and metasampling algorithm
@@ -62,3 +62,7 @@ To run algorithm properly, a user has to check the simulation first like:
 > do.call( what = model, args = c( arg0, list( x = c(5, 7) ) ) )
 
 where $x$ is the variable.
+
+## Input for predictor
+
+Input of the function MaxWiK.predictor() is the same as for metasampling algorithm, for details, please, see manual.
