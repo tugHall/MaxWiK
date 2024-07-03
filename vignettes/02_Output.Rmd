@@ -28,7 +28,7 @@ The Voronoi matrix is a matrix of information about Voronoi sites for each tree 
 
 ```{r, include = TRUE}
 cols = c(1:4, 9:16)
-df = as.data.frame( MaxWiK::Data.2D$ABC$Matrix.Voronoi[ , cols ] )
+df = as.data.frame( MaxWiK::Data.2D$ABC$Matrix.Voronoi[ 1:4, cols ] )
 names( df ) = cols
 print( df )
 
@@ -59,7 +59,7 @@ MaxWiK::Data.2D$ABC$result.MaxWiK$similarity[1:20]
 The Matrix_iKernel is the matrix of Voronoi sites for each data point in the form of Hilbert representation, for example, for the first 5 data points:
 
 ```{r, include = TRUE}
-MaxWiK::Data.2D$ABC$result.MaxWiK$Matrix_iKernel[1:5,]
+MaxWiK::Data.2D$ABC$result.MaxWiK$Matrix_iKernel[1:4,]
 
 ```
 
@@ -87,7 +87,7 @@ To get all the unique points from the 'spiderweb' list, one can run:
 
         network  = unique.data.frame( do.call(rbind.data.frame, meta.sampling$spiderweb ) )
 
-```{r, include = TRUE}
+```{r, echo=FALSE, include = TRUE, fig.height=5, fig.width=8}
 library('ggplot2')
 meta.sampling  =  MaxWiK::Data.2D$metasampling$result
 network  = unique.data.frame( do.call(rbind.data.frame, meta.sampling$spiderweb ) )
@@ -103,4 +103,26 @@ MaxWiK::my.ggplot.density( title = ' Posteriori distribution of X1 parameter',
 )
 ```
 
-The red line is a true value, dotted is the best simulation, the red area is metasampling generated points, and the green area is the points taken from isolation kernel algorithm with similarity more than 0.
+The red line is a true value, dotted is the best simulation, the red area is metasampling generated points (generated network), and the green area is the points taken from isolation kernel algorithm with similarity more than 0.
+
+## Output of sampling algorithm
+
+The functions sampler_MaxWiK() and sampler_MaxWiK_parallel() return the list of the next objects:
+
+-   results - the data frame of results of the sampling algorithm which includes the generated parameters, simulated output data, similarities (sim), mean squared error (mse), comments (com), and simulation IDs (sim_ID):
+
+```{r, echo=FALSE, include = TRUE}
+str(MaxWiK::Data.2D$sampling$MaxWiK$results)
+```
+
+-   best - the data frame of the most accurate simulation:
+
+```{r, echo=FALSE, include = TRUE}
+str(MaxWiK::Data.2D$sampling$MaxWiK$best)
+```
+
+-   time - the time of sampling in seconds;
+
+-   n_simulations - the total number of simulations;
+
+-   number_of_iterations - the number of iterations, each iteration includes several simulations, and number of simulations in each iteration depends on hyperparameters;

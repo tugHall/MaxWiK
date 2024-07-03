@@ -35,7 +35,7 @@ If you need use a matrix, please, transform it into the data frame first. If som
 
 The method is mostly appropriate for specific data which has sparse regions of interest. The package dataset `Data.2D` has an example where the lack of data points at the region of the interest (blue cross):
 
-```{r, include = TRUE, fig.height=4, fig.width=4}
+```{r, echo=FALSE, include = TRUE, fig.height=4, fig.width=4}
 library('ggplot2')
 df = MaxWiK::Data.2D$X; th = MaxWiK::Data.2D$sampling$theme.ggplot
 obs = MaxWiK::Data.2D$observation$x0
@@ -47,6 +47,18 @@ ggplot(data = df, mapping = aes( x = par.sim.X1, y = par.sim.X2) ) +
 
 ## Input for Approximate Bayesian Computation and metasampling algorithm
 
-Input for Approximate Bayesian Computation and metasampling algorithm are same. It includes parameters dataset, dataset of statistics of simulations, statistics of observation, and hyperparameters like $t$ and $\psi$.
+Inputs for Approximate Bayesian Computation (ABC) and metasampling algorithm have the same part. That includes parameters dataset, dataset of summary statistics of simulations, summary statistics of observation, and hyperparameters like $t$, $\psi$ and Matrix_Voronoi. To reproduce the results of ABC, it is necessary to use the same hyperparameters including Matrix_Voronoi where the Voronoi sites for each tree are determined.
 
 ## Input for sampling algorithm
+
+Two functions are used for sampling: sampler_MaxWiK() and sampler_MaxWiK_parallel() which have the input part as for metasampling. All the arguments are described in the manual but the most important are as follow:
+
+-   model - the function of simulation;
+
+-   arg0 - list of constant arguments for the model function.
+
+To run algorithm properly, a user has to check the simulation first like:
+
+> do.call( what = model, args = c( arg0, list( x = c(5, 7) ) ) )
+
+where $x$ is the variable.
