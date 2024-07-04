@@ -83,29 +83,6 @@ The metasampling algorithm has several features, because it iteratively generate
 
 -   spiderweb is the list of the generated data points for each iteration, the name 'spiderweb' used because of algorithmic feature which generates data points closer and cloaser to the observation like spider makes a web.
 
-To get all the unique points from the 'spiderweb' list, one can run:
-
-        network  = unique.data.frame( do.call(rbind.data.frame, meta.sampling$spiderweb ) )
-
-```{r, echo=FALSE, include = TRUE, fig.height=3, fig.width=5}
-library('ggplot2')
-th = MaxWiK::Data.2D$sampling$theme.ggplot
-meta.sampling  =  MaxWiK::Data.2D$metasampling$result
-network  = unique.data.frame( do.call(rbind.data.frame, meta.sampling$spiderweb ) )
-obs = MaxWiK::Data.2D$observation
-w = which(MaxWiK::Data.2D$metasampling$result$iKernelABC$similarity > 0)
-posteriori.MaxWiK = MaxWiK::Data.2D$X[ w, ]
-MaxWiK::my.ggplot.density( title = ' Posteriori distribution of X1 parameter', 
-                   datafr1 = posteriori.MaxWiK, 
-                   datafr2 = network, 
-                   var.df  = 'par.sim.X1', 
-                   obs.true = obs$x0[ 1 ], 
-                   best.sim = as.numeric( meta.sampling$par.best[ 1 ] )
-)
-```
-
-The red line is a true value, dotted is the best simulation, the red area is metasampling generated points (generated network), and the green area is the points taken from isolation kernel algorithm with similarity more than 0.
-
 ## Output of sampling algorithm
 
 The functions sampler_MaxWiK() and sampler_MaxWiK_parallel() return the list of the next objects:
