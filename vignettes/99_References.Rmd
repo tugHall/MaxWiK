@@ -1,0 +1,37 @@
+---
+title: "References"
+output:
+  pdf_document: 
+    fig_caption: yes
+    highlight: tango
+  html_document:
+    df_print: paged
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# References
+
+For publication, please, be kind to use next references related to MaxWiK software:
+
+-   [Iurii S. Nagornov, Approximate Bayesian Computation Based on Maxima Weighted Isolation Kernel Mapping, arXiv.2201.12745, 2022](https://doi.org/10.48550/arXiv.2201.12745)
+
+-   [Iurii S. Nagornov, Overfitting Problem in the Approximate Bayesian Computation Method Based on Maxima Weighted Isolation Kernel, The 36th Annual Conference of the Japanese Society for Artificial Intelligence, 2S5-IS-2c-05, 2022](https://confit.atlas.jp/guide/event/jsai2022/subject/2S5-IS-2c-05/tables?cryptoId=)
+
+-   [Package MaxWiK: https://github.com/tugHall/MaxWiK](https://github.com/tugHall/MaxWiK.git)
+
+# Collaboration
+
+Leveraging of MaxWiK package is free for any purpose. Adjusting hyperparameters for the particular task and certain datasets is the issue of collaboration. To get hyperparameters we use our Know-How algorithm which cannot be distributed freely. In each specific case this is being discussed, but in general the rules are as follow:
+
+-   for **commercial purpose** the adjusting of hyperparameters including Matrix of Voronoi sites is under commercial offer. Copyrights of hyperparameters' dataset belong to customers.
+
+-   for **research purpose** the adjusting of hyperparameters including Matrix of Voronoi sites is the cooperation issue. Copyrights of hyperparameters' dataset belong to us.
