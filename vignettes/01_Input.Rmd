@@ -1,24 +1,3 @@
----
-title: "Input"
-output:
-  html_document:
-    df_print: paged
-  pdf_document: 
-    fig_caption: yes
-    highlight: tango
-vignette: >
-  %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
----
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>", 
-  fig.align='center'
-)
-```
-
 # Input data
 
 ## Data format

@@ -1,23 +1,3 @@
----
-title: "Approximate Bayesian Computation"
-output:
-  pdf_document: 
-    fig_caption: yes
-    highlight: tango
-  html_document:
-    df_print: paged
-vignette: >
-  %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
----
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
 # Approximate Bayesian Computation
 
 To get the approximate Bayesian computation for a given dataset, one can use function get.MaxWiK(), here, please, try 2D example:

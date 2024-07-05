@@ -12,8 +12,19 @@ output:
   html_document:
     toc: yes
     number_sections: yes
-vignette: "%\\VignetteEncoding{UTF-8} %\\VignetteEngine{knitr::rmarkdown}\n"
+    df_print: paged
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  fig.align='center'
+)
+```
 
 \newpage
 
@@ -23,17 +34,27 @@ vignette: "%\\VignetteEncoding{UTF-8} %\\VignetteEngine{knitr::rmarkdown}\n"
 ```{r, child = '02_Output.Rmd'}
 ```
 
+\newpage
+
 ```{r, child = '03_ABC.Rmd'}
 ```
+
+\newpage
 
 ```{r, child = '04_Metasampling.Rmd'}
 ```
 
+\newpage
+
 ```{r, child = '05_Sampling.Rmd'}
 ```
 
+\newpage
+
 ```{r, child = '06_Predictor.Rmd'}
 ```
+
+\newpage
 
 ```{r, child = '99_References.Rmd'}
 ```
