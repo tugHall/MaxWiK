@@ -8,6 +8,7 @@
 #'
 #' @return data.frame of data from a file
 #' 
+#' @export
 #'
 #' @examples
 #' # fl = system.file('extdata/Input', 'gene_map.txt',package = 'tugHall.3', mustWork = TRUE )
@@ -28,7 +29,8 @@ read_file  <-  function( file_name = '', stringsAsFactors = FALSE, header = TRUE
 #' @param pkg Package name
 #'
 #' @return if the package is installed then it returns NULL else it returns error message
-#'
+#' 
+#' @keywords internal
 #' 
 #' @examples
 #' check_pkg( pkg = 'grDevices' )
@@ -46,10 +48,10 @@ check_pkg  <-  function( pkg ){
 #' 
 #' @return if the packages are installed then it returns NULL else it returns error message
 #'
-#' @export
+#' @keywords internal
 #' 
 #' @examples
-#' check_packages(  )
+#' NULL
 check_packages  <-  function( pkgs = NULL ){
     
     if ( is.null( pkgs ) ) {
@@ -86,7 +88,8 @@ check_packages  <-  function( pkgs = NULL ){
 #'
 #' @return TRUE if data.frame has ONLY numeric data and FALSE vice verse  
 #' 
-#'
+#' @keywords internal
+#' 
 #' @examples
 #' \dontrun{
 #' check_numeric_format( data.frame( A= c(9,0), B = c(4,6)) )  # TRUE
@@ -203,7 +206,7 @@ MSE_sim   <-   function( stat.obs, stat.sim ){
 #' - mean of MSE values for all the points from par.top; \cr
 #' - MSE value for the point of par.best 
 #' 
-#' @export
+#' @keywords internal
 #' 
 #' @examples
 #' NULL 

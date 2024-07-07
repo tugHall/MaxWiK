@@ -30,7 +30,7 @@
 #' - feature_tracers that is results of the function \code{get_voronoi_feature_PART_dataset()} applied to the new tracer points, 
 #' - similarity_to_mean that is numeric vector of similarities of all the tracers points.
 #' 
-#' 
+#' @keywords internal
 #' 
 #'
 #' @examples
@@ -87,7 +87,8 @@ sudoku  <-  function( DT , iKernelABC, n_bullets = 20, n_best = 10, halfwidth = 
 #'
 #' @return The function \code{get_pairs_of_data_frame()} returns the list of the pairs of points
 #' 
-#'
+#' @keywords internal
+#' 
 #' @examples
 #' NULL 
 get_pairs_of_data_frame  <-  function( DF ){
@@ -119,7 +120,7 @@ get_pairs_of_data_frame  <-  function( DF ){
 #' returns data frame of generated points between two given points, 
 #' including given points as the first and the last rows
 #' 
-#' 
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -148,6 +149,7 @@ generate_points_between_two_points  <-  function( pair, n = 10 ){
 #'
 #' @return The function \code{get_tracer_bullets()} returns data frame of generated tracer points
 #' 
+#' @keywords internal
 #'
 #' @examples
 #' NULL 

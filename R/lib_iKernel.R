@@ -7,6 +7,8 @@
 #'
 #' @return The squared root of sum of squared elements of the vector x or Euclid length of the vector x
 #'
+#' @keywords internal
+#'
 #' @examples
 #' norm_vec(c(3,4)) # that returns 5
 #' norm_vec(c(12,5)) # that returns 13
@@ -18,6 +20,7 @@ norm_vec     <-  function(x) {
 #' @describeIn norm_vec The squared norm or the sum of squared elements of the vector x
 #' @return The squared Euclid norm or the sum of squared elements of the vector x
 #' 
+#' @keywords internal
 #' 
 #' @examples
 #' norm_vec_sq(c(3,4)) # that returns 25
@@ -47,6 +50,7 @@ norm_vec_sq  <-  function(x) {
 #'
 #' @return Feature representation in RKHS based on Voronoi diagram for WHOLE dataset
 #' 
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -113,7 +117,8 @@ get_voronoi_feature  <-  function( psi = 40, t = 350, data, talkative = FALSE,
 #'
 #' @return RKHS mapping for a new point based on Isolation Kernel mapping
 #' 
-#'
+#' @keywords internal
+#' 
 #' @examples
 #' NULL
 add_new_point_iKernel  <-  function( data, d1, Matrix_Voronoi, dissim, t, psi, nr ){
@@ -155,7 +160,8 @@ add_new_point_iKernel  <-  function( data, d1, Matrix_Voronoi, dissim, t, psi, n
 #'
 #' @return Subset of data_set with columns pnts
 #' 
-#'
+#' @keywords internal
+#' 
 #' @examples
 #' NULL
 #' 
@@ -179,6 +185,7 @@ GET_SUBSET  <-  function( data_set, pnts ){
 #' 
 #' @return The function \code{iKernel()} returns a value of similarity or Isolation KERNEL for TWO points
 #' 
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -202,7 +209,8 @@ iKernel  <-  function( Matrix_iKernel, pnt_1, pnt_2, t ){
 #' 
 #' @return The function \code{iKernel_point_dataset()} returns a value of Isolation Kernel between a new point and dataset represented via Matrix_iKernel
 #' 
-#'
+#' @keywords internal
+#' 
 #' @examples
 #' NULL
 iKernel_point_dataset  <-  function( Matrix_iKernel, t, nr, iFeature_point ){
@@ -231,6 +239,7 @@ iKernel_point_dataset  <-  function( Matrix_iKernel, t, nr, iFeature_point ){
 #' @return The function \code{get_weights_iKernel()} returns the 
 #' list of weights for RKHS space and weights of similarity for iFeature_point
 #' 
+#' @keywords internal
 #'
 #' @examples
 #' NULL 
@@ -260,7 +269,7 @@ get_weights_iKernel   <-   function( GI, Matrix_iKernel, t, nr, iFeature_point )
 #' 
 #' @return List of three matrices: Matrix_Voronoi, Matrix_iKernel and dissim
 #' 
-#' 
+#' @keywords internal
 #' 
 #' @examples
 #' NULL
@@ -316,7 +325,7 @@ get_voronoi_feature_PART_dataset  <-  function( data, talkative = FALSE, start_r
 #' @return Maxima weighted kernel mean mapping in the form of integer vector with length t (number of trees). 
 #' Each element of the vector is index of Voronoi cell with maximal weight in the Voronoi diagram 
 #' 
-#' 
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -387,7 +396,8 @@ get_subset_of_feature_map   <-   function(dtst, Matrix_Voronoi, iFeature_point )
 #'
 #' @return  The function \code{GRAM_iKernel()} returns Gram matrix of Isolation Kernel
 #' 
-#'
+#' @keywords internal
+#' 
 #' @examples
 #' NULL
 GRAM_iKernel    <-  function( Matrix_iKernel, check_pos_def = FALSE ){
@@ -420,7 +430,8 @@ GRAM_iKernel    <-  function( Matrix_iKernel, check_pos_def = FALSE ){
 #' @return Function \code{get_inverse_GRAM()} returns the inverse Gram matrix 
 #' based on the given positive regularization constant lambda l
 #' 
-#'
+#' @keywords internal
+#' 
 #' @examples
 #' NULL
 get_inverse_GRAM  <-  function( G, l = 1E-6, check_pos_def = FALSE ){
@@ -451,7 +462,8 @@ get_inverse_GRAM  <-  function( G, l = 1E-6, check_pos_def = FALSE ){
 #' @return Function \code{check_positive_definite()} returns logical value: \cr 
 #' TRUE if Gram matrix is positive definite, and FALSE if it is not
 #' 
-#'
+#' @keywords internal
+#' 
 #' @examples
 #' NULL
 check_positive_definite  <-  function( G , n = 10 ){
