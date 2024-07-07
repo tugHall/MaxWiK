@@ -365,6 +365,7 @@ get_kernel_mean_embedding  <-  function( parameters_Matrix_iKernel, Hilbert_weig
 #' @return The subset of dtst that has points 
 #' extracted with feature mapping of an observation point (iFeature_point)
 #' 
+#' @keywords internal
 #'
 #' @examples
 #' NULL

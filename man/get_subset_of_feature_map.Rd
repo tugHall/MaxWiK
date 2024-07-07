@@ -24,3 +24,4 @@ The function to get subset of points based on feature mapping
 \examples{
 NULL
 }
+\keyword{internal}
