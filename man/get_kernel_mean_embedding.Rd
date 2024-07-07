@@ -21,3 +21,4 @@ The function to calculate Maxima weighted kernel mean mapping for Isolation Kern
 \examples{
 NULL
 }
+\keyword{internal}

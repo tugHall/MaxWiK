@@ -18,3 +18,4 @@ Check the installation of a package for some functions
 \examples{
 check_pkg( pkg = 'grDevices' )
 }
+\keyword{internal}

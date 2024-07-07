@@ -18,5 +18,6 @@ if the packages are installed then it returns NULL else it returns error message
 Check the installation of packages and attach them with corresponding functions
 }
 \examples{
-check_packages(  )
+NULL
 }
+\keyword{internal}

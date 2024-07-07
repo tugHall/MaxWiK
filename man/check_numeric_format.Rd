@@ -22,3 +22,4 @@ check_numeric_format( data.frame( A= c(9,0), B = c(4,NA)) )  # Error due to NA v
 check_numeric_format( data.frame( A= c(9,'0'), B = c(4,6)) ) # Error due to character in the data
 }
 }
+\keyword{internal}

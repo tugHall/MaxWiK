@@ -41,3 +41,4 @@ Function \code{check_positive_definite()} returns logical value about n trials o
 NULL
 NULL
 }
+\keyword{internal}

@@ -21,3 +21,4 @@ The function to get subset with size psi for Voronoi diagram
 NULL
 
 }
+\keyword{internal}
