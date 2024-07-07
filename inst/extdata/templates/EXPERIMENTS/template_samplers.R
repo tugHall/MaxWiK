@@ -18,9 +18,6 @@ if ( dir.exists( wd ) ) {
     setwd( wd )
 }
 
-### Check installation of libraries:
-check_packages()
-
 file_name   =  'output.txt'
 model       =  c( 'Gaussian', 'Linear' )[ 1 ]
 dimension   =  20

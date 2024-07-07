@@ -36,9 +36,6 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA,
     if ( verbose ) print('This code will be executed: ')
     if ( verbose ) print( simulation_example )
 
-    # Attach packages from import list
-    check_packages()
-
     A  =  ( ( 1:d ) + 5 ) * 100
     sigma  =  rep( ( r[2] - r[1] ) / 10, d )
     
@@ -125,9 +122,6 @@ simulation_example_many_psi_t  <-  function( verbose = TRUE , to_plot = TRUE, se
     
     if ( verbose ) print('This code will be executed: ')
     if ( verbose ) print( simulation_example )
-    
-    # Attach packages from import list
-    check_packages()
 
     A  =  ( ( 1:d ) + 5 ) * 100
     sigma  =  rep( ( r[2] - r[1] ) / 10, d )

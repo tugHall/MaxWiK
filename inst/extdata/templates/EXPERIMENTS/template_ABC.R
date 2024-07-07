@@ -13,9 +13,6 @@ if ( dir.exists( wd ) ) {
     setwd( wd )
 }
 
-### Check installation of libraries:
-check_packages()
-
 ### In order to understand procedure of execution all the method, please, see
 ### the functions:
 ###             *   Get_call_all_methods   - to call all the methods, and
