@@ -26,10 +26,7 @@ The norm function for vector
 
 }}
 \examples{
-norm_vec(c(3,4)) # that returns 5
-norm_vec(c(12,5)) # that returns 13
-
-norm_vec_sq(c(3,4)) # that returns 25
-norm_vec_sq(c(12,5)) # that returns 169
+NULL
+NULL
 }
 \keyword{internal}

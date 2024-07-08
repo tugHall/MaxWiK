@@ -87,7 +87,6 @@ check_packages  <-  function( pkgs = NULL ){
 #' @keywords internal
 #' 
 #' @examples
-#' \dontrun{
 #' NULL
 check_numeric_format  <-  function( l ) {
     

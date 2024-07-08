@@ -16,10 +16,6 @@ TRUE if data.frame has ONLY numeric data and FALSE vice verse
 Check that DATA.FRAME has numeric format for ALL the columns and it has NO 'NA' values
 }
 \examples{
-\dontrun{
-check_numeric_format( data.frame( A= c(9,0), B = c(4,6)) )  # TRUE
-check_numeric_format( data.frame( A= c(9,0), B = c(4,NA)) )  # Error due to NA value
-check_numeric_format( data.frame( A= c(9,'0'), B = c(4,6)) ) # Error due to character in the data
-}
+NULL
 }
 \keyword{internal}
