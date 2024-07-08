@@ -63,22 +63,22 @@ get_voronoi_feature  <-  function( psi = 40, t = 350, data, talkative = FALSE,
     new = is.null(Matrix_Voronoi)
     
     ### Check the data format:
-    if (talkative ) cat( 'Check the data format')
-    if ( talkative & check_numeric_format( data ) ) cat( 'OK' )
-    if ( new & talkative ) cat( 'This is a new Voronoi diagram and Matrix') 
+    if (talkative ) cat( 'Check the data format \n')
+    if ( talkative & check_numeric_format( data ) ) cat( 'OK \n' )
+    if ( new & talkative ) cat( 'This is a new Voronoi diagram and Matrix \n') 
     if ( !new ) {
-        if (talkative ) cat( 'This is a calculation based on a GIVEN Voronoi diagram and Matrix')
+        if (talkative ) cat( 'This is a calculation based on a GIVEN Voronoi diagram and Matrix \n')
         psi = ncol( Matrix_Voronoi )
         t   = nrow( Matrix_Voronoi )
     }
     
-    if (talkative ) cat( 'Finding matrix of distances between all points in data')
+    if (talkative ) cat( 'Finding matrix of distances between all points in data \n')
     dissim  <-  dist( data, method = 'euclidean', diag = TRUE, upper = TRUE)
     dissim  <-  as.matrix( dissim )
     nr  =  nrow(dissim)  ## number of columns and rows in matrix of distances
-    if (talkative ) cat( 'Done' )
+    if (talkative ) cat( 'Done \n' )
     
-    if (talkative ) cat( 'Transform data to the Hilbert space related to Isolation Kernel' )
+    if (talkative ) cat( 'Transform data to the Hilbert space related to Isolation Kernel \n' )
     ### The matrix 'Matrix_iKernel' keeps IDs of Voronoi area for each point and each tree
     Matrix_iKernel  =  matrix( data = NA, nrow = nr, ncol = t )
     
@@ -99,7 +99,7 @@ get_voronoi_feature  <-  function( psi = 40, t = 350, data, talkative = FALSE,
             Matrix_iKernel[i, j]   =  which.min( sub_data[ i, ] )[1]  ### which( sub_data[ i, ] == min( sub_data[ i, ] ) )[1]
         }
     }
-    if (talkative ) cat( 'Done' )
+    if (talkative ) cat( 'Done \n' )
     
     return( list( M_Voronoi = Matrix_Voronoi, 
                   M_iKernel = Matrix_iKernel,
@@ -279,19 +279,19 @@ get_voronoi_feature_PART_dataset  <-  function( data, talkative = FALSE, start_r
     ### Matrix_Voronoi is a matrix of Voronoi diagrams based on the PREVIOUS dataset
     
     ### Check the data format:
-    if (talkative ) cat( 'Check the data format')
-    if ( talkative & check_numeric_format( data ) ) cat( 'OK' )
-    if (talkative ) cat( 'This is a calculation based on a GIVEN Voronoi diagram and Matrix')
+    if (talkative ) cat( 'Check the data format \n')
+    if ( talkative & check_numeric_format( data ) ) cat( 'OK \n' )
+    if (talkative ) cat( 'This is a calculation based on a GIVEN Voronoi diagram and Matrix \n')
     psi = ncol( Matrix_Voronoi )
     t   = nrow( Matrix_Voronoi )
     
-    if (talkative ) cat( 'Finding matrix of distances between all points in data')
+    if (talkative ) cat( 'Finding matrix of distances between all points in data \n')
     dissim  <-  as.matrix( dist( data, method = 'euclidean', diag = TRUE, upper = TRUE) )
     nnw  =  nrow(dissim) - start_row  + 1  ### number of new points
     nr   =  nrow(dissim)                   ### number of rows 
-    if (talkative ) cat( 'Done' )
+    if (talkative ) cat( 'Done \n' )
     
-    if (talkative ) cat( 'Transform a NEW data to the Hilbert space related to Isolation Kernel' )
+    if (talkative ) cat( 'Transform a NEW data to the Hilbert space related to Isolation Kernel \n' )
     ### The matrix 'Matrix_iKernel' keeps IDs of Voronoi area for each point and each tree
     Matrix_iKernel  =  matrix( data = NA, nrow = nnw, ncol = t )
     
@@ -306,7 +306,7 @@ get_voronoi_feature_PART_dataset  <-  function( data, talkative = FALSE, start_r
             Matrix_iKernel[i, j]   =  which.min( sub_data[ i, ] )[1]  ### which( sub_data[ i, ] == min( sub_data[ i, ] ) )[1]
         }
     }
-    if (talkative ) cat( 'Done' )
+    if (talkative ) cat( 'Done \n' )
     
     return( list( M_Voronoi = Matrix_Voronoi, 
                   M_iKernel = Matrix_iKernel,
@@ -438,7 +438,7 @@ get_inverse_GRAM  <-  function( G, l = 1E-6, check_pos_def = FALSE ){
     I = diag( n ) * n * l
     G = G - I
     d = det( G )
-    # if ( d == 0 & !check_pos_def ) cat( 'The Gram matrix has determinant = 0 or close to zero' )    # stop( 'The Gram matrix has determinant = 0 \n' )
+    # if ( d == 0 & !check_pos_def ) cat( 'The Gram matrix has determinant = 0 or close to zero \n' )    # stop( 'The Gram matrix has determinant = 0 \n' )
     
     GI  =  solve( G ) 
     if ( check_pos_def ) {
