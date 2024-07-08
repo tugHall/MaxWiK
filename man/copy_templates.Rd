@@ -16,5 +16,5 @@ List of logic numbers for each copied file, TRUE - success, FALSE - not success
 Function to copy the templates from extdata folder in the library to /Templates/ folder in the working directory
 }
 \examples{
-copy_templates( dir = 'Input' )
+copy_templates( dir = './' )
 }
