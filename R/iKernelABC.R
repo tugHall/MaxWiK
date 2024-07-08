@@ -47,10 +47,10 @@ get.MaxWiK  <-  function( psi = 40, t = 350, param,
     ### stat.obs is a summary statistics of the observation data
     par.sim  =  param
     ### Check the data format:
-    if (talkative ) print( 'Check the data format of the summary statistics of observation data')
-    if ( talkative & check_numeric_format(stat.obs) ) print( 'OK' )
-    if (talkative ) print( 'Check the data format of the summary statistics of simulation data')
-    if ( talkative & check_numeric_format(stat.sim) ) print( 'OK' )
+    if (talkative ) cat( 'Check the data format of the summary statistics of observation data')
+    if ( talkative & check_numeric_format(stat.obs) ) cat( 'OK' )
+    if (talkative ) cat( 'Check the data format of the summary statistics of simulation data')
+    if ( talkative & check_numeric_format(stat.sim) ) cat( 'OK' )
     
     Voron  =  get_voronoi_feature( psi = psi, t = t, data = stat.sim, 
                                    talkative = talkative, Matrix_Voronoi = Matrix_Voronoi )
@@ -66,19 +66,19 @@ get.MaxWiK  <-  function( psi = 40, t = 350, param,
     iFeature_point  =  add_new_point_iKernel( data = stat.sim, d1 = stat.obs, 
                                               Matrix_Voronoi, dissim, t, psi, nr )
     
-    if (talkative ) print( 'Get the Gram matrix and inverse Gram matrix' )
+    if (talkative ) cat( 'Get the Gram matrix and inverse Gram matrix' )
     ### Get Gram matrix
     G = GRAM_iKernel( Matrix_iKernel, check_pos_def = check_pos_def )
     
     ### Get inverse Gram matrix, l - regularization coefficient
     GI  <-  get_inverse_GRAM( G , l = 1E-5 )
-    if (talkative ) print( 'OK') 
+    if (talkative ) cat( 'OK') 
     
-    if (talkative ) print( 'Get the weights for Isolation Kernel' )
+    if (talkative ) cat( 'Get the weights for Isolation Kernel' )
     weights_iKernel  =  get_weights_iKernel( GI, Matrix_iKernel, t, nr, iFeature_point )
-    if (talkative ) print( 'OK') 
+    if (talkative ) cat( 'OK') 
     
-    if (talkative ) print( 'Transform the parameters data set to Hilbert space' )
+    if (talkative ) cat( 'Transform the parameters data set to Hilbert space' )
     param_Voron  =  get_voronoi_feature( psi = psi, t = t, data = par.sim, talkative = talkative, 
                                          Matrix_Voronoi = Matrix_Voronoi )
     parameters_Matrix_iKernel = param_Voron[['M_iKernel']]
@@ -86,7 +86,7 @@ get.MaxWiK  <-  function( psi = 40, t = 350, param,
     
     kernel_mean_embedding  =  get_kernel_mean_embedding( parameters_Matrix_iKernel = parameters_Matrix_iKernel, 
                                                          Hilbert_weights = weights_iKernel[['weights_RKHS']] )  # t( parameters_Matrix_iKernel )  %*%  weights_iKernel[['weights_RKHS']]
-    if (talkative ) print( 'Finish') 
+    if (talkative ) cat( 'Finish') 
     
     description = "The result of Kernel Approximate Bayesian Computation
     based on Isolation Kernel:
