@@ -32,7 +32,7 @@ my.ggplot.density  <-  function( title = '', datafr1, datafr2, var.df,
         geom.1 = NULL
     } else {
         geom.1  =    geom_density( data = datafr1, 
-                                   aes( x =  .data[[ var.df ]] ), 
+                                   aes_string( x = var.df ), 
                                    fill=clrs[ 1 ], color= clrs[ 1 ], 
                                    alpha=alpha[ 1 ] ) 
     }
@@ -41,7 +41,7 @@ my.ggplot.density  <-  function( title = '', datafr1, datafr2, var.df,
         geom.2 = NULL
     } else {
         geom.2  =    geom_density( data = datafr2, 
-                                   aes( x =  .data[[ var.df ]] ), 
+                                   aes_string( x = var.df ), 
                                    fill=clrs[ 2 ], color= clrs[ 2 ], 
                                    alpha=alpha[ 2 ] ) 
     }
