@@ -5,6 +5,7 @@
 #' @importFrom abc abc
 #' @importFrom bayestestR point_estimate
 #' @importFrom ggplot2 aes
+#' @importFrom ggplot2 aes_string
 #' @importFrom ggplot2 geom_density
 #' @importFrom ggplot2 geom_line
 #' @importFrom ggplot2 geom_vline
