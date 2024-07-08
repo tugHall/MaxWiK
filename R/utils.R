@@ -33,7 +33,7 @@ read_file  <-  function( file_name = '', stringsAsFactors = FALSE, header = TRUE
 #' @keywords internal
 #' 
 #' @examples
-#' check_pkg( pkg = 'grDevices' )
+#' NULL
 check_pkg  <-  function( pkg ){
     msg  =  paste0( 'Package ', pkg, ' must be installed to use this function. \n ' )
     if ( !requireNamespace( pkg , quietly = TRUE ) )    stop( msg, call. = FALSE )
