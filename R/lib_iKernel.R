@@ -10,9 +10,7 @@
 #' @keywords internal
 #'
 #' @examples
-#' norm_vec(c(3,4)) # that returns 5
-#' norm_vec(c(12,5)) # that returns 13
-#' 
+#' NULL
 norm_vec     <-  function(x) {
     sqrt(sum(x^2))
 }
@@ -23,8 +21,7 @@ norm_vec     <-  function(x) {
 #' @keywords internal
 #' 
 #' @examples
-#' norm_vec_sq(c(3,4)) # that returns 25
-#' norm_vec_sq(c(12,5)) # that returns 169
+#' NULL
 norm_vec_sq  <-  function(x) {
     (sum(x^2))
 }

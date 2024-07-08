@@ -11,10 +11,6 @@
 #' @export
 #'
 #' @examples
-#' # fl = system.file('extdata/Input', 'gene_map.txt',package = 'tugHall.3', mustWork = TRUE )
-#' # read_file(file_name = fl, stringsAsFactors = FALSE )
-#' # fl = system.file('extdata/Input', 'CF.txt',package = 'tugHall.3', mustWork = TRUE )
-#' # read_file(file_name = fl, stringsAsFactors = FALSE, header = FALSE )
 #' NULL
 read_file  <-  function( file_name = '', stringsAsFactors = FALSE, header = TRUE ){
     if ( file.size( file_name )  < 10 ) return( NULL )
@@ -92,10 +88,7 @@ check_packages  <-  function( pkgs = NULL ){
 #' 
 #' @examples
 #' \dontrun{
-#' check_numeric_format( data.frame( A= c(9,0), B = c(4,6)) )  # TRUE
-#' check_numeric_format( data.frame( A= c(9,0), B = c(4,NA)) )  # Error due to NA value
-#' check_numeric_format( data.frame( A= c(9,'0'), B = c(4,6)) ) # Error due to character in the data
-#' }
+#' NULL
 check_numeric_format  <-  function( l ) {
     
     if ( all(!is.na( l ) )  & all( sapply(l, is.numeric) ) & is.data.frame( l ) ) return( TRUE )
