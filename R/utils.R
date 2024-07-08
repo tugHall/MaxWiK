@@ -52,19 +52,12 @@ check_packages  <-  function( pkgs = NULL ){
     
     if ( is.null( pkgs ) ) {
         pkgs  =  list(  abc = 'abc',
-                        bayestestR    =  'point_estimate',
-                        ggplot2       =  c( 'ggplot', 'geom_line', 'scale_color_manual', 'ggtitle', 'ylab', 'xlab', 'aes' ),
-                        graphics      =  c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title', 'points' ),
-                        grDevices     =  c('dev.off', 'pdf', 'rgb'),
-                        kernlab       =  c( 'kernelMatrix', 'laplacedot', 'rbfdot' ),
-                        magrittr      =  '%>%',
+                        ggplot2       =  c( 'aes', 'aes_string', 'geom_density', 'geom_line', 'geom_vline', 'ggplot', 'ggtitle', 'scale_color_manual', 'ylab', 'xlab' ),
                         methods       =  'new',
                         parallel      =  'mclapply',
-                        plotly        =  c( 'plot_ly', 'add_trace', 'add_surface' ),
-                        randomcoloR   =  'randomColor',
                         scales        =  'alpha',
-                        stats         =  c('aggregate', 'rbinom', 'rexp', 'rnorm', 'runif', 'dist', 'complete.cases' ),
-                        utils         =  c('read.delim', 'read.table', 'write.table', 'globalVariables' )
+                        stats         =  c( 'complete.cases', 'dist', 'runif' ),
+                        utils         =  c( 'read.table', 'setTxtProgressBar', 'txtProgressBar', 'write.table' )
                         )
     }
     
