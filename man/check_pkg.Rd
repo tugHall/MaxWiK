@@ -16,6 +16,6 @@ if the package is installed then it returns NULL else it returns error message
 Check the installation of a package for some functions
 }
 \examples{
-check_pkg( pkg = 'grDevices' )
+NULL
 }
 \keyword{internal}

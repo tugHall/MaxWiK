@@ -80,10 +80,6 @@ If \code{n_simulation_stop = NA} then there is no restriction (by default)}
 \item{number_of_nodes_in_ring}{Number of points/nodes between two points in the web ring. By default \code{number_of_nodes_in_ring = 2}}
 
 \item{cores}{Number of cores for parallel calculations of a model (4 by default)}
-
-\item{psi}{Integer number. Size of each Voronoi diagram or number of areas/points in the Voronoi diagrams}
-
-\item{t}{Integer number of trees in the Isolation Forest}
 }
 \value{
 \code{sampler_MaxWiK()} returns the list: \cr
