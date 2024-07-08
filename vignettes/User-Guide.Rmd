@@ -15,7 +15,7 @@ output:
     df_print: paged
 vignette: >
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{MaxWiK}
+  %\VignetteIndexEntry{**MaxWiK**}
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
