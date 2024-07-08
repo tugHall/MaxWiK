@@ -127,7 +127,7 @@ The function \code{get.MaxWiK()} returns the list of :
 }
 }
 \description{
-The function \code{meta_sampling()} itteratively generates tracer based on the simple procedure: \cr
+The function \code{meta_sampling()} iteratively generates tracer based on the simple procedure: \cr
 \itemize{
 \item making a reflection of the top points from the best point, \cr
 \item and then generating the point tracers between them, \cr

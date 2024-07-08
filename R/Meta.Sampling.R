@@ -6,7 +6,7 @@
 #' @describeIn get.MaxWiK The function to get the best value of parameter corresponding to 
 #' Maxima Weighted Isolation Kernel mapping which is related to an observation point
 #' 
-#' @description The function \code{meta_sampling()} itteratively generates tracer based on the simple procedure: \cr
+#' @description The function \code{meta_sampling()} iteratively generates tracer based on the simple procedure: \cr
 #' - making a reflection of the top points from the best point, \cr 
 #' - and then generating the point tracers between them, \cr
 #' - finally, the algorithm chooses again the top points and the best point (\code{sudoku()} function is used),

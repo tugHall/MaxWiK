@@ -7,7 +7,7 @@
 #' @format A list of:
 #' \describe{
 #'   \item{X}{ Input data frame of the model }
-#'   \item{Y}{ Ouput data frame of the model }
+#'   \item{Y}{ Output data frame of the model }
 #'   \item{observation}{ Data frame with observation info }
 #'   \item{ABC}{ List of hyperparameters, the matrix of Voronoi sites, posteriori distribution, and results of MaxWiK algorithm }
 #'   \item{metasampling}{ List of results of meta-sampling algorithm, and the network of points during meta-sampling }
