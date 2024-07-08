@@ -29,33 +29,33 @@ knitr::opts_chunk$set(
 
 \newpage
 
-```{r, child = '01_Input.Rmd'}
+```{r, child = '01_Input'}
 ```
 
-```{r, child = '02_Output.Rmd'}
-```
-
-\newpage
-
-```{r, child = '03_ABC.Rmd'}
+```{r, child = '02_Output'}
 ```
 
 \newpage
 
-```{r, child = '04_Metasampling.Rmd'}
+```{r, child = '03_ABC'}
 ```
 
 \newpage
 
-```{r, child = '05_Sampling.Rmd'}
+```{r, child = '04_Metasampling'}
 ```
 
 \newpage
 
-```{r, child = '06_Predictor.Rmd'}
+```{r, child = '05_Sampling'}
 ```
 
 \newpage
 
-```{r, child = '99_References.Rmd'}
+```{r, child = '06_Predictor'}
+```
+
+\newpage
+
+```{r, child = '99_References'}
 ```
