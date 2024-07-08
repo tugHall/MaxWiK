@@ -2,6 +2,12 @@
 
 #' Function to generate parameters and simulate a model based on MaxWiK algorithm 
 #'
+#' @param psi Integer number. Size of each Voronoi diagram or number of areas/points in the Voronoi diagrams
+#' @param t Integer number of trees in the Isolation Forest
+#' @param stat.sim Summary statistics of the simulations (model output)
+#' @param stat.obs Summary statistics of the observation point
+#' @param par.sim Data frame of parameters of the model
+#' @param psi_t Vector of psi and t hyperparameters.
 #' @param model Function to get output of simulation during sampling 
 #' @param arg0 List with arguments for a model function, so that arg0 is NOT changed during sampling
 #' @param size Number of points in the simulation based on MaxWiK algorithm 

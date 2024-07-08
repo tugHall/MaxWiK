@@ -45,11 +45,19 @@ sampler_MaxWiK_parallel(
 )
 }
 \arguments{
+\item{stat.obs}{Summary statistics of the observation point}
+
+\item{stat.sim}{Summary statistics of the simulations (model output)}
+
+\item{par.sim}{Data frame of parameters of the model}
+
 \item{model}{Function to get output of simulation during sampling}
 
 \item{arg0}{List with arguments for a model function, so that arg0 is NOT changed during sampling}
 
 \item{size}{Number of points in the simulation based on MaxWiK algorithm}
+
+\item{psi_t}{Vector of psi and t hyperparameters.}
 
 \item{epsilon}{Criterion to stop simulation when \code{MSE_current - MSE_previous < epsilon}}
 
@@ -72,6 +80,10 @@ If \code{n_simulation_stop = NA} then there is no restriction (by default)}
 \item{number_of_nodes_in_ring}{Number of points/nodes between two points in the web ring. By default \code{number_of_nodes_in_ring = 2}}
 
 \item{cores}{Number of cores for parallel calculations of a model (4 by default)}
+
+\item{psi}{Integer number. Size of each Voronoi diagram or number of areas/points in the Voronoi diagrams}
+
+\item{t}{Integer number of trees in the Isolation Forest}
 }
 \value{
 \code{sampler_MaxWiK()} returns the list: \cr

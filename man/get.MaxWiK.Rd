@@ -84,6 +84,8 @@ get.MaxWiK(
 
 \item{use.iKernelABC}{The iKernelABC object to use for meta-sampling. By default it is NULL and is generated.}
 
+\item{new.param}{New parameter for the predictor input}
+
 \item{Matrix_Voronoi}{is a predefined matrix of information about Voronoi trees
 (rows - trees, columns - Voronoi points/areas IDs). By default it is NULL and is generated randomly.}
 }

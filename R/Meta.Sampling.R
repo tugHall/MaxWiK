@@ -175,7 +175,9 @@ meta_sampling  <-  function(  psi = 4, t = 35,
 #' @describeIn get.MaxWiK The function to get the prediction of output based on a new parameter and MaxWiK
 #' 
 #' @description The function \code{MaxWiK.predictor()} uses the meta-sampling for a prediction
-#'
+#' 
+#' @param new.param New parameter for the predictor input
+#' 
 #' @return The function \code{MaxWiK.predictor()} returns the list of the next objects:
 #' - input.parameters that is the list of all the input parameters for Isolation Kernel ABC method;
 #' - iteration that is iteration value when algorithm stopped;

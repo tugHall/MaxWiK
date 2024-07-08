@@ -6,7 +6,7 @@
 \alias{MaxWiK-package}
 \title{MaxWiK: Machine learning method based on Maxima Weighted Isolation Kernel mean embedding}
 \description{
-This software is a package named **MaxWiK** contains Approximate Bayesian Computation method to choose a single parameter for a single observation point. The method involves the transformation of row data to a Hilbert space (mapping) and the measurement of the similarity between simulated points and maxima weighted Isolation Kernel mapping related to the observation point. We also design a heuristic algorithm for parameter estimation that requires no calculation and is dimension independent.
+This software is a package named **MaxWiK** contains Approximate Bayesian Computation method to choose a single parameter for a single observation point. The method involves the transformation of row data to a Hilbert space (mapping) and the measurement of the similarity between simulated points and maxima weighted Isolation Kernel mapping related to the observation point. The metasampling or heuristic algorithm is also designed for parameter estimation that requires no calculation and is dimension independent. **MaWiK** also has the predictor based on metasampling procedure.
 }
 \author{
 \strong{Maintainer}: Iurii Nagornov \email{iurii.nagornov@aist.go.jp}
