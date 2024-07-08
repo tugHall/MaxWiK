@@ -4,8 +4,7 @@ Version: 1.0.0
 Authors@R: 
     person("Iurii", "Nagornov", , "iurii.nagornov@aist.go.jp", role = c("aut", "cre") )
 Description: This software is a package named **MaxWiK** contains Approximate Bayesian Computation method to choose a single parameter for a single observation point. The method involves the transformation of row data to a Hilbert space (mapping) and the measurement of the similarity between simulated points and maxima weighted Isolation Kernel mapping related to the observation point. The metasampling or heuristic algorithm is also designed for parameter estimation that requires no calculation and is dimension independent. **MaWiK** also has the predictor based on metasampling procedure.
-License: 
-    AGPL (>= 3)
+License: AGPL (>= 3) + file LICENSE
 Depends: 
     R (>= 3.3.0)
 Imports:

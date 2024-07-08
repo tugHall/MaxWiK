@@ -141,7 +141,7 @@ restrict_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
 #' @export
 #'
 #' @examples
-#' copy_templates( dir = 'Input' )
+#' copy_templates( dir = './' )
 copy_templates  <-  function( dir = './' ){
     
     dir_pck =  system.file('extdata', 'templates', package = 'MaxWiK', mustWork = TRUE )
