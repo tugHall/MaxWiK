@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' NULL
-my.ggplot.density  <-  function( title = '', datafr1, datafr2, var.df, 
+MaxWiK.ggplot.density  <-  function( title = '', datafr1, datafr2, var.df, 
                                  obs.true = NULL, 
                                  best.sim = NULL,  
                                  clrs = c( "#a9b322", "#f9b3a2", 'red', 'blue' ), 
@@ -60,5 +60,5 @@ my.ggplot.density  <-  function( title = '', datafr1, datafr2, var.df,
                              color=clrs[ 4 ], linetype=lt[ 2 ], linewidth=lw[ 2 ])
     }
     
-    print( pl.base + geom.1 + geom.2 + l1 + l2 + ggtitle( title ) )
+    return( pl.base + geom.1 + geom.2 + l1 + l2 + ggtitle( title ) )
 }
