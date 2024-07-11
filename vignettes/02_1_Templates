@@ -1,0 +1,17 @@
+# Templates
+
+To use the templates, please, be kind to call the function:
+
+```{r, include = TRUE, echo=TRUE, eval=FALSE}
+MaxWiK::MaxWiK_templates(dir = './')
+```
+
+The function MaxWiK_templates() copies all the templates to the working folder. There are 3 templates:
+
+-   MaxWiK.ABC.R - template to run approximate Bayesian computation based on MaxWiK algorithms including metasampling;
+
+-   MaxWiK.Sampling.R - template to run sampling generation and run a model with example of Gaussian function;
+
+-   MaxWiK.Predictor.R - template to get prediction based on metasampling procedure.
+
+One can find the explanation of leveraging of the templates in this vignette. 
