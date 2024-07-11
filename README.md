@@ -29,7 +29,7 @@ To install, please, use the archive file 'MaxWiK_1.0.0.tar.gz':
 
 To see how it works, please, be kind use the templates. To get templates, please, use command:
 
-    copy_templates( dir = './' )   
+    MaxWiK_templates( dir = './' )   
     # dir can be any working folder where template will be copied
 
 

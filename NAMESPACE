@@ -3,7 +3,7 @@
 export(MSE_sim)
 export(MaxWiK.ggplot.density)
 export(MaxWiK.predictor)
-export(copy_templates)
+export(MaxWiK_templates)
 export(get.MaxWiK)
 export(meta_sampling)
 export(read_file)
