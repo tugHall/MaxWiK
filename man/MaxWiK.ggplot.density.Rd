@@ -39,7 +39,7 @@ MaxWiK.ggplot.density(
 \item{lt}{Line types}
 }
 \value{
-Make ggplot of the densities of the data frames
+Make and return the ggplot object of the densities of the data frames
 }
 \description{
 Density plot
