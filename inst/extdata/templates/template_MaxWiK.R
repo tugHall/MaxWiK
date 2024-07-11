@@ -2,7 +2,7 @@
 library('MaxWiK')
 library('ggplot2')
 
-my.ggplot.density  <-  function( title = '', datafr1, datafr2, var.df, 
+MaxWiK.ggplot.density  <-  function( title = '', datafr1, datafr2, var.df, 
                                  obs.true = NULL, 
                                  best.sim = NULL,  
                                  clrs = c( "#a9b322", "#f9b3a2", 'red', 'blue' ), 
@@ -88,7 +88,7 @@ posteriori.MaxWiK  =  par.sim[ w.sim, ]
 posteriori.weights =  res.MaxWik$similarity[ w.sim ] / sum( res.MaxWik$similarity[ w.sim ] )
 
 
-my.ggplot.density( title = ' Posteriori distribution of X2 parameter (Red line is a true value) ', 
+MaxWiK.ggplot.density( title = ' Posteriori distribution of X2 parameter (Red line is a true value) ', 
                    datafr1 = posteriori.MaxWiK, 
                    datafr2 = NULL, 
                    var.df  = 'par.sim.X2', 
@@ -96,7 +96,7 @@ my.ggplot.density( title = ' Posteriori distribution of X2 parameter (Red line i
                    best.sim = NULL
                 )
 
-my.ggplot.density( title = ' Posteriori distribution of X1 parameter (Red line is a true value) ', 
+MaxWiK.ggplot.density( title = ' Posteriori distribution of X1 parameter (Red line is a true value) ', 
                    datafr1 = posteriori.MaxWiK, 
                    datafr2 = NULL, 
                    var.df  = 'par.sim.X1', 
@@ -117,7 +117,7 @@ meta.sampling  =  meta_sampling( psi = hyper$psi, t = hyper$t, param = par.sim,
 
 network  = unique.data.frame( do.call(rbind.data.frame, meta.sampling$spiderweb ) )
 
-my.ggplot.density( title = ' Posteriori distribution of X1 parameter \n (Red line is a true value, dotted is the best simulation) \n red area is metasampling', 
+MaxWiK.ggplot.density( title = ' Posteriori distribution of X1 parameter \n (Red line is a true value, dotted is the best simulation) \n red area is metasampling', 
                    datafr1 = posteriori.MaxWiK, 
                    datafr2 = network, 
                    var.df  = 'par.sim.X1', 
@@ -126,7 +126,7 @@ my.ggplot.density( title = ' Posteriori distribution of X1 parameter \n (Red lin
         )
 
 
-my.ggplot.density( title = ' Posteriori distribution of X2 parameter \n (Red line is a true value, dotted is the best simulation) \n red area is metasampling', 
+MaxWiK.ggplot.density( title = ' Posteriori distribution of X2 parameter \n (Red line is a true value, dotted is the best simulation) \n red area is metasampling', 
                    datafr1 = posteriori.MaxWiK, 
                    datafr2 = network, 
                    var.df  = 'par.sim.X2', 
@@ -154,7 +154,7 @@ posteriori.pred.MaxWiK  =  stat.sim[ w.sim, ]
 posteriori.pred.weights =  pred.MaxWiK$similarity[ w.sim ] / sum( pred.MaxWiK$similarity[ w.sim ] )
 
 
-my.ggplot.density( title = ' Posteriori distribution of Y1 parameter \n (Red line is a true value)', 
+MaxWiK.ggplot.density( title = ' Posteriori distribution of Y1 parameter \n (Red line is a true value)', 
                    datafr1 = posteriori.pred.MaxWiK, 
                    datafr2 = NULL, 
                    var.df  = 'stat.sim.Y1', 
@@ -177,7 +177,7 @@ predictor  =  MaxWiK.predictor( psi = hyper$psi, t = hyper$t, param = par.sim,
 
 pred.network  = unique.data.frame( do.call(rbind.data.frame, predictor$spiderweb ) )
 
-my.ggplot.density( title = ' Posteriori distribution of Y1 parameter \n (Red line is a true value, blue one is prediction), \n red area is metasampling', 
+MaxWiK.ggplot.density( title = ' Posteriori distribution of Y1 parameter \n (Red line is a true value, blue one is prediction), \n red area is metasampling', 
                    datafr1 = posteriori.pred.MaxWiK, 
                    datafr2 = pred.network, 
                    var.df  = 'stat.sim.Y1', 
@@ -186,7 +186,7 @@ my.ggplot.density( title = ' Posteriori distribution of Y1 parameter \n (Red lin
 )
 
 
-my.ggplot.density( title = ' Posteriori distribution of Y2 parameter at the last step of metasampling \n (Red line is a true value, blue one is prediction), \n red area is metasampling', 
+MaxWiK.ggplot.density( title = ' Posteriori distribution of Y2 parameter at the last step of metasampling \n (Red line is a true value, blue one is prediction), \n red area is metasampling', 
                    datafr1 = posteriori.pred.MaxWiK, 
                    datafr2 = predictor$spiderweb[[predictor$iteration]], 
                    var.df  = 'stat.sim.Y2', 

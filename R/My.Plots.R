@@ -13,7 +13,7 @@
 #' @param lw Line widths
 #' @param lt Line types
 #'
-#' @return Make ggplot of the densities of the data frames 
+#' @return Make and return the ggplot object of the densities of the data frames 
 #' @export
 #'
 #' @examples
