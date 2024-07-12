@@ -254,3 +254,60 @@ read_hyperparameters  <- function( input ){
     
     return( out )
 }
+
+
+
+#' Function to restrict values of the data according with the range for each dimension
+#'
+#' @param diapason Vector of min and max values or data frame with two rows (min and max) for each dimension of input data
+#' @param input.data Data frame of input where values will be corrected
+#'
+#' @return The same data frame with corrected values according to the diapason
+#' 
+#' @export
+#'
+#' @examples
+#' NULL
+apply_range  <- function( diapason, input.data ){
+    
+    if ( is.vector( diapason) ) if ( length( diapason ) != 2 ) 
+        stop( 'diapason should be vector with length = 2' )
+    if ( is.data.frame( diapason ) ) if ( nrow( diapason) !=2 ) 
+        stop( 'diapason should be data frame with number of rows = 2 for min and max values for each dimension' )
+    if ( is.null( input.data ) ) return( NULL)
+    
+    out.data  =  input.data
+    
+    if ( !is.data.frame( input.data ) ){
+        if ( !is.vector( input.data ) ) stop( 'input.data should be data frame or vector.')
+        if ( !is.vector( diapason ) )   stop( 'If input data is vector, diapason also shopuld be vector.')
+        w = which( input.data > diapason[ 2 ] )
+        if ( length( w ) > 0 ) out.data[ w ] = diapason[ 2 ] 
+        w = which( input.data < diapason[ 1 ] )
+        if ( length( w ) > 0 ) out.data[ w ] = diapason[ 1 ] 
+        return( out.data )
+    }
+    
+    f_minmax = function( icol, input.data, diapason ) {
+                out.data = input.data
+                if ( is.vector( diapason ) ) {
+                    min_max = diapason
+                } else {
+                    min_max = diapason[ , icol ]
+                }
+                # Max check
+                w = which( input.data[ , icol ] > min_max[ 2 ] )
+                if ( length( w ) > 0 ) out.data[ w, icol ]  =  min_max[ 2 ]
+                # Min check
+                w = which( input.data[ , icol ] < min_max[ 1 ] )
+                if ( length( w ) > 0 ) out.data[ w, icol ]  =  min_max[ 1 ]
+                return( out.data[ , icol] )
+    }
+    
+    for( icol in 1:ncol( input.data ) ){
+        out.data[ , icol ]  =  f_minmax( icol = icol, input.data = input.data, diapason = diapason )
+    }
+    return( out.data )
+}
+
+
