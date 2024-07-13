@@ -54,6 +54,10 @@ predictor  =  MaxWiK.predictor( psi = hyper$psi, t = hyper$t, param = par.sim,
 
 pred.network  = unique.data.frame( do.call(rbind.data.frame, predictor$spiderweb ) )
 
+# Check the diapason
+pred.network  = apply_range( diapason = c(0,1000), input.data = pred.network )
+predictor$prediction.best = apply_range( diapason = c(0,1000), input.data = predictor$prediction.best )
+
 MaxWiK.ggplot.density( title = ' Posteriori distribution of Y1 parameter \n (Red line is a true value, blue one is prediction), \n red area is metasampling', 
                        datafr1 = posteriori.pred.MaxWiK, 
                        datafr2 = pred.network, 
