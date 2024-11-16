@@ -1,5 +1,5 @@
 Package: MaxWiK
-Title: Machine learning method based on Maxima Weighted Isolation Kernel mean embedding
+Title: Machine Learning Method Based On Maxima Weighted Isolation Kernel Mean Embedding
 Version: 1.0.0
 Authors@R: 
     person("Iurii", "Nagornov", email="iurii.nagornov@aist.go.jp", role = c('aut', 'cre', 'cph'), comment = c(ORCID = '0000-0002-7935-6776') )
