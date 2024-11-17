@@ -1,6 +1,6 @@
 # MaxWiK: Maxima Weighted Isolation Kernel Mapping Method
 
-[![License](https://img.shields.io/badge/License-AGPL-orange.svg)](https://github.com/tugHall/MaxWiK/blob/main/LICENSE.md)
+[![License](https://img.shields.io/badge/License-GPL.3-green.svg)](https://github.com/tugHall/MaxWiK/blob/main/LICENSE.md)
 
 **MaxWiK** *(**Max**ima **W**eighted-**i**solation **K**ernel mapping method)* is a machine learning method of meta-sampling based on Isolation Kernel and Kernel mean embedding. For more details of the method, please, be kind to read the papers:
 
