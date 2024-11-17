@@ -34,7 +34,7 @@
 #' @export
 #'
 #' @examples
-#' NULL
+#' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
 get.MaxWiK  <-  function( psi = 40, t = 350, param, 
                           stat.sim, stat.obs, talkative = FALSE, 
                           check_pos_def = TRUE, Matrix_Voronoi = NULL ){
