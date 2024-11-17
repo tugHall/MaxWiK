@@ -4,12 +4,12 @@
 \name{MaxWiK-package}
 \alias{MaxWiK}
 \alias{MaxWiK-package}
-\title{MaxWiK: Machine Learning Method Based On Isolation Kernel Mean Embedding}
+\title{MaxWiK: Machine Learning Method Based on Isolation Kernel Mean Embedding}
 \description{
-This software is a package named 'MaxWiK' (maxima weighted Isolation Kernel approach) contains Approximate Bayesian Computation method to choose a single parameter for a single observation point. The method involves the transformation of row data to a Hilbert space (mapping) and the measurement of the similarity between simulated points and maxima weighted Isolation Kernel mapping related to the observation point. The metasampling or heuristic algorithm is also designed for parameter estimation that requires no calculation and is dimension independent. 'MaxWiK' also has the predictor based on metasampling procedure. The method is described in Iurii Nagornov (2024) \doi{10.1007/978-3-031-66431-1_16} and Iurii Nagornov (2023) \doi{10.1007/978-3-031-29168-5_18}
+This software is a package named 'MaxWiK' (maxima weighted Isolation Kernel approach) contains Approximate Bayesian Computation method to choose a single parameter for a single observation point. The method involves the transformation of row data to a Hilbert space (mapping) and the measurement of the similarity between simulated points and maxima weighted Isolation Kernel mapping related to the observation point. The metasampling or heuristic algorithm is also designed for parameter estimation that requires no calculation and is dimension independent. 'MaxWiK' also has the predictor based on metasampling procedure. The method is described in Iurii Nagornov (2024) \doi{10.1007/978-3-031-66431-1_16} and Iurii Nagornov (2023) \doi{10.1007/978-3-031-29168-5_18}.
 }
 \author{
-\strong{Maintainer}: Yuri Nagornov \email{iurii.nagornov@aist.go.jp} (\href{https://orcid.org/0000-0002-7935-6776}{ORCID}) [copyright holder]
+\strong{Maintainer}: Yuri Nagornov \email{nagornov.yuri@gmail.com} (\href{https://orcid.org/0000-0002-7935-6776}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}

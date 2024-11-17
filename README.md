@@ -47,4 +47,4 @@ For publication, please, be kind to use next references related to MaxWiK softwa
 
 -   [Iurii S. Nagornov, Overfitting Problem in the Approximate Bayesian Computation Method Based on Maxima Weighted Isolation Kernel, The 36th Annual Conference of the Japanese Society for Artificial Intelligence, 2S5-IS-2c-05, 2022](https://confit.atlas.jp/guide/event/jsai2022/subject/2S5-IS-2c-05/tables?cryptoId=)
 
--   [Package MaxWiK: https://github.com/tugHall/MaxWiK](https://github.com/tugHall/MaxWiK.git)
+-   [Package MaxWiK: https://github.com/tugHall/MaxWiK](https://github.com/tugHall/MaxWiK)
