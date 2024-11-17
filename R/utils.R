@@ -6,7 +6,7 @@
 #' @param stringsAsFactors Parameter for read.table function, by default stringsAsFactors = FALSE
 #' @param header Logical type to read or do not read head of a file
 #'
-#' @return data.frame of data from a file
+#' @returns data.frame of data from a file
 #' 
 #' @export
 #'
@@ -24,7 +24,7 @@ read_file  <-  function( file_name = '', stringsAsFactors = FALSE, header = TRUE
 #'
 #' @param pkg Package name
 #'
-#' @return if the package is installed then it returns NULL else it returns error message
+#' @returns if the package is installed then it returns NULL else it returns error message
 #' 
 #' @keywords internal
 #' 
@@ -42,7 +42,7 @@ check_pkg  <-  function( pkg ){
 #' by default (or when pkgs = NULL) the list of packages are described in Namespace file of the package or
 #' 'R/MaxWiK-package.R' file
 #' 
-#' @return if the packages are installed then it returns NULL else it returns error message
+#' @returns if the packages are installed then it returns NULL else it returns error message
 #'
 #' @keywords internal
 #' 
@@ -75,7 +75,7 @@ check_packages  <-  function( pkgs = NULL ){
 #' Check that DATA.FRAME has numeric format for ALL the columns and it has NO 'NA' values
 #' @param l DATA.FRAME that should have data of numeric type
 #'
-#' @return TRUE if data.frame has ONLY numeric data and FALSE vice verse  
+#' @returns TRUE if data.frame has ONLY numeric data and FALSE vice verse  
 #' 
 #' @keywords internal
 #' 
@@ -104,7 +104,7 @@ check_numeric_format  <-  function( l ) {
 #' @param stat.sim Data frame of outputs of simulations
 #' @param stat.obs Data frame of observation point
 #'
-#' @return \code{restrict_data()} returns the list of: \cr
+#' @returns \code{restrict_data()} returns the list of: \cr
 #' par.sim - restricted parameters which are close to observation point \cr
 #' stat.sim - restricted stat.sim which are close to observation point
 #' 
@@ -130,7 +130,7 @@ restrict_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
 #'
 #' @param dir Folder to where files should be save, by default dir = './'
 #'
-#' @return List of logic numbers for each copied file, TRUE - success, FALSE - not success
+#' @returns List of logic numbers for each copied file, TRUE - success, FALSE - not success
 #' @export
 #'
 #' @examples
@@ -159,7 +159,7 @@ MaxWiK_templates  <-  function( dir = './' ){
 #' @param stat.sim Summary statistics of the simulations (model output)
 #' @param stat.obs Summary statistics of the observation point
 #'
-#' @return The function \code{MSE_sim()} returns numeric vector of
+#' @returns The function \code{MSE_sim()} returns numeric vector of
 #' the mean square error values for statistics of simulations
 #' 
 #' @export
@@ -187,7 +187,7 @@ MSE_sim   <-   function( stat.obs, stat.sim ){
 #' @param par.top Parameters from the top of similarities of \code{get.MaxWiK()} algorithm
 #' @param par.best The best parameter from \code{get.MaxWiK()} algorithm
 #'
-#' @return The function \code{MSE_parameters()} returns list of two numbers: \cr
+#' @returns The function \code{MSE_parameters()} returns list of two numbers: \cr
 #' - mean of MSE values for all the points from par.top; \cr
 #' - MSE value for the point of par.best 
 #' 
@@ -223,7 +223,7 @@ MSE_parameters   <-   function( par.truth, par.top = NULL, par.best ){
 #'
 #' @param input File name to input 
 #'
-#' @return Parameters and their values
+#' @returns Parameters and their values
 #' 
 #' @export
 #'
@@ -262,7 +262,7 @@ read_hyperparameters  <- function( input ){
 #' @param diapason Vector of min and max values or data frame with two rows (min and max) for each dimension of input data
 #' @param input.data Data frame of input where values will be corrected
 #'
-#' @return The same data frame with corrected values according to the diapason
+#' @returns The same data frame with corrected values according to the diapason
 #' 
 #' @export
 #'

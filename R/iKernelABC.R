@@ -19,7 +19,7 @@
 #' @param Matrix_Voronoi is a predefined matrix of information about Voronoi trees 
 #' (rows - trees, columns - Voronoi points/areas IDs). By default it is NULL and is generated randomly.
 #' 
-#' @return The function \code{get.MaxWiK()} returns the list of :
+#' @returns The function \code{get.MaxWiK()} returns the list of :
 #' - kernel_mean_embedding is a maxima weighted kernel mean embedding (mapping) related to the observation point;
 #' - parameters_Matrix_Voronoi is a matrix of information about Voronoi trees (rows - trees, columns - Voronoi points/areas IDs) for parameters data set;
 #' - parameters_Matrix_iKernel is a matrix of of all points of PARAMETERS in a Hilbert space (rows - points, columns - isolation trees);

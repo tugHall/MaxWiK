@@ -23,7 +23,7 @@
 #' @param save_web Logical to save all the generated points (web net)
 #' @param use.iKernelABC The iKernelABC object to use for meta-sampling. By default it is NULL and is generated.
 #' 
-#' @return The function \code{meta_sampling()} returns the list of the next objects:
+#' @returns The function \code{meta_sampling()} returns the list of the next objects:
 #' - input.parameters that is the list of all the input parameters for Isolation Kernel ABC method;
 #' - iteration that is iteration value when algorithm stopped;
 #' - network that is network points when algorithm stopped;
@@ -178,7 +178,7 @@ meta_sampling  <-  function(  psi = 4, t = 35,
 #' 
 #' @param new.param New parameter for the predictor input
 #' 
-#' @return The function \code{MaxWiK.predictor()} returns the list of the next objects:
+#' @returns The function \code{MaxWiK.predictor()} returns the list of the next objects:
 #' - input.parameters that is the list of all the input parameters for Isolation Kernel ABC method;
 #' - iteration that is iteration value when algorithm stopped;
 #' - network that is network points when algorithm stopped;

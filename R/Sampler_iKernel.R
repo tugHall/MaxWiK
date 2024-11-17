@@ -21,7 +21,7 @@
 #' @param include_web_rings Logical to include or do not include the cobweb rings to the simulations
 #' @param number_of_nodes_in_ring Number of points/nodes between two points in the web ring. By default \code{number_of_nodes_in_ring = 2}
 #'
-#' @return \code{sampler_MaxWiK()} returns the list: \cr
+#' @returns \code{sampler_MaxWiK()} returns the list: \cr
 #' - results: results of all the simulations; \cr 
 #' - best: the best value of parameter; \cr
 #' - MSE_min: minimum of MSE; \cr
@@ -298,7 +298,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
 #'
 #' @param cores Number of cores for parallel calculations of a model (4 by default)
 #'
-#' @return the same as in \code{sampler_MaxWiK()}.
+#' @returns the same as in \code{sampler_MaxWiK()}.
 #' 
 #' @export
 #'

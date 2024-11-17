@@ -22,7 +22,7 @@
 #' @param halfwidth Criterion to choose the best tracer points like: \cr
 #' \code{if similarity_of_point >= halfwidth} then it is the point to be included to the pool of the best points 
 #' 
-#' @return The function \code{sudoku()} returns the list of next objects:
+#' @returns The function \code{sudoku()} returns the list of next objects:
 #' - tracer_bullets that is all the points generated during the run of the algorithm, 
 #' - criterion that is a value of the similarity that is used to choose the best tracer points,  
 #' - best_tracer_bullets that is the best tracer points that have similarity more or equal than \strong{criterion} value,
@@ -85,7 +85,7 @@ sudoku  <-  function( DT , iKernelABC, n_bullets = 20, n_best = 10, halfwidth = 
 #' @param DF Data Frame that is usually part of whole data frame of parameters, 
 #' and this part is corresponding also to Voronoi sites/seeds
 #'
-#' @return The function \code{get_pairs_of_data_frame()} returns the list of the pairs of points
+#' @returns The function \code{get_pairs_of_data_frame()} returns the list of the pairs of points
 #' 
 #' @keywords internal
 #' 
@@ -116,7 +116,7 @@ get_pairs_of_data_frame  <-  function( DF ){
 #' @param pair Data frame of two points
 #' @param n Integer number of points that should be located between two input points
 #'
-#' @return The function \code{generate_points_between_two_points()} 
+#' @returns The function \code{generate_points_between_two_points()} 
 #' returns data frame of generated points between two given points, 
 #' including given points as the first and the last rows
 #' 
@@ -147,7 +147,7 @@ generate_points_between_two_points  <-  function( pair, n = 10 ){
 #' so it is usually a subset of points corresponding to Voronoi sites/seeds
 #' @param n_bullets Integer number of tracer points between each pair of points from DF
 #'
-#' @return The function \code{get_tracer_bullets()} returns data frame of generated tracer points
+#' @returns The function \code{get_tracer_bullets()} returns data frame of generated tracer points
 #' 
 #' @keywords internal
 #'

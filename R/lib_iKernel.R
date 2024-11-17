@@ -5,7 +5,7 @@
 #'
 #' @param x numeric vector
 #'
-#' @return The squared root of sum of squared elements of the vector x or Euclid length of the vector x
+#' @returns The squared root of sum of squared elements of the vector x or Euclid length of the vector x
 #'
 #' @keywords internal
 #'
@@ -16,7 +16,7 @@ norm_vec     <-  function(x) {
 }
 
 #' @describeIn norm_vec The squared norm or the sum of squared elements of the vector x
-#' @return The squared Euclid norm or the sum of squared elements of the vector x
+#' @returns The squared Euclid norm or the sum of squared elements of the vector x
 #' 
 #' @keywords internal
 #' 
@@ -45,7 +45,7 @@ norm_vec_sq  <-  function(x) {
 #' @param talkative logical. If TRUE then print messages, FALSE for the silent execution
 #' @param Matrix_Voronoi Matrix of Voronoi diagrams, if it is NULL then the function will calculate Matrix_Voronoi
 #'
-#' @return Feature representation in RKHS based on Voronoi diagram for WHOLE dataset
+#' @returns Feature representation in RKHS based on Voronoi diagram for WHOLE dataset
 #' 
 #' @keywords internal
 #'
@@ -112,7 +112,7 @@ get_voronoi_feature  <-  function( psi = 40, t = 350, data, talkative = FALSE,
 #' @param dissim Matrix of dissimilarity or distances between all points.
 #' @param nr Integer number of rows in matrix of distances (dissim) and also the size of dataset
 #'
-#' @return RKHS mapping for a new point based on Isolation Kernel mapping
+#' @returns RKHS mapping for a new point based on Isolation Kernel mapping
 #' 
 #' @keywords internal
 #' 
@@ -155,7 +155,7 @@ add_new_point_iKernel  <-  function( data, d1, Matrix_Voronoi, dissim, t, psi, n
 #' @param data_set Data.frame of Voronoi diagram
 #' @param pnts Integer vector of indexes of columns of the data_set
 #'
-#' @return Subset of data_set with columns pnts
+#' @returns Subset of data_set with columns pnts
 #' 
 #' @keywords internal
 #' 
@@ -180,7 +180,7 @@ GET_SUBSET  <-  function( data_set, pnts ){
 #' @param pnt_2 The second point of dataset
 #' @param t is a number of columns of Matrix_iKernel or dimension of Matrix_iKernel (corresponding to the number of trees t)
 #' 
-#' @return The function \code{iKernel()} returns a value of similarity or Isolation KERNEL for TWO points
+#' @returns The function \code{iKernel()} returns a value of similarity or Isolation KERNEL for TWO points
 #' 
 #' @keywords internal
 #'
@@ -204,7 +204,7 @@ iKernel  <-  function( Matrix_iKernel, pnt_1, pnt_2, t ){
 #' @param iFeature_point Feature mapping in RKHS for a new point, that can be gotten via \code{add_new_point_iKernel()} function
 #' @param nr is number of rows in Matrix_iKernel or size of dataset
 #' 
-#' @return The function \code{iKernel_point_dataset()} returns a value of Isolation Kernel between a new point and dataset represented via Matrix_iKernel
+#' @returns The function \code{iKernel_point_dataset()} returns a value of Isolation Kernel between a new point and dataset represented via Matrix_iKernel
 #' 
 #' @keywords internal
 #' 
@@ -233,7 +233,7 @@ iKernel_point_dataset  <-  function( Matrix_iKernel, t, nr, iFeature_point ){
 #'
 #' @param GI The inverse Gram matrix
 #'
-#' @return The function \code{get_weights_iKernel()} returns the 
+#' @returns The function \code{get_weights_iKernel()} returns the 
 #' list of weights for RKHS space and weights of similarity for iFeature_point
 #' 
 #' @keywords internal
@@ -264,7 +264,7 @@ get_weights_iKernel   <-   function( GI, Matrix_iKernel, t, nr, iFeature_point )
 #' @param start_row Row number from which a new data should be added
 #' @param Matrix_Voronoi Matrix of Voronoi diagrams based on the PREVIOUS dataset
 #' 
-#' @return List of three matrices: Matrix_Voronoi, Matrix_iKernel and dissim
+#' @returns List of three matrices: Matrix_Voronoi, Matrix_iKernel and dissim
 #' 
 #' @keywords internal
 #' 
@@ -319,7 +319,7 @@ get_voronoi_feature_PART_dataset  <-  function( data, talkative = FALSE, start_r
 #' @param parameters_Matrix_iKernel Matrix of all the points represented in RKHS related to parameters space
 #' @param Hilbert_weights Maximal weights in RKHS to get related part of kernel mean embedding from parameters_Matrix_iKernel
 #'
-#' @return Maxima weighted kernel mean mapping in the form of integer vector with length t (number of trees). 
+#' @returns Maxima weighted kernel mean mapping in the form of integer vector with length t (number of trees). 
 #' Each element of the vector is index of Voronoi cell with maximal weight in the Voronoi diagram 
 #' 
 #' @keywords internal
@@ -359,7 +359,7 @@ get_kernel_mean_embedding  <-  function( parameters_Matrix_iKernel, Hilbert_weig
 #' @param iFeature_point Feature mapping in RKHS for a point, 
 #' that can be gotten via \code{add_new_point_iKernel()} function
 #'
-#' @return The subset of dtst that has points 
+#' @returns The subset of dtst that has points 
 #' extracted with feature mapping of an observation point (iFeature_point)
 #' 
 #' @keywords internal
@@ -392,7 +392,7 @@ get_subset_of_feature_map   <-   function(dtst, Matrix_Voronoi, iFeature_point )
 #' 
 #' @param check_pos_def Logical parameter to check the Gram matrix is positive definite or do not check
 #'
-#' @return  The function \code{GRAM_iKernel()} returns Gram matrix of Isolation Kernel
+#' @returns  The function \code{GRAM_iKernel()} returns Gram matrix of Isolation Kernel
 #' 
 #' @keywords internal
 #' 
@@ -425,7 +425,7 @@ GRAM_iKernel    <-  function( Matrix_iKernel, check_pos_def = FALSE ){
 #' @param l Lambda parameter or positive regularization constant
 #' @param check_pos_def Logical parameter to check the Gram matrix is positive definite or do not check
 #'
-#' @return Function \code{get_inverse_GRAM()} returns the inverse Gram matrix 
+#' @returns Function \code{get_inverse_GRAM()} returns the inverse Gram matrix 
 #' based on the given positive regularization constant lambda l
 #' 
 #' @keywords internal
@@ -457,7 +457,7 @@ get_inverse_GRAM  <-  function( G, l = 1E-6, check_pos_def = FALSE ){
 #' 
 #' @param n Number of iterations to check the positive definite property
 #'
-#' @return Function \code{check_positive_definite()} returns logical value: \cr 
+#' @returns Function \code{check_positive_definite()} returns logical value: \cr 
 #' TRUE if Gram matrix is positive definite, and FALSE if it is not
 #' 
 #' @keywords internal
