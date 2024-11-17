@@ -14,7 +14,7 @@
 
 **Iurii (Yuri) Nagornov** (Maintainer, Author)
 
-All questions and requests can be sent to [iurii.nagornov\@aist.go.jp](mailto:iurii.nagornov@aist.go.jp){.email} or [nagornov.yuri\@gmail.com](mailto:nagornov.yuri@gmail.com){.email}
+All questions and requests can be sent to [nagornov.yuri\@gmail.com](mailto:nagornov.yuri@gmail.com){.email}
 
 ### Short description of the package:
 

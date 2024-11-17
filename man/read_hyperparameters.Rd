@@ -16,5 +16,5 @@ Parameters and their values
 Function to read hyperparameters and their values from the file
 }
 \examples{
-NULL
+MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
 }
