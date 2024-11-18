@@ -140,7 +140,7 @@ MaxWiK_templates  <-  function( dir = './' ){
     dir_pck =  system.file('extdata', package = 'MaxWiK', mustWork = TRUE )
     files  =  list.files( dir_pck )
     fls  =  lapply( X = files,
-                    FUN = function( x ) system.file('extdata/templates', x, package = 'MaxWiK', mustWork = TRUE ) )
+                    FUN = function( x ) system.file('extdata/', x, package = 'MaxWiK', mustWork = TRUE ) )
     
     if ( !file.exists( dir ) ) dir.create( dir )
     lapply( X = 1:length( fls ) , FUN = function( x ){
