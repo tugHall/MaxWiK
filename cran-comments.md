@@ -2,7 +2,7 @@
 
 This is a resubmission. The package MaxWiK_1.0.2.tar.gz does not pass the incoming checks automatically because of two notes.
 
-In this version I have just added answers to these notes.
+This version fixed the notes:
 
 ##### Automatical check results
 
@@ -30,7 +30,7 @@ And this is the submission of a new package.
 
 2.  
 
-Files ‘MaxWiK.ABC.R’ ‘MaxWiK.Predictor.R’ ‘MaxWiK.Sampling.R’ are used as templates for demonstration of the machine learning method for three different problems. They are described in the vignette.
+Files ‘MaxWiK.ABC.R’ ‘MaxWiK.Predictor.R’ ‘MaxWiK.Sampling.R’ are used as templates for demonstration of the machine learning method for three different problems. They are described in the vignette. To avoid copying of these files to the user's working directory, I have added "\\dontrun{}" to the manual, and also modified 'MaxWiK_templates( dir = tempdir() )' examples in the vignettes using tempdir() function.
 
 ## R CMD check results
 
