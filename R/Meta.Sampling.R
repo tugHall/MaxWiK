@@ -35,7 +35,9 @@
 #' @export
 #' 
 #' @examples
+#' \dontrun{
 #' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' }
 meta_sampling  <-  function(  psi = 4, t = 35, 
                               param, stat.sim, stat.obs, 
                               talkative = FALSE, check_pos_def = FALSE ,
@@ -190,7 +192,9 @@ meta_sampling  <-  function(  psi = 4, t = 35,
 #' @export
 #' 
 #' @examples
+#' \dontrun{
 #' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' }
 MaxWiK.predictor  <-  function( psi = 4, t = 35, 
                                 param, stat.sim, new.param, 
                                 talkative = FALSE, check_pos_def = FALSE ,

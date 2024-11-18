@@ -32,7 +32,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' }
 sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model, 
                                              arg0 = list(),  size = 500, 
                                              psi_t, epsilon, nmax = 100, 
@@ -303,7 +305,9 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' }
 sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model, 
                                           arg0 = list(),  size = 500, 
                                           psi_t, epsilon, nmax = 100, 

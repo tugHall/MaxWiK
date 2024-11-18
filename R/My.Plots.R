@@ -17,7 +17,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' }
 MaxWiK.ggplot.density  <-  function( title = '', datafr1, datafr2, var.df, 
                                  obs.true = NULL, 
                                  best.sim = NULL,  
