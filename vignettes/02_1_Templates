@@ -3,7 +3,7 @@
 To use the templates, please, be kind to call the function:
 
 ```{r, include = TRUE, echo=TRUE, eval=FALSE}
-MaxWiK::MaxWiK_templates(dir = './')
+MaxWiK::MaxWiK_templates(dir = tempdir())
 ```
 
 The function MaxWiK_templates() copies all the templates to the working folder. There are 3 templates:
