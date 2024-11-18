@@ -1,6 +1,6 @@
 Package: MaxWiK
 Title: Machine Learning Method Based on Isolation Kernel Mean Embedding
-Version: 1.0.2
+Version: 1.0.3
 Authors@R: 
     person('Yuri', 'Nagornov', email='nagornov.yuri@gmail.com', role = c('aut', 'cre', 'cph'), comment = c(ORCID = '0000-0002-7935-6776') )
 Description: This software is a package named 'MaxWiK' (maxima weighted Isolation Kernel approach) contains Approximate Bayesian Computation method to choose a single parameter for a single observation point. The method involves the transformation of row data to a Hilbert space (mapping) and the measurement of the similarity between simulated points and maxima weighted Isolation Kernel mapping related to the observation point. The meta-sampling or heuristic algorithm is also designed for parameter estimation that requires no calculation and is dimension independent. 'MaxWiK' also has the predictor based on meta-sampling procedure. The method is described in Iurii Nagornov (2024) <doi:10.1007/978-3-031-66431-1_16> and Iurii Nagornov (2023) <doi:10.1007/978-3-031-29168-5_18>.
