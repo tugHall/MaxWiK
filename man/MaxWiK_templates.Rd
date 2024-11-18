@@ -4,7 +4,7 @@
 \alias{MaxWiK_templates}
 \title{Function to copy the templates from extdata folder in the library to /Templates/ folder in the working directory}
 \usage{
-MaxWiK_templates(dir = "./templates")
+MaxWiK_templates(dir = "./")
 }
 \arguments{
 \item{dir}{Folder to where files should be save, by default dir = './'}

@@ -24,7 +24,7 @@ Possibly misspelled words in DESCRIPTION: Iurii (6:667, 6:728) Nagornov (6:673, 
 
 1.  
 
-Iurii and Nagornov are the correct spelling of the author's name. Actually I use Yuri and Iurii spelling in different cases.
+Iurii and Nagornov are the correct spelling of the author's name. Actually I use Yuri and Iurii spelling in different cases. To fix it I have updated inst/WORDLIST file.
 
 And this is the submission of a new package.
 
