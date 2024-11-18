@@ -17,6 +17,6 @@ Function to read hyperparameters and their values from the file
 }
 \examples{
 \dontrun{
-MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
 }
 }

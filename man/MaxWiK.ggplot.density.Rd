@@ -46,6 +46,6 @@ Density plot
 }
 \examples{
 \dontrun{
-MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
 }
 }
