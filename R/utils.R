@@ -135,7 +135,7 @@ restrict_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
 #'
 #' @examples
 #' MaxWiK_templates( dir = './' )
-MaxWiK_templates  <-  function( dir = './' ){
+MaxWiK_templates  <-  function( dir = './templates' ){
     
     dir_pck =  system.file('extdata', package = 'MaxWiK', mustWork = TRUE )
     files  =  list.files( dir_pck )
