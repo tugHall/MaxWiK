@@ -112,7 +112,7 @@ check_numeric_format  <-  function( l ) {
 #'
 #' @examples
 #' \dontrun{
-#' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
 #' }
 restrict_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
     l  =  nrow( par.sim )
@@ -231,7 +231,7 @@ MSE_parameters   <-   function( par.truth, par.top = NULL, par.best ){
 #'
 #' @examples
 #' \dontrun{
-#' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
 #' }
 read_hyperparameters  <- function( input ){
     
@@ -272,7 +272,7 @@ read_hyperparameters  <- function( input ){
 #'
 #' @examples
 #' \dontrun{
-#' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
 #' }
 apply_range  <- function( diapason, input.data ){
     

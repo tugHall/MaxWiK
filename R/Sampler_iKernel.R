@@ -33,7 +33,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
 #' }
 sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model, 
                                              arg0 = list(),  size = 500, 
@@ -306,7 +306,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
 #'
 #' @examples
 #' \dontrun{
-#' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
 #' }
 sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model, 
                                           arg0 = list(),  size = 500, 

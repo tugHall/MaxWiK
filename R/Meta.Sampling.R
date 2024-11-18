@@ -36,7 +36,7 @@
 #' 
 #' @examples
 #' \dontrun{
-#' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
 #' }
 meta_sampling  <-  function(  psi = 4, t = 35, 
                               param, stat.sim, stat.obs, 
@@ -193,7 +193,7 @@ meta_sampling  <-  function(  psi = 4, t = 35,
 #' 
 #' @examples
 #' \dontrun{
-#' MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
 #' }
 MaxWiK.predictor  <-  function( psi = 4, t = 35, 
                                 param, stat.sim, new.param, 
