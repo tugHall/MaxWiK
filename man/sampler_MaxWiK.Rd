@@ -103,6 +103,10 @@ Function to generate parameters and simulate a model based on MaxWiK algorithm
 
 }}
 \examples{
+\dontrun{
 MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+}
+\dontrun{
 MaxWiK::MaxWiK_templates(dir = './') # See the templates and vignettes for usage
+}
 }
