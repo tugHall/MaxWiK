@@ -32,7 +32,8 @@
 #' @export
 #'
 #' @examples
-#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Sampling.R' and vignettes for usage.
+#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Sampling.R' 
+#' # and vignettes for usage.
 sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model, 
                                              arg0 = list(),  size = 500, 
                                              psi_t, epsilon, nmax = 100, 
@@ -303,7 +304,9 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
 #' @export
 #'
 #' @examples
-#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Sampling.R' and vignettes for usage. \cr For parallel implementation change the function \code{sampler_MaxWiK()} to \code{sampler_MaxWiK_parallel()}.
+#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Sampling.R' 
+#' # and vignettes for usage. For parallel implementation 
+#' # change the function \code{sampler_MaxWiK()} to \code{sampler_MaxWiK_parallel()}.
 sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model, 
                                           arg0 = list(),  size = 500, 
                                           psi_t, epsilon, nmax = 100, 
