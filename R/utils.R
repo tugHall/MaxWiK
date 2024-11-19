@@ -139,7 +139,7 @@ restrict_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
 #' \dontrun{
 #' MaxWiK_templates( dir = tempdir() )
 #' }
-MaxWiK_templates  <-  function( dir = './' ){
+MaxWiK_templates  <-  function( dir ){
     
     dir_pck =  system.file('extdata', 'templates', package = 'MaxWiK', mustWork = TRUE )
     files  =  list.files( dir_pck )
