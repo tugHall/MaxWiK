@@ -46,6 +46,6 @@ Density plot
 }
 \examples{
 MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage. 
-# Function \code{MaxWiK.ggplot.density()} is used in the MaxWiK.ABC.R and 
+# Function 'MaxWiK.ggplot.density()' is used in the MaxWiK.ABC.R and 
 # MaxWiK.Predictor.R templates.
 }

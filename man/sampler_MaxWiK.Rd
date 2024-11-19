@@ -107,5 +107,5 @@ MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Sampling.R'
 # and vignettes for usage.
 MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Sampling.R' 
 # and vignettes for usage. For parallel implementation 
-# change the function \code{sampler_MaxWiK()} to \code{sampler_MaxWiK_parallel()}.
+# change the function 'sampler_MaxWiK()' to 'sampler_MaxWiK_parallel()'.
 }
