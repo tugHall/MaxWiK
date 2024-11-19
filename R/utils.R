@@ -111,9 +111,7 @@ check_numeric_format  <-  function( l ) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
-#' }
 restrict_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
     l  =  nrow( par.sim )
     if ( l != nrow( stat.sim ) ) stop( "The parameters and statistics of simulations have different number of rows" )
@@ -136,9 +134,7 @@ restrict_data  <-  function( par.sim, stat.sim, stat.obs, size = 300 ){
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' MaxWiK_templates( dir = tempdir() )
-#' }
 MaxWiK_templates  <-  function( dir ){
     
     dir_pck =  system.file('extdata', 'templates', package = 'MaxWiK', mustWork = TRUE )
@@ -232,9 +228,7 @@ MSE_parameters   <-   function( par.truth, par.top = NULL, par.best ){
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
-#' }
 read_hyperparameters  <- function( input ){
     
     check_packages()
@@ -273,9 +267,7 @@ read_hyperparameters  <- function( input ){
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
-#' }
 apply_range  <- function( diapason, input.data ){
     
     if ( is.vector( diapason) ) if ( length( diapason ) != 2 ) 
