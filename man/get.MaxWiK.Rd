@@ -154,7 +154,10 @@ Maxima Weighted Isolation Kernel mapping which is related to an observation poin
 
 }}
 \examples{
-MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.ABC.R' and vignettes for usage
-MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Predictor.R' and vignettes for usage. 
-MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.ABC.R' and vignettes for usage
+MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.ABC.R' and 
+# vignettes for usage.
+MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Predictor.R' 
+# and vignettes for usage. 
+MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.ABC.R' and 
+# vignettes for usage.
 }

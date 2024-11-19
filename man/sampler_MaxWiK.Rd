@@ -103,6 +103,9 @@ Function to generate parameters and simulate a model based on MaxWiK algorithm
 
 }}
 \examples{
-MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Sampling.R' and vignettes for usage
-MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Sampling.R' and vignettes for usage. For parallel implementation change the function \code{sampler_MaxWiK()} to \code{sampler_MaxWiK_parallel()}.
+MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Sampling.R' 
+# and vignettes for usage.
+MaxWiK::MaxWiK_templates(dir = tempdir()) # See the template 'MaxWiK.Sampling.R' 
+# and vignettes for usage. For parallel implementation 
+# change the function \code{sampler_MaxWiK()} to \code{sampler_MaxWiK_parallel()}.
 }
