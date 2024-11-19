@@ -154,13 +154,7 @@ Maxima Weighted Isolation Kernel mapping which is related to an observation poin
 
 }}
 \examples{
-\dontrun{
 MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
-}
-\dontrun{
 MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
-}
-\dontrun{
 MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
-}
 }
