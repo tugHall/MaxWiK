@@ -24,7 +24,5 @@ stat.sim - restricted stat.sim which are close to observation point
 \code{restrict_data()} is based on rejection ABC method to restrict original dataset
 }
 \examples{
-\dontrun{
-MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
-}
+MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage.
 }

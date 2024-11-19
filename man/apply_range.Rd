@@ -18,7 +18,5 @@ The same data frame with corrected values according to the diapason
 Function to restrict values of the data according with the range for each dimension
 }
 \examples{
-\dontrun{
-MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
-}
+MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage.
 }

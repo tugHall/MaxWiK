@@ -45,7 +45,7 @@ Make and return the ggplot object of the densities of the data frames
 Density plot
 }
 \examples{
-\dontrun{
-MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
-}
+MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage. 
+# Function 'MaxWiK.ggplot.density()' is used in the MaxWiK.ABC.R and 
+# MaxWiK.Predictor.R templates.
 }

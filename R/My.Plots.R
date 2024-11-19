@@ -17,9 +17,9 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage
-#' }
+#' MaxWiK::MaxWiK_templates(dir = tempdir()) # See the templates and vignettes for usage. 
+#' # Function 'MaxWiK.ggplot.density()' is used in the MaxWiK.ABC.R and 
+#' # MaxWiK.Predictor.R templates.
 MaxWiK.ggplot.density  <-  function( title = '', datafr1, datafr2, var.df, 
                                  obs.true = NULL, 
                                  best.sim = NULL,  
