@@ -293,8 +293,6 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
     #Stop progress BAR:
     close(pb)
     
-    results_ALL$sim_ID  =  1:nrow( results_ALL )
-    
     return( list( results = results_ALL, 
                   best = best, 
                   MSE_min = err, 
@@ -311,7 +309,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
 #'
 #' @param cores Number of cores for parallel calculations of a model (4 by default)
 #'
-#' @returns the same as in \code{sampler_MaxWiK()}.
+#' @returns \code{sampler_MaxWiK_parallel()} returns the same output as in \code{sampler_MaxWiK()}.
 #' 
 #' @export
 #'
@@ -600,6 +598,8 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
     
     best  =  results_ALL[ which.min(results_ALL$mse ) , ]
     end_time = Sys.time()
+    
+    results_ALL$sim_ID  =  1:nrow( results_ALL )
     
     #Stop progress BAR:
     close(pb)
