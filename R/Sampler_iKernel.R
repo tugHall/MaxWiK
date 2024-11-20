@@ -293,6 +293,8 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
     #Stop progress BAR:
     close(pb)
     
+    results_ALL$sim_ID  =  1:nrow( results_ALL )
+    
     return( list( results = results_ALL, 
                   best = best, 
                   MSE_min = err, 
