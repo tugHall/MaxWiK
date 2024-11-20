@@ -309,7 +309,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
 #'
 #' @param cores Number of cores for parallel calculations of a model (4 by default)
 #'
-#' @returns the same as in \code{sampler_MaxWiK()}.
+#' @returns \code{sampler_MaxWiK_parallel()} returns the same output as in \code{sampler_MaxWiK()}.
 #' 
 #' @export
 #'
@@ -340,13 +340,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
     
     check_packages()
     
-    w.env <- new.env()
-    w.env$n_simulations  <-  0
-    
-    update_n <- function( x ) {
-        # Here we need to modify n_simulations
-        w.env$n_simulations  = w.env$n_simulations + 1
-    }
+    n_simulations  <-  0
     
     start_time = Sys.time()
     # Redefine input:
@@ -375,7 +369,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                          char = ":")   # Character used to create the bar
     
     ############### Function to get data.frame of results:
-    make_res  =  function( web, use_network  =  FALSE, model, arg0, cores ){
+    make_res  =  function( web, use_network  =  FALSE, model, arg0, cores, n_simulations ){
         
         results  =  NULL
         
@@ -383,7 +377,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             res_1  =  web$par.best
             
             new_best.sim  =  do.call( what = model, args = c( arg0, list( x =  web$par.best ) ) )
-            # update_n( 1 )
+            n_simulations  <-  n_simulations  +  1
             
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim
             
@@ -406,7 +400,6 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                     res_1  =  web$network[ i, ]
                     
                     new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
-                    # update_n( 1 )
                     
                     res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
                     
@@ -428,18 +421,19 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
               
               results_list   =  mclapply( X = 1:nrow( web$network ), 
                                           FUN = function( x ){
-                                              update_n( x )
                                               fun_par_run( x )
                                               }, 
                                           mc.cores = cores )
+              n_simulations  <-  n_simulations  +  nrow( web$network )
               results  =  as.data.frame( do.call( rbind, results_list ) )
             ##############
         }
         
-        return( results )
+        return( list( results      =  results, 
+                      n_simulations =  n_simulations ) )
     }
     
-    make_web_rings  =  function( web, model, arg0, number_of_nodes  =  1, cores ){
+    make_web_rings  =  function( web, model, arg0, number_of_nodes  =  1, cores, n_simulations ){
         
         results  =  NULL
         
@@ -450,7 +444,6 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             res_1    =   pnts[ j, ]
             
             new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
-            # update_n( 1 )
             
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
             
@@ -485,16 +478,17 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             results_list  =  mclapply( 
                 X = 1:nrow( pnts ), 
                 FUN =  function( x ){
-                        update_n( x )
                         model_paral_run( x )
                         }, 
                 mc.cores = cores 
                 )
+            n_simulations  <-  n_simulations  +  nrow( pnts )
 
             results  =  as.data.frame( do.call( rbind, results_list ) )
             ### 
         }
-        return( results )
+        return( list( results      =  results, 
+                      n_simulations =  n_simulations ) )
     }
     
     for( i in 1:nmax ){
@@ -516,21 +510,30 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                                 use_network  = include_top, 
                                 model =  model, 
                                 arg0  =  arg0, 
-                                cores = cores )
+                                cores = cores, 
+                                n_simulations = n_simulations )
+            
+            n_simulations  =  res_1$n_simulations
+            res_1  =  res_1$results
             
             if ( include_top & include_web_rings ) {
                 res_2  =  make_web_rings( web    =  web, 
                                           model  =  model, 
                                           arg0   =  arg0, 
                                           number_of_nodes = number_of_nodes_in_ring, 
-                                          cores = cores )
+                                          cores = cores, 
+                                          n_simulations = n_simulations )
+                
+                n_simulations  =  res_2$n_simulations
+                res_2  =  res_2$results
+                
             } else res_2  =  NULL
             
             if ( FALSE ){
                 res_1  =  web$par.best
                 
                 new_best.sim  =  do.call( what = model, args = c( arg0, list( x =  web$par.best ) ) )
-                update_n( 1 )
+                n_simulations  =  n_simulations  +  1
                 
                 res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim
                 
@@ -589,12 +592,14 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
         
         err_previous  =  err
         if ( !is.na( n_simulation_stop ) & 
-             ( n_simulation_stop <= w.env$n_simulations ) ) break
+             ( n_simulation_stop <= n_simulations ) ) break
         
     }
     
     best  =  results_ALL[ which.min(results_ALL$mse ) , ]
     end_time = Sys.time()
+    
+    results_ALL$sim_ID  =  1:nrow( results_ALL )
     
     #Stop progress BAR:
     close(pb)
@@ -604,7 +609,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                   MSE_min = err, 
                   number_of_iterations = i, 
                   time = as.numeric( difftime( end_time, start_time, units = "secs")[[1]] ),
-                  n_simulations  =  w.env$n_simulations
+                  n_simulations  =  n_simulations
     ) )
 }
 

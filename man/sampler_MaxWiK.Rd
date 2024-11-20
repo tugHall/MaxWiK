@@ -92,7 +92,7 @@ If \code{n_simulation_stop = NA} then there is no restriction (by default)}
 \item n_simulations: the total number of simulations.
 }
 
-the same as in \code{sampler_MaxWiK()}.
+\code{sampler_MaxWiK_parallel()} returns the same output as in \code{sampler_MaxWiK()}.
 }
 \description{
 Function to generate parameters and simulate a model based on MaxWiK algorithm
