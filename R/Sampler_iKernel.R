@@ -400,7 +400,6 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                     res_1  =  web$network[ i, ]
                     
                     new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
-                    # update_n( 1 )
                     
                     res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
                     
@@ -422,7 +421,6 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
               
               results_list   =  mclapply( X = 1:nrow( web$network ), 
                                           FUN = function( x ){
-                                              update_n( x )
                                               fun_par_run( x )
                                               }, 
                                           mc.cores = cores )
@@ -446,7 +444,6 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             res_1    =   pnts[ j, ]
             
             new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
-            # update_n( 1 )
             
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
             
@@ -481,7 +478,6 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
             results_list  =  mclapply( 
                 X = 1:nrow( pnts ), 
                 FUN =  function( x ){
-                        update_n( x )
                         model_paral_run( x )
                         }, 
                 mc.cores = cores 
@@ -516,6 +512,7 @@ sampler_MaxWiK_parallel  <-  function(    stat.obs, stat.sim, par.sim, model,
                                 arg0  =  arg0, 
                                 cores = cores, 
                                 n_simulations = n_simulations )
+            
             n_simulations  =  res_1$n_simulations
             res_1  =  res_1$results
             
