@@ -10,7 +10,7 @@
 |collate  |en_US.UTF-8                                |
 |ctype    |en_US.UTF-8                                |
 |tz       |Asia/Tokyo                                 |
-|date     |2024-11-18                                 |
+|date     |2024-11-21                                 |
 |rstudio  |2024.09.0+375 Cranberry Hibiscus (desktop) |
 |pandoc   |NA                                         |
 
@@ -18,7 +18,7 @@
 
 |package |old |new   |Δ  |
 |:-------|:---|:-----|:--|
-|MaxWiK  |NA  |1.0.0 |*  |
+|MaxWiK  |NA  |1.0.3 |*  |
 
 # Revdeps
 
