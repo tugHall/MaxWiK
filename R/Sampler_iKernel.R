@@ -83,7 +83,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                          char = ":")   # Character used to create the bar
     
     ############### Function to get data.frame of results:
-    make_res  =  function( web, use_network  =  FALSE, model, arg0 ){
+    make_res  =  function( web, use_network  =  FALSE, model, arg0, n_simulations ){
         
         results  =  NULL
         
@@ -91,7 +91,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
             res_1  =  web$par.best
             
             new_best.sim  =  do.call( what = model, args = c( arg0, list( x =  web$par.best ) ) )
-            n_simulations  <<-  n_simulations  +  1
+            n_simulations  <-  n_simulations  +  1
             
             res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new_best.sim) ) ]  =  new_best.sim
             
@@ -112,7 +112,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                 res_1  =  web$network[ i, ]
                 
                 new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
-                n_simulations  <<-  n_simulations  +  1
+                n_simulations  <-  n_simulations  +  1
                 
                 res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
                 
@@ -130,10 +130,11 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
             }
         }
         
-        return( results )
+        return( list( results       =  results, 
+                      n_simulations =  n_simulations ) )
     }
     
-    make_web_rings  =  function( web, model, arg0, number_of_nodes  =  1 ){
+    make_web_rings  =  function( web, model, arg0, number_of_nodes  =  1, n_simulations ){
         
         results  =  NULL
         
@@ -158,7 +159,7 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
                 res_1    =   pnts[ j, ]
             
                 new.sim  =  do.call( what = model, args = c( arg0, list( x =  res_1 ) ) )
-                n_simulations  <<-  n_simulations  +  1
+                n_simulations  <-  n_simulations  +  1
                 
                 res_1[ , (ncol(res_1) + 1) : (ncol(res_1) + ncol(new.sim) ) ]  =  new.sim
                 
@@ -176,7 +177,8 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
             }
         }
         
-        return( results )
+        return( list( results       =  results, 
+                      n_simulations =  n_simulations ) )
     }
     
     n_simulations  =  0
@@ -198,13 +200,21 @@ sampler_MaxWiK  <-  function( stat.obs, stat.sim, par.sim, model,
             res_1  =  make_res( web = web, 
                                 use_network  = include_top, 
                                 model =  model, 
-                                arg0  =  arg0 )
+                                arg0  =  arg0, 
+                                n_simulations = n_simulations ) 
+            
+            n_simulations = res_1$n_simulations
+            res_1  =  res_1$results
             
             if ( include_top & include_web_rings ) {
                 res_2  =  make_web_rings( web    =  web, 
                                           model  =  model, 
                                           arg0   =  arg0, 
-                                          number_of_nodes = number_of_nodes_in_ring )
+                                          number_of_nodes = number_of_nodes_in_ring, 
+                                          n_simulations = n_simulations )
+                n_simulations = res_2$n_simulations
+                res_2  =  res_2$results
+                
             } else { 
                 res_2  =  NULL
             }
