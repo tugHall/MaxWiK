@@ -8,6 +8,10 @@ This is a resubmission. In this version I have:
 
 0 errors \| 0 warnings \| 1 note
 
+Maintainer: ‘Yuri Nagornov [nagornov.yuri\@gmail.com](mailto:nagornov.yuri@gmail.com){.email}’
+
+New submission
+
 ## revdepcheck results
 
 We checked 0 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
