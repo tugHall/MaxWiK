@@ -80,7 +80,7 @@ X12 = data.frame( i  = smpl_1$results$sim_ID,
 th =     theme(
     plot.title = element_text(color="red", size=14, face="bold.italic"),
     axis.title.x = element_text(color="black", size=16, face="bold"),
-    axis.title.y = element_text(color="black", size=16, face="bold"), 
+    axis.title.y = element_text(color="black", size=16, face="bold", angle = 90), 
     axis.text    = element_text(color="black", size=13             )
 )
 

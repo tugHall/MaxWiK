@@ -17,7 +17,13 @@ The method is mostly appropriate for specific data which has sparse regions of i
 
 ```{r, echo=FALSE, include = TRUE, fig.height=4, fig.width=4 }
 library(ggplot2)
-df = MaxWiK::Data.2D$X; th = MaxWiK::Data.2D$sampling$theme.ggplot
+df = MaxWiK::Data.2D$X
+th = theme(
+            plot.title = element_text(color="red", size=12, face="bold.italic"),
+            axis.title.x = element_text(color="black", size=13, face="bold"),
+            axis.title.y = element_text(color="black", size=13, face="bold", angle = 90), 
+            axis.text    = element_text(color="black", size=11             )
+)
 obs = MaxWiK::Data.2D$observation$x0
 ggplot(data = df, mapping = aes( x = par.sim.X1, y = par.sim.X2) ) +
     geom_point(size = 0.3) + th + 
