@@ -1,3 +1,9 @@
+# MaxWiK 1.0.6
+
+**2025 July 7th**
+
+Update and fix of theme usage for ggplot2 package.
+
 # MaxWiK 1.0.5
 
 # MaxWiK 1.0.4
