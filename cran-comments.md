@@ -1,5 +1,17 @@
 # Resubmission
 
+Update of theme usage in the vignettes for new versions of the ggplot2 package.
+
+## R CMD check results
+
+0 errors \| 0 warnings \| 0 note
+
+# PREVIOUS CRAN submissions
+
+CRAN released for version MaxWiK.1.0.5: <https://cran.r-project.org/web/packages/MaxWiK/index.html>
+
+# Resubmission for MaxWiK_1.0.5.tar.gz
+
 This is a resubmission. In this version I have:
 
 -   Update Description field in DESCRIPTION file to meet the CRAN requirements.
@@ -18,8 +30,6 @@ We checked 0 reverse dependencies, comparing R CMD check results across CRAN and
 
 -   We saw 0 new problems
 -   We failed to check 0 packages
-
-# PREVIOUS CRAN submissions
 
 ## Resubmission for MaxWiK_1.0.4.tar.gz
 
